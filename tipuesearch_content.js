@@ -1,0 +1,1 @@
+var tipuesearch = {"pages":[{"title":"Welcome","text":"Welcome page","tags":"Miscelánea","url":"https://gcca.github.io/2024/02/11/welcome/","loc":"https://gcca.github.io/2024/02/11/welcome/"}]};
