@@ -1,184 +1,166 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="" />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;1,400&display=swap"
-    rel="stylesheet">
-
-  <link rel="stylesheet" type="text/css" href="https://gcca.github.io/theme/stylesheet/style.min.css">
-
-
-  <link id="pygments-light-theme" rel="stylesheet" type="text/css"     href="https://gcca.github.io/theme/pygments/monokai.min.css">
-
-  <script src="https://gcca.github.io/theme/tipuesearch/jquery.min.js"></script>
-  <script defer src="https://gcca.github.io/theme/tipuesearch/tipuesearch.min.js"></script>
-  <script defer src="https://gcca.github.io/theme/tipuesearch/tipuesearch_set.js"></script>
-  <script defer src="https://gcca.github.io/tipuesearch_content.js"></script>
-  <link rel="stylesheet" href="https://gcca.github.io/theme/tipuesearch/tipuesearch.min.css" />
-
-  <link rel="stylesheet" type="text/css" href="https://gcca.github.io/theme/font-awesome/css/fontawesome.css">
-  <link rel="stylesheet" type="text/css" href="https://gcca.github.io/theme/font-awesome/css/brands.css">
-  <link rel="stylesheet" type="text/css" href="https://gcca.github.io/theme/font-awesome/css/solid.css">
-
-
-
-  <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate"
-    title="(gcca) RSS">
-
-
-  <!-- Chrome, Firefox OS and Opera -->
-  <meta name="theme-color" content="#333333">
-  <!-- Windows Phone -->
-  <meta name="msapplication-navbutton-color" content="#333333">
-  <!-- iOS Safari -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Microsoft EDGE -->
-  <meta name="msapplication-TileColor" content="#333333">
-
-  <meta name="author" content="Cristhian Gonzales" />
-  <meta name="description" content="" />
-<meta property="og:site_name" content="(gcca)"/>
-<meta property="og:type" content="blog"/>
-<meta property="og:title" content="(gcca)"/>
-<meta property="og:description" content=""/>
-<meta property="og:locale" content="en_US"/>
-<meta property="og:url" content="https://gcca.github.io"/>
-<meta property="og:image" content="/images/logo.png">
-
-  <title>(gcca) &ndash; Tag python</title>
-
-
-
-  <link rel="me" href="https://mastodon.social/@gcca" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>(gcca) | articles tagged "python"</title>
+    <link rel="shortcut icon" type="image/png" href="http://localhost:8000/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8000/favicon.ico">
+    <link rel="stylesheet" href="http://localhost:8000/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="http://localhost:8000/theme/css/pygments.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales" />
 </head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li class="ephemeral selected"><a href="http://localhost:8000/tag/python.html">python</a></li>
+                <li><a href="http://localhost:8000/">Home</a></li>
+                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="http://localhost:8000/tags">Tags</a></li>
+                <li><a href="http://localhost:8000/categories">Categories</a></li>
+                <li><a href="http://localhost:8000/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="http://localhost:8000/">
+            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+            <h2>Blog</h2>
+        </div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Oct 03, 2024</h4>
 
-<body class="light-theme"
->
-  <aside>
-    <div>
-      <a href="https://gcca.github.io">
-        <img src="/images/logo.png" alt="(gcca)" title="(gcca)">
-      </a>
+            <article class="post">
+                <h2 class="title">
+                    <a href="http://localhost:8000/2024/10/03/python-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Intro to Round Robin&quot;">Intro to Round Robin</a>
+                </h2>
 
-      <h1>
-        <a href="https://gcca.github.io">(gcca)</a>
-      </h1>
+                
+                
 
-<p>Blog</p>
-      <form class="navbar-search" action="/search.html" role="search">
-        <input type="text" name="q" id="tipue_search_input" placeholder="Search...">
-      </form>
+                <h2>Introducción</h2>
+<p>Round Robin es un algoritmo de planificación de procesos.</p>
+<p>Cada elemento de una lista se selecciona en turno, uno por uno, y cuando se llega al final de la lista, se vuelve al principio.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">choices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
 
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
 
-      <ul class="social">
-        <li>
-          <a  class="sc-twitter" href="https://x.com/@gcca__" target="_blank">
-            <i class="fab fa-twitter"></i>
-          </a>
-        </li>
-        <li>
-          <a  class="sc-github" href="https://github.com/gcca" target="_blank">
-            <i class="fab fa-github"></i>
-          </a>
-        </li>
-        <li>
-          <a  class="sc-linkedin" href="https://www.linkedin.com/in/cristhiangz" target="_blank">
-            <i class="fab fa-linkedin"></i>
-          </a>
-        </li>
-      </ul>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Alternativas</h2>
+<h3>Aleatorio (Random Selection):</h3>
+<p>Selecciona elementos de manera aleatoria sin reemplazo hasta que se agoten; luego reinicia el proceso.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="n">choices</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Ponderado (Weighted Selection):</h3>
+<p>Cada elemento tiene una probabilidad de ser seleccionado basada en un peso asignado.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Least Recently Used (LRU):</h3>
+<p>Selecciona el elemento que ha sido usado hace más tiempo. Simplificada:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+
+<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="k">yield</span> <span class="n">item</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Prioridad (Priority Queue):</h3>
+<p>Los elementos se seleccionan basándose en una prioridad asignada. Usando heapq (con la prioridad invertida para que funcione como una cola de prioridad mínima) para mantener la prioridad:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">heapq</span>
+
+<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">):</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
+    <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
+            <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">item</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">item</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">priorities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<ul>
+<li><em>Round Robin</em> es ideal para asegurar una distribución equitativa y predecible.</li>
+<li><em>Aleatorio</em> puede ser útil cuando no quieres que haya patrones predecibles.</li>
+<li><em>Ponderado</em> es excelente cuando algunos elementos deben ser seleccionados con mayor frecuencia.</li>
+<li><em>LRU</em> es útil en sistemas donde la recencia de uso es importante.</li>
+<li><em>Prioridad</em> es perfecta para sistemas donde algunos elementos deben ser procesados antes que otros.</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="http://localhost:8000/2024/10/03/python-roundrobin/">posted at 13:01</a>
+                    &nbsp;&middot;&nbsp;<a href="http://localhost:8000/category/notes.html" rel="tag">Notes</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="http://localhost:8000/tag/python.html" class="tags selected">python</a>
+                    &nbsp;<a href="http://localhost:8000/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+            </footer>
+        </div>
+        <div class="clear"></div>
     </div>
-
-  </aside>
-  <main>
-
-    <nav>
-      <a href="https://gcca.github.io">Home</a>
-
-      <a href="/archives.html">Archives</a>
-      <a href="/categories.html">Categories</a>
-      <a href="/tags.html">Tags</a>
-
-
-      <a href="https://gcca.github.io/feeds/all.rss.xml">RSS</a>
-    </nav>
-
-
-
-<article>
-  <header>
-    <h2><a href="https://gcca.github.io/2024/10/03/python-roundrobin/">Intro to Round Robin</a></h2>
-    <p>
-      Posted on Thu 03 October 2024 in <a href="https://gcca.github.io/category/notes.html">Notes</a>
-
-          &#8226; Tagged with
-              <a href="https://gcca.github.io/tag/python.html">python</a>,              <a href="https://gcca.github.io/tag/programming.html">programming</a>
-    </p>
-  </header>
-  <div>
-      <p>Ejemplos sencillos de uso de Round Robin en Python</p>
-        <br>
-        <a class="btn"
-           href="https://gcca.github.io/2024/10/03/python-roundrobin/">
-          Continue reading
-        </a>
-  </div>
-</article>
-
-  <div class="pagination">
-  </div>
-
-
-
-    <footer>
-<p>
-  &copy; 2024  - This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>
-</p>
-<p>
-  Built with <a href="http://getpelican.com" target="_blank">Pelican</a> using <a href="http://bit.ly/flex-pelican" target="_blank">Flex</a> theme - source code available on <a href="https://github.com/gcca" target="_blank">GitHub</a>
-</p><p>
-  <a rel="license"
-     href="http://creativecommons.org/licenses/by-sa/4.0/"
-     target="_blank">
-    <img alt="Creative Commons License"
-         title="Creative Commons License"
-         style="border-width:0"
-           src="/images/by-sa.png"
-         width="80"
-         height="15"/>
-  </a>
-</p>    </footer>
-  </main>
-
-
-
-
-<script type="application/ld+json">
-{
-  "@context" : "http://schema.org",
-  "@type" : "Blog",
-  "name": " (gcca) ",
-  "url" : "https://gcca.github.io",
-  "image": "/images/logo.png",
-  "description": ""
-}
-</script>
-
-  <script>
-    $(document).ready(function () {
-      $('#tipue_search_input').tipuesearch();
-    });
-  </script>
-
 </body>
-
 </html>
