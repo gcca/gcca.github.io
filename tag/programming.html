@@ -4,10 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>(gcca) | articles tagged "programming"</title>
-    <link rel="shortcut icon" type="image/png" href="http://localhost:8000/favicon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8000/favicon.ico">
-    <link rel="stylesheet" href="http://localhost:8000/theme/css/main.css" type="text/css" />
-    <link rel="stylesheet" href="http://localhost:8000/theme/css/pygments.css" type="text/css" />
+    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/programming.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
     <meta name="generator" content="Pelican" />
     <meta name="description" content="(gcca) blog" />
     <meta name="author" content="Cristhian Gonzales" />
@@ -16,28 +18,123 @@
     <header>
         <nav style="overflow: hidden;">
             <ul>
-                <li class="ephemeral selected"><a href="http://localhost:8000/tag/programming.html">programming</a></li>
-                <li><a href="http://localhost:8000/">Home</a></li>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/programming.html">programming</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
                 <li><a href="https://x.com/@gcca_at_x">X</a></li>
                 <li><a href="https://github.com/gcca">GitHub</a></li>
-                <li><a href="http://localhost:8000/tags">Tags</a></li>
-                <li><a href="http://localhost:8000/categories">Categories</a></li>
-                <li><a href="http://localhost:8000/archives">Archives</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
             </ul>
         </nav>
         <div class="header_box" style="height: 50px">
-        <h1><a href="http://localhost:8000/">
+        <h1><a href="https://gcca.github.io/">
             <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
             </a></h1></div>
             <h2>Blog</h2>
         </div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Oct 03, 2024</h4>
+        <div id="content">            <h4 class="date">Oct 04, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
-                    <a href="http://localhost:8000/2024/10/03/python-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Intro to Round Robin&quot;">Intro to Round Robin</a>
+                    <a href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Dynamic Round Robin&quot;">Dynamic Round Robin</a>
+                </h2>
+
+                
+                
+
+                <p>Continuando lo presentando en <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">Intro to Round Robin</a>, se muestra una adaptación para permitir la adición de elementos a la lista de selección. Para ello se aplicará Round Robin con subconjuntos dinámicos.</p>
+<ol>
+<li><em>Mantener un Historial de Selecciones:</em> Para asegurar la equidad, mantendremos un historial de cuántas veces cada elemento ha sido seleccionado.</li>
+<li><em>Round Robin Modificado:</em> En lugar de un simple round robin, ajustaremos la selección basándonos en el historial de selecciones para asegurar que todos los elementos del subconjunto tengan una oportunidad equitativa.</li>
+<li><em>Reajuste de Historial:</em> Cada vez que el subconjunto cambia, podremos ajustar el historial para reflejar solo las selecciones de los elementos que están actualmente en el subconjunto.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">class</span> <span class="nc">DynamicRoundRobin</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
+        <span class="c1"># verifica subconjunto no vacío</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">subset</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># actualiza el subconjunto y ajusta el historial</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjust_history</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+
+        <span class="c1"># encuentra el elemento con la menor cantidad de selecciones</span>
+        <span class="n">min_selections</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="n">min_selections</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># si hay más de un candidato, round robin para decidir</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">return</span> <span class="n">element</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># si solo hay un candidato, selecciona directamente</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">element</span>
+
+    <span class="k">def</span> <span class="nf">adjust_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
+        <span class="c1"># elimina el conteo de elementos que ya no están en el subconjunto</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
+
+<span class="c1"># ejemplo</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">DynamicRoundRobin</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+
+<span class="c1"># simula cambios en el subconjunto y selecciones</span>
+<span class="n">subsets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">subsets</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>  <span class="c1"># selecciona 3 veces de cada subconjunto</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected from </span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">selected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Entonces:</p>
+<ul>
+<li><em>Inicialización:</em> Se inicia con todos los elementos y un contador de selecciones.</li>
+<li><em>Selección:</em> Para cada selección, se busca el elemento con el menor número de selecciones dentro del subconjunto actual. Si hay más de uno, se usa round robin para decidir entre ellos.</li>
+<li><em>Ajuste de Historial:</em> Cada vez que el subconjunto cambia, se ajusta el historial para reflejar sólo los elementos del nuevo subconjunto.</li>
+</ul>
+<p>Asegura que:</p>
+<ul>
+<li><em>Equidad:</em> Todos los elementos tienen una oportunidad equitativa de ser seleccionados.</li>
+<li><em>Adaptabilidad:</em> Se adapta dinámicamente a subconjuntos cambiantes.</li>
+<li><em>Balance:</em> Evita sobrecargar cualquier elemento al mantener un historial de selecciones.</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/">posted at 13:11</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/python.html" class="tags">python</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags selected">programming</a>
+                </div>
+            </article>            <h4 class="date">Oct 03, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Intro to Round Robin&quot;">Intro to Round Robin</a>
                 </h2>
 
                 
@@ -144,11 +241,11 @@
                 <div class="clear"></div>
 
                 <div class="info">
-                    <a href="http://localhost:8000/2024/10/03/python-roundrobin/">posted at 13:01</a>
-                    &nbsp;&middot;&nbsp;<a href="http://localhost:8000/category/notes.html" rel="tag">Notes</a>
+                    <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">posted at 02:01</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
                     &nbsp;&middot;
-                    &nbsp;<a href="http://localhost:8000/tag/python.html" class="tags">python</a>
-                    &nbsp;<a href="http://localhost:8000/tag/programming.html" class="tags selected">programming</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/python.html" class="tags">python</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags selected">programming</a>
                 </div>
             </article>
 
@@ -158,6 +255,8 @@
                 <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
                 &middot;
                 Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
             </footer>
         </div>
         <div class="clear"></div>
