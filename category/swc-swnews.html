@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>(gcca) | articles in the "SW.C SW.News" category</title>
+    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales" />
+</head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+
+                <li class="ephemeral selected"><a href="https://gcca.github.io/category/swc-swnews.html">SW.C SW.News</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+            <h2>Blog</h2>
+        </div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Dec 13, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/" rel="bookmark" title="Permanent Link to &quot;memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C&quot;">memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C</a>
+                </h2>
+
+                
+                
+
+                <p>El comportamiento indefinido (UB) en el lenguaje de programación C es una fuente regular de acaloradas discusiones entre programadores. Por un lado, el UB puede ser importante para las optimizaciones del compilador. Por otro lado, facilita la introducción de errores que pueden llevar a problemas de seguridad.</p>
+<p>La buena noticia es que N3322 ha sido aceptado para C2y, lo cual eliminará el comportamiento indefinido de un rincón específico del lenguaje C, haciendo que lo siguiente sea bien definido:</p>
+<div class="highlight"><pre><span></span><code><span class="n">memcpy</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="n">memcmp</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Esto solo se aplica cuando un puntero nulo se combina con una operación de "longitud cero". Lo siguiente sigue siendo indefinido:</p>
+<div class="highlight"><pre><span></span><code><span class="n">memcpy</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</code></pre></div>
+
+<p>La eliminación de este comportamiento indefinido no se espera que tenga un impacto negativo en el rendimiento. De hecho, ocurre lo contrario.</p>
+<p><strong>Motivación</strong></p>
+<p>Los ejemplos anteriores son un poco tontos porque codifican de manera dura una constante NULL/nullptr. Sin embargo, es fácil encontrarse con esta situación con un puntero que a veces es nulo. Por ejemplo, considere una representación típica para una cadena con una longitud conocida:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Una cadena vacía normalmente se representaría como <code>(struct str) { .data = nullptr, .len = 0 }</code>, con el puntero de datos siendo nullptr. Ahora, considere una función que comprueba si dos cadenas son iguales:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="nf">str_eq</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">          </span><span class="n">memcmp</span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Esta implementación parece razonable a primera vista. Sin embargo, muestra comportamiento indefinido si ambas entradas son cadenas vacías. En ese caso, llamaremos a <code>memcmp(nullptr, nullptr, 0)</code>, lo cual es comportamiento indefinido según el estándar de C.</p>
+<p>Este tipo de UB introduce el riesgo de que el compilador optimice las comprobaciones de punteros nulos subsiguientes. Por ejemplo, GCC eliminará alegremente la rama <code>dest == nullptr</code> en el siguiente código, mientras que Clang deliberadamente no realiza esta optimización:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dest</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="c1">// Esta rama será eliminada por GCC debido al comportamiento indefinido.</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>La manera correcta de escribir la función <code>str_eq</code> es:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="nf">str_eq</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">          </span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span>
+<span class="w">           </span><span class="n">memcmp</span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El nuevo código es correcto, pero peor en todos los demás aspectos:</p>
+<ul>
+<li>Aumenta el tamaño del código, requiriendo una comprobación adicional en cada sitio de llamada inlinada.</li>
+<li>Disminuye el rendimiento, comprobando redundante algo que <code>memcmp</code> debe manejar de todas formas.</li>
+<li>Aumenta la complejidad del código.</li>
+</ul>
+<p>Al mismo tiempo, no hay una manera útil en la que la biblioteca de C pueda aprovechar este comportamiento indefinido para proporcionar una implementación más eficiente. Este es el tipo de UB que no beneficia a nadie y debería ser eliminado del lenguaje.</p>
+<p><strong>Aritmética de puntero nulo</strong></p>
+<p>La propuesta original se centró en eliminar UB para las llamadas de la biblioteca de memoria, pero un revisor temprano señaló que esto no es suficiente. Después de todo, también necesitamos tener en cuenta cómo se implementan estas funciones de biblioteca.</p>
+<p>Por ejemplo, consideremos una implementación típica para una función tipo <code>memcpy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="n">src</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="o">*</span><span class="n">dst</span><span class="o">++</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Esta función muestra comportamiento indefinido cuando se llama como <code>copy(nullptr, nullptr, 0)</code>, porque nullptr + 0 es comportamiento indefinido en C.</p>
+<p>Para evitar esto, y hacer que el lenguaje sea autoconsistente, necesitamos definir nullptr + 0 como devolviendo nullptr y nullptr - nullptr como devolviendo 0. Esto también alinea C con las semánticas de C++, donde esto ya estaba bien definido.</p>
+<p><strong>Oposición</strong></p>
+<p>Cuando se discutió esta propuesta en dos reuniones de WG14, la oposición no vino de la dirección que esperaba.</p>
+<p>La parte más controvertida de la propuesta fue definir nullptr - nullptr como devolviendo 0. La razón para esto es que cuando los espacios de direcciones entran en juego (que no son parte del C estándar, pero pueden ser implementados como extensión), puede haber múltiples representaciones de un puntero nulo. Asegurarse de que la resta de dos "diferentes" nulos aún resulte en cero podría requerir la generación de código adicional, rompiendo la premisa de que este cambio es completamente gratuito.</p>
+<p>Sin embargo, la oposición más vocal vino desde la perspectiva del análisis estático: Haciendo que los punteros nulos sean bien definidos para longitud cero significa que los analizadores estáticos ya no pueden reportar incondicionalmente nullptr siendo pasado a funciones como <code>memcpy</code>—también deben tener en cuenta la longitud ahora. Si un calificador <code>_Optional</code> se introduce en el futuro, los argumentos de <code>memcpy</code> tendrían que ser calificados con él. GCC está considerando la introducción de un atributo <code>nonnull_if_nonzero</code> para representar la nueva precondición.</p>
+<p>Después de la discusión aparentemente negativa, me sorprendió que el voto no solo fuera fuertemente a favor del cambio, sino que también viniera con una recomendación a los implementadores para aplicar el cambio retroactivamente a versiones antiguas del estándar. Esto significa que, una vez que los compiladores y las bibliotecas de C hayan implementado el cambio, debería aplicarse incluso sin especificar la bandera -std=c2y.</p>
+<p><strong>Funciones integradas del compilador</strong></p>
+<p>Trabajo en el medio de la cadena de herramientas de compilador LLVM. Al estar lejos de cualquier parte "orientada al usuario" del compilador, generalmente no estoy involucrado en esfuerzos de estandarización.</p>
+<p>La razón por la que me involucré aquí fue la especificación para el intrínseco interno de memcpy de LLVM:</p>
+<blockquote>
+<p>Los intrínsecos llvm.memcpy.* copian un bloque de memoria desde la ubicación de origen a la ubicación de destino, que deben ser iguales o no superpuestas. [...]</p>
+<p>Si <len> es 0, es un no-op modulo el comportamiento de los atributos adjuntos a los argumentos. [...]</p>
+</blockquote>
+<p>El intrínseco llvm.memcpy puede reducirse a una llamada a la función memcpy, que se trata aquí como un "compilador runtime builtin", aunque en última instancia también es proporcionada por la biblioteca C.</p>
+<p>Cuando se usa como un builtin, LLVM requiere que tanto <code>memcpy(x, x, s)</code> como <code>memcpy(nullptr, nullptr, 0)</code> estén bien definidos, aunque el estándar C dice que son UB. GCC y MSVC tienen suposiciones similares.</p>
+<p>Hacer que <code>memcpy(nullptr, nullptr, 0)</code> sea oficialmente bien definido elimina una de las suposiciones, mientras que el caso de <code>memcpy(x, x, s)</code> permanece por ahora. Permitir esto fue originalmente también parte de la propuesta, pero más tarde se descartó porque no encajaba bien con los otros cambios.</p>
+<p>En un giro extraño de los eventos, este cambio en el estándar de C surgió porque los desarrolladores de Rust seguían quejándose sobre la discrepancia entre las semánticas de LLVM y C.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/">posted at 08:46</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swc-swnews.html" rel="tag">SW.C SW.News</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

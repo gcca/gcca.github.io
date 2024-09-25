@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>(gcca) | Fast Inverse Square Root (Quake III Arena)</title>
+<link href="https://gcca.github.io/favicon.png" rel="shortcut icon" type="image/png"/>
+<link href="https://gcca.github.io/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+<link href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate" title="(gcca) Full RSS Feed" type="application/rss+xml">
+<link href="https://gcca.github.io/theme/css/main.css" rel="stylesheet" type="text/css">
+<link href="https://gcca.github.io/theme/css/pygments.css" rel="stylesheet" type="text/css"/>
+<meta content="Pelican" name="generator">
+<meta content="(gcca) blog" name="description"/>
+<meta content="Cristhian Gonzales" name="author"/>
+<meta content="Misc" name="keywords"/>
+</meta></link></link><link href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/" rel="canonical"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "(gcca)", "item": "https://gcca.github.io"}, {"@type": "ListItem", "position": 2, "name": "2024", "item": "https://gcca.github.io/2024"}, {"@type": "ListItem", "position": 3, "name": "12", "item": "https://gcca.github.io/2024/12"}, {"@type": "ListItem", "position": 4, "name": "14", "item": "https://gcca.github.io/2024/12/14"}, {"@type": "ListItem", "position": 5, "name": "Fast inv sqrt", "item": "https://gcca.github.io/2024/12/14/fast-inv-sqrt"}, {"@type": "ListItem", "position": 6, "name": "Index", "item": "https://gcca.github.io/2024/12/14/fast-inv-sqrt/index.html"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "author": {"@type": "Person", "name": "(gcca)"}, "publisher": {"@type": "Organization", "name": "(gcca)"}, "headline": "Fast Inverse Square Root (Quake III Arena)", "about": "SW.Misc", "datePublished": "2024-12-14 09:51"}</script></head>
+<body>
+<header>
+<nav style="overflow: hidden;">
+<ul>
+<li><a href="https://gcca.github.io/">Home</a></li>
+<li><a href="https://x.com/@gcca_at_x">X</a></li>
+<li><a href="https://github.com/gcca">GitHub</a></li>
+<li><a href="https://gcca.github.io/tags">Tags</a></li>
+<li><a href="https://gcca.github.io/categories">Categories</a></li>
+<li><a href="https://gcca.github.io/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="header_box" style="height: 50px">
+<h1><a href="https://gcca.github.io/">
+<image class="avatar" src="/images/logo.png" width="50px"/><span class="site_title">(gcca)</span>
+</a></h1></div>
+<h2>Blog</h2>
+
+</header>
+<div id="wrapper">
+<div id="content"> <h4 class="date">Dec 14, 2024</h4>
+<article class="post">
+<h2 class="title">
+<a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/" rel="bookmark" title='Permanent Link to "Fast Inverse Square Root (Quake III Arena)"'>Fast Inverse Square Root (Quake III Arena)</a>
+</h2>
+<p>Cada milisegundo cuenta, especialmente en juegos en tiempo real como los shooters en primera persona. Una de las técnicas de optimización más legendarias y controvertidas es el "Fast Inverse Square Root", implementada en el motor de Quake III Arena.</p>
+<h3>¿Qué es?</h3>
+<p>El "Fast Inverse Square Root" es un algoritmo diseñado para calcular la raíz cuadrada inversa de un número flotante rápidamente, mucho más rápido que los métodos tradicionales. En términos matemáticos, si tenemos un número <code>x</code>, queremos calcular <code>1/sqrt(x)</code> de una manera eficiente.</p>
+<h3>Quake III Arena</h3>
+<p>El código que nos ha dejado perplejos a muchos es el siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="nf">Q_rsqrt</span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">x2</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5F</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">x2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5F</span><span class="p">;</span>
+<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="p">;</span>
+<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">;</span><span class="w">                       </span><span class="c1">// evil floating point bit level hacking</span>
+<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mh">0x5f3759df</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">);</span><span class="w">               </span><span class="c1">// what the fuck?</span>
+<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w">   </span><span class="c1">// 1st iteration</span>
+<span class="c1">//  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>Desglose</h3>
+<p><strong>1 Conversión de bits</strong>:</p>
+<ul>
+<li><code>i = * (long *) &amp;y;</code> Aquí, el código realiza un "hack" a nivel de bits. La representación en memoria de un número flotante en IEEE 754 es convertida a un entero largo. Esto permite manipular directamente los bits del número flotante.</li>
+</ul>
+<p><strong>2 La aproximación</strong>:</p>
+<ul>
+<li><code>i = 0x5f3759df - (i &gt;&gt; 1);</code> La constante <code>0x5f3759df</code> es crucial. Este número mágico fue encontrado mediante experimentación y proporciona una primera aproximación sorprendentemente precisa de <code>1/sqrt(x)</code>. La operación <code>i &gt;&gt; 1</code> es un desplazamiento de bits a la derecha, efectivamente dividiendo <code>i</code> por 2.</li>
+</ul>
+<p><strong>3 Refinamiento</strong>:</p>
+<ul>
+<li><code>y = * (float *) &amp;i;</code> Convierte de vuelta el entero largo a un flotante.</li>
+<li><code>y = y * (threehalfs - (x2 * y * y));</code> Aplica una iteración de Newton-Raphson para mejorar la precisión de la aproximación inicial. La constante <code>threehalfs</code> (1.5 en forma flotante) es usada en este paso de refinamiento.</li>
+</ul>
+<h3>¿Por qué funciona?</h3>
+<p>Esta técnica se aprovecha de las propiedades de la representación de punto flotante. La relación entre el logaritmo de un número y su inversa raíz cuadrada es casi lineal cuando se trabaja con los exponentes y mantisas de los números flotantes. La constante <code>0x5f3759df</code> está ajustada para esta relación, proporcionando una aproximación inicial que luego se refina.</p>
+<h3>Implicaciones y uso</h3>
+<p>El "Fast Inverse Square Root" fue fundamental en Quake III porque era usado en cálculos de vectores y normalización, operaciones comunes en gráficos 3D que necesitan ser extremadamente rápidas. Aunque hoy en día los procesadores son mucho más potentes, hay instrucciones específicas para cálculos de punto flotante y tenemos GPUs, este truco histórico sigue siendo un ejemplo impresionante de ingenio.</p>
+<div class="clear"></div>
+<div class="info">
+<a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/">posted at 09:51</a>
+                     · <a href="https://gcca.github.io/category/swmisc.html" rel="tag">SW.Misc</a>
+                     ·
+                     <a class="tags" href="https://gcca.github.io/tag/misc.html">Misc</a>
+</div>
+</article>
+<div class="clear"></div>
+<footer>
+<p>
+<a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                ·
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                ·
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+</p></footer>
+</div>
+<div class="clear"></div>
+</div>
+</body>
+</html>

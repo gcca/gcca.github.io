@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>(gcca) | Articles by (gcca)</title>
+    <title>(gcca) | articles tagged "Tips"</title>
     <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
     <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
     <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/tips.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
     <meta name="generator" content="Pelican" />
@@ -17,8 +18,7 @@
     <header>
         <nav style="overflow: hidden;">
             <ul>
-
-                <li class="ephemeral selected"><a href="https://gcca.github.io/author/gcca.html">(gcca)</a></li>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/tips.html">Tips</a></li>
                 <li><a href="https://gcca.github.io/">Home</a></li>
                 <li><a href="https://x.com/@gcca_at_x">X</a></li>
                 <li><a href="https://github.com/gcca">GitHub</a></li>
@@ -35,66 +35,7 @@
         </div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Dec 14, 2024</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/" rel="bookmark" title="Permanent Link to &quot;Fast Inverse Square Root (Quake III Arena)&quot;">Fast Inverse Square Root (Quake III Arena)</a>
-                </h2>
-
-                
-                
-
-                <p>Cada milisegundo cuenta, especialmente en juegos en tiempo real como los shooters en primera persona. Una de las técnicas de optimización más legendarias y controvertidas es el "Fast Inverse Square Root", implementada en el motor de Quake III Arena.</p>
-<h3>¿Qué es?</h3>
-<p>El "Fast Inverse Square Root" es un algoritmo diseñado para calcular la raíz cuadrada inversa de un número flotante rápidamente, mucho más rápido que los métodos tradicionales. En términos matemáticos, si tenemos un número <code>x</code>, queremos calcular <code>1/sqrt(x)</code> de una manera eficiente.</p>
-<h3>Quake III Arena</h3>
-<p>El código que nos ha dejado perplejos a muchos es el siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="nf">Q_rsqrt</span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">x2</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5F</span><span class="p">;</span>
-
-<span class="w">    </span><span class="n">x2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5F</span><span class="p">;</span>
-<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="p">;</span>
-<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">;</span><span class="w">                       </span><span class="c1">// evil floating point bit level hacking</span>
-<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mh">0x5f3759df</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">);</span><span class="w">               </span><span class="c1">// what the fuck?</span>
-<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">;</span>
-<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w">   </span><span class="c1">// 1st iteration</span>
-<span class="c1">//  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3>Desglose</h3>
-<p><strong>1 Conversión de bits</strong>:</p>
-<ul>
-<li><code>i = * (long *) &amp;y;</code> Aquí, el código realiza un "hack" a nivel de bits. La representación en memoria de un número flotante en IEEE 754 es convertida a un entero largo. Esto permite manipular directamente los bits del número flotante.</li>
-</ul>
-<p><strong>2 La aproximación</strong>:</p>
-<ul>
-<li><code>i = 0x5f3759df - (i &gt;&gt; 1);</code> La constante <code>0x5f3759df</code> es crucial. Este número mágico fue encontrado mediante experimentación y proporciona una primera aproximación sorprendentemente precisa de <code>1/sqrt(x)</code>. La operación <code>i &gt;&gt; 1</code> es un desplazamiento de bits a la derecha, efectivamente dividiendo <code>i</code> por 2.</li>
-</ul>
-<p><strong>3 Refinamiento</strong>:</p>
-<ul>
-<li><code>y = * (float *) &amp;i;</code> Convierte de vuelta el entero largo a un flotante.</li>
-<li><code>y = y * (threehalfs - (x2 * y * y));</code> Aplica una iteración de Newton-Raphson para mejorar la precisión de la aproximación inicial. La constante <code>threehalfs</code> (1.5 en forma flotante) es usada en este paso de refinamiento.</li>
-</ul>
-<h3>¿Por qué funciona?</h3>
-<p>Esta técnica se aprovecha de las propiedades de la representación de punto flotante. La relación entre el logaritmo de un número y su inversa raíz cuadrada es casi lineal cuando se trabaja con los exponentes y mantisas de los números flotantes. La constante <code>0x5f3759df</code> está ajustada para esta relación, proporcionando una aproximación inicial que luego se refina.</p>
-<h3>Implicaciones y uso</h3>
-<p>El "Fast Inverse Square Root" fue fundamental en Quake III porque era usado en cálculos de vectores y normalización, operaciones comunes en gráficos 3D que necesitan ser extremadamente rápidas. Aunque hoy en día los procesadores son mucho más potentes, hay instrucciones específicas para cálculos de punto flotante y tenemos GPUs, este truco histórico sigue siendo un ejemplo impresionante de ingenio.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/">posted at 09:51</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swmisc.html" rel="tag">SW.Misc</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
-                </div>
-            </article>            <h4 class="date">Dec 13, 2024</h4>
+        <div id="content">            <h4 class="date">Dec 13, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -193,7 +134,7 @@
                     <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/">posted at 08:46</a>
                     &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swc-swnews.html" rel="tag">SW.C SW.News</a>
                     &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags selected">Tips</a>
                     &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C</a>
                 </div>
             </article>            <h4 class="date">Dec 13, 2024</h4>
@@ -403,46 +344,10 @@
                     <a href="https://gcca.github.io/2024/12/13/c++14_features/">posted at 08:01</a>
                     &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swc-swtips.html" rel="tag">SW.C++ SW.Tips</a>
                     &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags selected">Tips</a>
                     &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C++</a>
                 </div>
-            </article>            <h4 class="date">Dec 12, 2024</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/" rel="bookmark" title="Permanent Link to &quot;URLs con nGinx&quot;">URLs con nGinx</a>
-                </h2>
-
-                
-                
-
-                <p>En <code>nginx</code>, se pueden reescribir URLs con la directiva <code>rewrite</code>. Por ejemplo, para redirigir todas las URLs usando NginxHttpRewriteModule, se puede usar:</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$host</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">&amp;quot</span><span class="p">;</span><span class="k">^sub.dom.com$&amp;quot</span><span class="p">;</span><span class="k">){</span>
-<span class="w">  </span><span class="s">rewrite</span><span class="w"> </span><span class="s">^.*(?=\/)(.+)</span>$<span class="w"> </span><span class="s">http://www.dom.com/blog</span><span class="nv">$1</span><span class="w"> </span><span class="s">permanent</span><span class="p">;</span>
-<span class="w">  </span><span class="k">break</span><span class="p">;</span>
-<span class="k">}</span>
-</code></pre></div>
-
-<p>Esto redirige URLs del formato antiguo de http://sub.dom.com/2024/12/12/slug-de-la-página al nuevo formato http://www.dom.com/blog/el-slug-de-la-página (en la capa de nginx) usando <a href="http://www.regular-expressions.info/lookaround.html">lookaround</a>, también conocido como “zero-width positive look-ahead assertion”.</p>
-<p>El <em>positive lookahead</em> coincide con el slash (escapado): <code>(?=\/)</code>, sin hacerlo parte de la coincidencia. El símbolo <code>.*</code> significa cualquier carácter y, dado que <code>*</code> consume por defecto, coincide con toda la URL hasta el último carácter de barra diagonal. Finalmente, <code>(.+)</code> forma la primera referencia inversa <code>$1</code> (los lookaheads no crean grupos de captura), la cual se usa en la nueva URL como el segundo argumento para reescribir.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/">posted at 07:40</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swtips.html" rel="tag">SW.Tips</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/tip.html" class="tags">Tip</a>
-                </div>
             </article>
-
-                <div class="clear"></div>
-                <div class="pages">
-
-
-                    <a href="https://gcca.github.io/author/gcca/page/2/" class="next_page">Next&nbsp;&rarr;</a>
-
-                    <span>Page 1 of 3</span>
-                </div>
 
             <div class="clear"></div>
             <footer>
