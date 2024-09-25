@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>(gcca) | articles tagged "C"</title>
+    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/c.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales" />
+</head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/c.html">C</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+            <h2>Blog</h2>
+        </div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Dec 13, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/" rel="bookmark" title="Permanent Link to &quot;memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C&quot;">memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C</a>
+                </h2>
+
+                
+                
+
+                <p>El comportamiento indefinido (UB) en el lenguaje de programación C es una fuente regular de acaloradas discusiones entre programadores. Por un lado, el UB puede ser importante para las optimizaciones del compilador. Por otro lado, facilita la introducción de errores que pueden llevar a problemas de seguridad.</p>
+<p>La buena noticia es que N3322 ha sido aceptado para C2y, lo cual eliminará el comportamiento indefinido de un rincón específico del lenguaje C, haciendo que lo siguiente sea bien definido:</p>
+<div class="highlight"><pre><span></span><code><span class="n">memcpy</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="n">memcmp</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Esto solo se aplica cuando un puntero nulo se combina con una operación de "longitud cero". Lo siguiente sigue siendo indefinido:</p>
+<div class="highlight"><pre><span></span><code><span class="n">memcpy</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</code></pre></div>
+
+<p>La eliminación de este comportamiento indefinido no se espera que tenga un impacto negativo en el rendimiento. De hecho, ocurre lo contrario.</p>
+<p><strong>Motivación</strong></p>
+<p>Los ejemplos anteriores son un poco tontos porque codifican de manera dura una constante NULL/nullptr. Sin embargo, es fácil encontrarse con esta situación con un puntero que a veces es nulo. Por ejemplo, considere una representación típica para una cadena con una longitud conocida:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<span class="w">   </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Una cadena vacía normalmente se representaría como <code>(struct str) { .data = nullptr, .len = 0 }</code>, con el puntero de datos siendo nullptr. Ahora, considere una función que comprueba si dos cadenas son iguales:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="nf">str_eq</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">          </span><span class="n">memcmp</span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Esta implementación parece razonable a primera vista. Sin embargo, muestra comportamiento indefinido si ambas entradas son cadenas vacías. En ese caso, llamaremos a <code>memcmp(nullptr, nullptr, 0)</code>, lo cual es comportamiento indefinido según el estándar de C.</p>
+<p>Este tipo de UB introduce el riesgo de que el compilador optimice las comprobaciones de punteros nulos subsiguientes. Por ejemplo, GCC eliminará alegremente la rama <code>dest == nullptr</code> en el siguiente código, mientras que Clang deliberadamente no realiza esta optimización:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dest</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="c1">// Esta rama será eliminada por GCC debido al comportamiento indefinido.</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>La manera correcta de escribir la función <code>str_eq</code> es:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="nf">str_eq</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">          </span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span>
+<span class="w">           </span><span class="n">memcmp</span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El nuevo código es correcto, pero peor en todos los demás aspectos:</p>
+<ul>
+<li>Aumenta el tamaño del código, requiriendo una comprobación adicional en cada sitio de llamada inlinada.</li>
+<li>Disminuye el rendimiento, comprobando redundante algo que <code>memcmp</code> debe manejar de todas formas.</li>
+<li>Aumenta la complejidad del código.</li>
+</ul>
+<p>Al mismo tiempo, no hay una manera útil en la que la biblioteca de C pueda aprovechar este comportamiento indefinido para proporcionar una implementación más eficiente. Este es el tipo de UB que no beneficia a nadie y debería ser eliminado del lenguaje.</p>
+<p><strong>Aritmética de puntero nulo</strong></p>
+<p>La propuesta original se centró en eliminar UB para las llamadas de la biblioteca de memoria, pero un revisor temprano señaló que esto no es suficiente. Después de todo, también necesitamos tener en cuenta cómo se implementan estas funciones de biblioteca.</p>
+<p>Por ejemplo, consideremos una implementación típica para una función tipo <code>memcpy</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="n">src</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="o">*</span><span class="n">dst</span><span class="o">++</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Esta función muestra comportamiento indefinido cuando se llama como <code>copy(nullptr, nullptr, 0)</code>, porque nullptr + 0 es comportamiento indefinido en C.</p>
+<p>Para evitar esto, y hacer que el lenguaje sea autoconsistente, necesitamos definir nullptr + 0 como devolviendo nullptr y nullptr - nullptr como devolviendo 0. Esto también alinea C con las semánticas de C++, donde esto ya estaba bien definido.</p>
+<p><strong>Oposición</strong></p>
+<p>Cuando se discutió esta propuesta en dos reuniones de WG14, la oposición no vino de la dirección que esperaba.</p>
+<p>La parte más controvertida de la propuesta fue definir nullptr - nullptr como devolviendo 0. La razón para esto es que cuando los espacios de direcciones entran en juego (que no son parte del C estándar, pero pueden ser implementados como extensión), puede haber múltiples representaciones de un puntero nulo. Asegurarse de que la resta de dos "diferentes" nulos aún resulte en cero podría requerir la generación de código adicional, rompiendo la premisa de que este cambio es completamente gratuito.</p>
+<p>Sin embargo, la oposición más vocal vino desde la perspectiva del análisis estático: Haciendo que los punteros nulos sean bien definidos para longitud cero significa que los analizadores estáticos ya no pueden reportar incondicionalmente nullptr siendo pasado a funciones como <code>memcpy</code>—también deben tener en cuenta la longitud ahora. Si un calificador <code>_Optional</code> se introduce en el futuro, los argumentos de <code>memcpy</code> tendrían que ser calificados con él. GCC está considerando la introducción de un atributo <code>nonnull_if_nonzero</code> para representar la nueva precondición.</p>
+<p>Después de la discusión aparentemente negativa, me sorprendió que el voto no solo fuera fuertemente a favor del cambio, sino que también viniera con una recomendación a los implementadores para aplicar el cambio retroactivamente a versiones antiguas del estándar. Esto significa que, una vez que los compiladores y las bibliotecas de C hayan implementado el cambio, debería aplicarse incluso sin especificar la bandera -std=c2y.</p>
+<p><strong>Funciones integradas del compilador</strong></p>
+<p>Trabajo en el medio de la cadena de herramientas de compilador LLVM. Al estar lejos de cualquier parte "orientada al usuario" del compilador, generalmente no estoy involucrado en esfuerzos de estandarización.</p>
+<p>La razón por la que me involucré aquí fue la especificación para el intrínseco interno de memcpy de LLVM:</p>
+<blockquote>
+<p>Los intrínsecos llvm.memcpy.* copian un bloque de memoria desde la ubicación de origen a la ubicación de destino, que deben ser iguales o no superpuestas. [...]</p>
+<p>Si <len> es 0, es un no-op modulo el comportamiento de los atributos adjuntos a los argumentos. [...]</p>
+</blockquote>
+<p>El intrínseco llvm.memcpy puede reducirse a una llamada a la función memcpy, que se trata aquí como un "compilador runtime builtin", aunque en última instancia también es proporcionada por la biblioteca C.</p>
+<p>Cuando se usa como un builtin, LLVM requiere que tanto <code>memcpy(x, x, s)</code> como <code>memcpy(nullptr, nullptr, 0)</code> estén bien definidos, aunque el estándar C dice que son UB. GCC y MSVC tienen suposiciones similares.</p>
+<p>Hacer que <code>memcpy(nullptr, nullptr, 0)</code> sea oficialmente bien definido elimina una de las suposiciones, mientras que el caso de <code>memcpy(x, x, s)</code> permanece por ahora. Permitir esto fue originalmente también parte de la propuesta, pero más tarde se descartó porque no encajaba bien con los otros cambios.</p>
+<p>En un giro extraño de los eventos, este cambio en el estándar de C surgió porque los desarrolladores de Rust seguían quejándose sobre la discrepancia entre las semánticas de LLVM y C.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/">posted at 08:46</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swc-swnews.html" rel="tag">SW.C SW.News</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags selected">C</a>
+                </div>
+            </article>            <h4 class="date">Dec 13, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/12/13/c++14_features/" rel="bookmark" title="Permanent Link to &quot;Algunas características de C++&quot;">Algunas características de C++</a>
+                </h2>
+
+                
+                
+
+                <h2>Características de C++26</h2>
+<h3>Bucles infinitos triviales y UB</h3>
+<p>Esta propuesta acerca un poco más a C y C++. El estándar de C++ definía el progreso hacia adelante de manera que asumía que incluso los bucles infinitos triviales terminarían; si no lo hacían, el programa entraba en comportamiento indefinido (UB). Esto es un problema si escribes código de bajo nivel donde estos bucles son comunes. La propuesta añade una definición de una declaración de iteración trivialmente vacía, donde un bucle cuya expresión de control es una expresión constante que evalúa a true es un bucle infinito trivial; ahora estos se incluyen en la definición de progreso hacia adelante. Por ejemplo, en GCC 14, el siguiente fragmento ya no causa comportamiento indefinido (en todos los dialectos de C++, no solo C++26):</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span>
+<span class="nf">g</span><span class="w"> </span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+<span class="w">  </span><span class="cm">/* do something */</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>Almacenamiento estático para inicializadores con llaves</h3>
+<p>Esta propuesta, implementada en GCC 14, permite al compilador optimizar mejor el código que usa <code>std::initializer_list</code>. La implementación de <code>std::initializer_list</code> usa un array de respaldo para sus datos. Antes de esta propuesta, el estándar no permitía al compilador asignar el array de respaldo en almacenamiento estático incluso cuando los datos eran constantes porque todos los arrays de respaldo tenían que ser distintos. Ahora, esta restricción ya no está mandatada, permitiendo que los arrays de respaldo se compartan (lo cual ya era el caso para las cadenas literales). En resumen, GCC 14 optimiza eliminando las llamadas memcpy que copian el array de respaldo en el siguiente fragmento:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;initializer_list&gt;</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">il</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">f</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">});</span><span class="w"> </span><span class="c1">// array en .rodata</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>Cadenas no evaluadas</h3>
+<p>GCC 14, en modo C++26, implementa P2361R6, que introduce el concepto de cadenas no evaluadas. Estas cadenas aparecen en contextos como _Pragma, static_assert, o los atributos <code>[[nodiscard]]</code> y <code>[[deprecated]]</code>. No se usan en tiempo de ejecución, por lo que no se convierten a la codificación de ejecución como las cadenas evaluadas. Dado que no se convertirán a otro tipo de codificación de cadena, no pueden contener secuencias de escape numéricas ni prefijos. En la práctica, esto significa que las siguientes dos líneas causarán diagnósticos en modo C++26:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="sa">u</span><span class="s">&quot;foo&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// error en C++26</span>
+<span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;\x{20}&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// advertencia en C++26 en modo pedántico</span>
+</code></pre></div>
+
+<h3><code>constexpr</code> cast desde <code>void*</code></h3>
+<p>GCC 14 implementa P2738R1, lo que significa que el siguiente test es aceptado en C++26. Esta característica permite realizar varios trucos de borrado de tipo en código constexpr. (En C++23 y antes, el compilador todavía emitía un error al intentar hacer un cast desde <code>void*</code> en una expresión constante):</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="p">};</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">;</span>
+<span class="w">  </span><span class="n">A</span><span class="o">*</span><span class="w"> </span><span class="n">ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">A</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w"> </span><span class="c1">// OK</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">42</span><span class="p">);</span>
+</code></pre></div>
+
+<h3>Mensajes de static_assert generados por el usuario</h3>
+<p>Con esta propuesta implementada en GCC 14, los usuarios pueden usar <code>static_assert</code> de manera más general ya que ahora acepta mensajes generados por el usuario (que deben ser evaluados como constantes). Por ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">error</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">size</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="nf">data</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">{});</span>
+</code></pre></div>
+
+<p>Esto produce el siguiente mensaje de error:</p>
+<blockquote>
+<p>error: static assertion failed: hello</p>
+</blockquote>
+<h3>Variables placeholder</h3>
+<p>GCC 14 implementa la propuesta P2169R4. Esta propuesta permite usar la variable especial <code>_</code>, que actúa como marcador de posición para una variable sin nombre que no produce el diagnóstico de "variable no usada" incluso cuando no se usa. <code>_</code> también puede redefinir una declaración existente en el ámbito actual (pero usar <code>_</code> generaría un error si más de una variable se ha declarado con ese nombre):</p>
+<div class="highlight"><pre><span></span><code><span class="n">X</span><span class="w"> </span><span class="nf">foo</span><span class="w"> </span><span class="p">();</span>
+<span class="kt">void</span>
+<span class="nf">g</span><span class="w"> </span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="p">();</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w">       </span><span class="c1">// OK</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_</span><span class="p">;</span><span class="w">         </span><span class="c1">// error: referencia a ‘_’ es ambigua</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>Retorno de referencia a temporal</h3>
+<p>P2748R5 hace que sea mal formado retornar una referencia a un temporal. GCC ha advertido sobre este tipo de código peligroso por mucho tiempo, pero C++26 lo convierte en un error:</p>
+<div class="highlight"><pre><span></span><code><span class="k">auto</span><span class="o">&amp;&amp;</span>
+<span class="n">foo</span><span class="w"> </span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w">  </span><span class="c1">// mal formado en C++26</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>Características de C++23</h2>
+<h3>Deducir this</h3>
+<p>GCC 14 implementó esta propuesta, muy solicitada. Permite añadir un parámetro this explícito a las funciones miembro no estáticas; esto se denomina parámetro de objeto explícito. De esta manera, puedes deducir el tipo y la categoría de valor del objeto de la clase. Es útil para evitar la duplicación de código; antes, el desarrollador tenía que escribir varias sobrecargas de funciones miembro: <code>no-const</code>, <code>const</code>, y con calificadores de referencia incluso const <code>&amp;</code> y <code>&amp;&amp;</code> (ignorando detalles como volatile). Con esta propuesta, en lugar de:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">S</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">value</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">S</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">S</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sr</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">int</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">.</span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">i3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">S</span><span class="p">{}.</span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i3</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>Puedes simplificar el código a:</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">S</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">value</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Self</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">Self</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="n">S</span><span class="w"> </span><span class="n">s</span><span class="p">{};</span>
+<span class="n">s</span><span class="p">.</span><span class="n">get_add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">                </span><span class="c1">// Self se deduce como S&amp;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">get_add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w">     </span><span class="c1">// Self se deduce como S</span>
+<span class="n">std</span><span class="o">::</span><span class="n">as_const</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">get_add</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="c1">// Self se deduce como const S&amp;</span>
+</code></pre></div>
+
+<p>Deducir this también permite escribir lambdas recursivas. Por ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span>
+<span class="nf">main</span><span class="w"> </span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">fib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">this</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">self</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Hay muchos más ejemplos donde el parámetro de objeto explícito puede ser útil. Tiene algunas restricciones; por ejemplo, una función miembro explícita no puede ser estática o virtual.</p>
+<h3>Referencias en expresiones constantes</h3>
+<p>Una forma moderna de C++ para implementar una función que obtenga el tamaño de un array puede ser:</p>
+<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="p">)[</span><span class="n">N</span><span class="p">])</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Esta función se puede usar como en el siguiente ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="w"> </span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">arr</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="p">};</span>
+<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El código funciona sin sorpresas. Sin embargo, cuando el array era un parámetro, como en este ejemplo:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El compilador, debido a ciertas reglas bastante complejas, rechazaba el código con el error: ‘arr’ no es una expresión constante. Las reglas se han ajustado y el código funciona como se espera con GCC 14 (en todos los dialectos de C++).</p>
+<h3><code>consteval</code> necesita propagarse hacia arriba</h3>
+<p>Implementar esta propuesta en GCC 14 resultó algo complicado. Hace que ciertas funciones se promuevan a consteval, es decir, convertir en funciones inmediatas. Considera:</p>
+<div class="highlight"><pre><span></span><code><span class="k">consteval</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">id</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">t</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">(</span><span class="n">t</span><span class="p">);</span><span class="w"> </span><span class="c1">// id causa que f&lt;int&gt; se promueva a consteval</span>
+<span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">g</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Anteriormente, el código era inválido y el compilador emitía un error diciendo que t en f no era una expresión constante válida. Con esta propuesta, f se promueve a consteval, lo que significa que la llamada id(t) está en un contexto inmediato, por lo que la llamada no necesita ser una expresión constante. (Así es como funciona la composición de funciones consteval – una función consteval llamando a otra). Ten en cuenta que hacer f<int> consteval implica que la llamada f(3) debe ser una expresión constante válida.</p>
+<p>El estándar describe cuáles expresiones causan que su función envolvente se promueva a consteval; estas expresiones se llaman inmediatas-escaladas. Por ejemplo, una llamada a una función inmediata (es decir, consteval) que no es una expresión constante y no es una subexpresión de una invocación inmediata es una expresión inmediata-escalada. No todas las funciones pueden promoverse a consteval. El estándar dice que solo las funciones de escalada inmediata pueden promoverse. Un ejemplo de función de escalada inmediata es una función de plantilla declarada como constexpr.</p>
+<p>El comportamiento descrito en la propuesta está habilitado por defecto en el modo C++20 o posterior, pero puedes suprimir la escalada de funciones con la opción de línea de comandos -fno-immediate-escalation.</p>
+<h3>CTAD desde constructores heredados</h3>
+<p>GCC 14 soporta P2582R1, una propuesta que extiende CTAD (Deducción de Argumentos de Plantilla de Clase) para constructores heredados. Por lo tanto, el siguiente caso de prueba compila en modo C++23:</p>
+<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="p">{</span>
+<span class="n">B</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">C</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">B</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="k">using</span><span class="w"> </span><span class="n">B</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;::</span><span class="n">B</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="n">C</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w"> </span><span class="c1">// OK, deduce C&lt;int&gt;</span>
+</code></pre></div>
+
+<h3>Resolución de informes de defectos</h3>
+<p>GCC 14 implementa varias resoluciones de informes de defectos, que generalmente se aplican a todos los dialectos afectados por -std, no solo a los estándares más nuevos. Consulta nuestra tabla de DR de C++ para un estado más detallado.</p>
+<h3>stricter constinit</h3>
+<p>El problema CWG 2543 aclara que las variables constinit con inicializadores no constantes deben ser diagnosticadas, incluso si la variable podría inicializarse estáticamente.</p>
+<h3><code>goto</code> y objetos inicializados trivialmente</h3>
+<p>Desde el problema CWG 2256, goto puede cruzar la inicialización de un objeto inicializado trivialmente con un destructor no trivial:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="o">~</span><span class="n">A</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">goto</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
+<span class="w">  </span><span class="n">A</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="nl">L</span><span class="p">:</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/12/13/c++14_features/">posted at 08:01</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swc-swtips.html" rel="tag">SW.C++ SW.Tips</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C++</a>
+                </div>
+            </article>            <h4 class="date">Oct 24, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/10/24/genuid-lockfree/" rel="bookmark" title="Permanent Link to &quot;Generador de UID y Lock free&quot;">Generador de UID y Lock free</a>
+                </h2>
+
+                
+                
+
+                <p>Exploraremos dos enfoques para generar IDs en C++: uno utilizando mecanismos de bloqueo (LockTierUID) y otro libre de bloqueo (LockFreeUID). Ambos generan IDs de 64 bits y son compatibles con C++11. Estas son sus definiciones:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockTierUID</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockFreeUID</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Un primera versión sencilla para entender el concepto de LockTierUID sería la siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">genuid::LockTierUID</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lock</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">++</span><span class="n">counter</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El ejemplo puede verse en el repositorio <a href="https://github.com/gcca/genuid">genuid</a>.</p>
+<p>El método <em>LockTierUID</em> utiliza un std::mutex para asegurar que la generación de IDs sea segura en entornos multithreaded. Maneja posibles colisiones de timestamp incrementando el número de secuencia o esperando al siguiente ciclo de tiempo si se agota. El método <em>LockFreeUID</em> intenta generar IDs sin necesidad de bloqueo utilizando operaciones atómicas. Si hay un conflicto en el timestamp, intenta actualizar el número de secuencia de manera atómica. En ambos casos, el mecanismo de timestamp busca generar IDs basados en la diferencia de tiempo desde el timestamp de base. Este enfoque permite generar IDs únicos de manera eficiente, con consideraciones para la concurrencia y el desbordamiento de secuencias, adecuado para applicaciones con requerimientos de alto rendimiento y escalabilidad.</p>
+<p>Con el objetivo de probar la concurrencia, se crearon unos tests que muestran cómo las funciones trabajan sobre un entorno multithreading. LockTierUID asegura la exclusión mutua con un mutex, lo cual es más simple pero puede ser menos eficiente en sistemas altamente concurrentes. LockFreeUID intenta evitar bloqueos, potencialmente mejorando el rendimiento pero a costa de una implementación más compleja y con la posibilidad de bucles de espera durante la contención.</p>
+<p>Para validar la unicidad, se usa un unordered-set para verificar de que no hay duplicados mostrando que los IDs son efectivamente únicos. Al generar un gran número de IDs (10,000), estos tests también prueban la capacidad de las funciones para escalar en términos de generación de IDs únicos. Este enfoque no solo muestra cómo se usan las funciones sino también cómo se aseguran que funcionen correctamente en condiciones de alta concurrencia, lo cual es crucial para entender y elegir entre implementaciones con y sin bloqueo.</p>
+<p>Benchmark:</p>
+<div class="highlight"><pre><span></span><code><span class="c">Run on (8 X 24 MHz CPU s)</span>
+<span class="c">CPU Caches:</span>
+<span class="c">  L1 Data 64 KiB</span>
+<span class="c">  L1 Instruction 128 KiB</span>
+<span class="c">  L2 Unified 4096 KiB (x8)</span>
+<span class="c">Load Average: 1</span><span class="nt">.</span><span class="c">27</span><span class="nt">,</span><span class="c"> 0</span><span class="nt">.</span><span class="c">98</span><span class="nt">,</span><span class="c"> 1</span><span class="nt">.</span><span class="c">09</span>
+<span class="nb">------------------------------------------------------</span>
+<span class="c">Benchmark            Time             CPU   Iterations</span>
+<span class="nb">------------------------------------------------------</span>
+<span class="c">BM_LockTier     133613 ns       133613 ns        10000</span>
+<span class="c">BM_LockFree       37</span><span class="nt">.</span><span class="c">3 ns         37</span><span class="nt">.</span><span class="c">3 ns     18792047</span>
+</code></pre></div>
+
+<p>La diferencia en tiempo es amplia, con LockFreeUID siendo aproximadamente 3,582 veces más rápido que LockTierUID en la generación de IDs. Esto se debe a que LockFreeUID evita el costo de adquirir y liberar un mutex en cada operación. No obstante, LockTierUID tiene oportunidades de mejora sin dejar el lock.</p>
+<p>Simplicidad / Complejidad: Aunque LockFreeUID ofrece un rendimiento superior, su implementación y depuración pueden ser más complejas debido a la naturaleza de los algoritmos sin bloqueo. LockTierUID, con su enfoque más tradicional, es más recto en su implementación pero a costa de rendimiento.</p>
+<p>Caso de uso: Para sistemas con baja a mediana concurrencia, LockTierUID puede ser suficiente y más fácil de mantener.
+En aplicaciones de alta concurrencia, como sistemas de transacciones de alta frecuencia, LockFreeUID sería la elección preferida para minimizar latencias.</p>
+<p>Mantenimiento y depuración: Los algoritmos sin bloqueo pueden introducir sutiles errores de concurrencia que son difíciles de detectar y corregir. Por otro lado, las implementaciones con locks son generalmente más predecibles y más fáciles de depurar.</p>
+<p>Entonces, al elegir entre estos métodos, considerar:</p>
+<ul>
+<li>Rendimiento: ¿Hasta qué punto el rendimiento afecta la funcionalidad del sistema?</li>
+<li>Complejidad: ¿El equipo tiene la experiencia y el tiempo para manejar un algoritmo sin bloqueo?</li>
+<li>Escalabilidad: ¿El sistema se espera que maneje un aumento en la concurrencia en el futuro?</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/10/24/genuid-lockfree/">posted at 23:14</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">c++</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

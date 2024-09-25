@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>(gcca) | URLs con nGinx</title>
+<link href="https://gcca.github.io/favicon.png" rel="shortcut icon" type="image/png"/>
+<link href="https://gcca.github.io/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+<link href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate" title="(gcca) Full RSS Feed" type="application/rss+xml">
+<link href="https://gcca.github.io/theme/css/main.css" rel="stylesheet" type="text/css">
+<link href="https://gcca.github.io/theme/css/pygments.css" rel="stylesheet" type="text/css"/>
+<meta content="Pelican" name="generator">
+<meta content="(gcca) blog" name="description"/>
+<meta content="Cristhian Gonzales" name="author"/>
+<meta content="Tip" name="keywords"/>
+</meta></link></link><link href="https://gcca.github.io/2024/12/12/rw_urls_nginx/" rel="canonical"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "(gcca)", "item": "https://gcca.github.io"}, {"@type": "ListItem", "position": 2, "name": "2024", "item": "https://gcca.github.io/2024"}, {"@type": "ListItem", "position": 3, "name": "12", "item": "https://gcca.github.io/2024/12"}, {"@type": "ListItem", "position": 4, "name": "12", "item": "https://gcca.github.io/2024/12/12"}, {"@type": "ListItem", "position": 5, "name": "Rw_urls_nginx", "item": "https://gcca.github.io/2024/12/12/rw_urls_nginx"}, {"@type": "ListItem", "position": 6, "name": "Index", "item": "https://gcca.github.io/2024/12/12/rw_urls_nginx/index.html"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "author": {"@type": "Person", "name": "(gcca)"}, "publisher": {"@type": "Organization", "name": "(gcca)"}, "headline": "URLs con nGinx", "about": "SW.Tips", "datePublished": "2024-12-12 07:40"}</script></head>
+<body>
+<header>
+<nav style="overflow: hidden;">
+<ul>
+<li><a href="https://gcca.github.io/">Home</a></li>
+<li><a href="https://x.com/@gcca_at_x">X</a></li>
+<li><a href="https://github.com/gcca">GitHub</a></li>
+<li><a href="https://gcca.github.io/tags">Tags</a></li>
+<li><a href="https://gcca.github.io/categories">Categories</a></li>
+<li><a href="https://gcca.github.io/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="header_box" style="height: 50px">
+<h1><a href="https://gcca.github.io/">
+<image class="avatar" src="/images/logo.png" width="50px"/><span class="site_title">(gcca)</span>
+</a></h1></div>
+<h2>Blog</h2>
+
+</header>
+<div id="wrapper">
+<div id="content"> <h4 class="date">Dec 12, 2024</h4>
+<article class="post">
+<h2 class="title">
+<a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/" rel="bookmark" title='Permanent Link to "URLs con nGinx"'>URLs con nGinx</a>
+</h2>
+<p>En <code>nginx</code>, se pueden reescribir URLs con la directiva <code>rewrite</code>. Por ejemplo, para redirigir todas las URLs usando NginxHttpRewriteModule, se puede usar:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$host</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">&amp;quot</span><span class="p">;</span><span class="k">^sub.dom.com$&amp;quot</span><span class="p">;</span><span class="k">){</span>
+<span class="w">  </span><span class="s">rewrite</span><span class="w"> </span><span class="s">^.*(?=\/)(.+)</span>$<span class="w"> </span><span class="s">http://www.dom.com/blog</span><span class="nv">$1</span><span class="w"> </span><span class="s">permanent</span><span class="p">;</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+<span class="k">}</span>
+</code></pre></div>
+<p>Esto redirige URLs del formato antiguo de http://sub.dom.com/2024/12/12/slug-de-la-página al nuevo formato http://www.dom.com/blog/el-slug-de-la-página (en la capa de nginx) usando <a href="http://www.regular-expressions.info/lookaround.html">lookaround</a>, también conocido como “zero-width positive look-ahead assertion”.</p>
+<p>El <em>positive lookahead</em> coincide con el slash (escapado): <code>(?=\/)</code>, sin hacerlo parte de la coincidencia. El símbolo <code>.*</code> significa cualquier carácter y, dado que <code>*</code> consume por defecto, coincide con toda la URL hasta el último carácter de barra diagonal. Finalmente, <code>(.+)</code> forma la primera referencia inversa <code>$1</code> (los lookaheads no crean grupos de captura), la cual se usa en la nueva URL como el segundo argumento para reescribir.</p>
+<div class="clear"></div>
+<div class="info">
+<a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/">posted at 07:40</a>
+                     · <a href="https://gcca.github.io/category/swtips.html" rel="tag">SW.Tips</a>
+                     ·
+                     <a class="tags" href="https://gcca.github.io/tag/tip.html">Tip</a>
+</div>
+</article>
+<div class="clear"></div>
+<footer>
+<p>
+<a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                ·
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                ·
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+</p></footer>
+</div>
+<div class="clear"></div>
+</div>
+</body>
+</html>

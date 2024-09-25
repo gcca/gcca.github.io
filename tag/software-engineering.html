@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>(gcca) | articles tagged "Software Engineering"</title>
+    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/software-engineering.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales" />
+</head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/software-engineering.html">Software Engineering</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+            <h2>Blog</h2>
+        </div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Feb 05, 2025</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/" rel="bookmark" title="Permanent Link to &quot;Notas sobre Feature Flags&quot;">Notas sobre Feature Flags</a>
+                </h2>
+
+                
+                
+
+                <h3>El Auge y la Complejidad de los Feature Flags en DevOps</h3>
+<p>En la última década, los <strong>feature flags</strong> se han convertido en una herramienta fundamental dentro del ecosistema de  despliegue, DevOps y mantenimiento, especialmente para la implementación continua. Permitir que operaciones e ingeniería operen de forma independiente ha sido una de sus mayores ventajas, pero no viene sin desafíos.</p>
+<p><strong>Ventajas y Desafíos:</strong></p>
+<ul>
+<li>
+<p><strong>Ventajas:</strong> Los feature flags permiten lanzamientos controlados, experimentación y la capacidad de activar o desactivar características sin necesidad de nuevos despliegues. Esto facilita el despliegue continuo y la innovación ágil.</p>
+</li>
+<li>
+<p><strong>Desafíos:</strong> Sin embargo, añaden <strong>complexity</strong> al código, aumentan el <strong>overhead</strong> de pruebas, y pueden llevar a <strong>bugs</strong> si no se gestionan adecuadamente. La <strong>lack</strong> de procesos automatizados para el seguimiento y la limpieza de feature flags puede resultar en:</p>
+</li>
+<li>
+<p><strong>Zombie flags</strong>: Feature flags olvidados que siguen en el código, incrementando el <strong>carrying cost</strong> y afectando la legibilidad y mantenimiento del código.</p>
+</li>
+<li>
+<p><strong>Unfinished business</strong>: Despliegues incompletos de feature flags, causando problemas a largo plazo.</p>
+</li>
+<li>
+<p><strong>Ghost flags</strong>: Feature flags eliminados pero aún manipulados por usuarios sin saberlo.</p>
+</li>
+</ul>
+<p><strong>Uso Inapropiado:</strong></p>
+<ul>
+<li>
+<p>Un <strong>feature flag</strong> pensado para un lanzamiento puede usarse para control de acceso a largo plazo, lo que puede llevar a problemas si el servicio externo falla. Esto ha llevado a algunos equipos a separar los sistemas de feature flags en:</p>
+</li>
+<li>
+<p><strong>Short-lived flags</strong> para lanzamientos temporales.</p>
+</li>
+<li><strong>Long-lived flags</strong> para controles de acceso o características permanentes.</li>
+</ul>
+<p>Esta separación, aunque lógica, trae consigo:</p>
+<ul>
+<li><strong>Lack of portability</strong>: Dificultad para mover un flag de un sistema a otro sin cambios de código.</li>
+<li><strong>User confusion</strong>: Frustración por recordar en qué sistema está cada flag.</li>
+<li><strong>Lack of context</strong>: Nombres de flags que no explican su propósito sin documentación adicional.</li>
+</ul>
+<p><strong>La Realidad de la Gestión de Feature Flags:</strong></p>
+<p>El sentido común sugiere que los feature flags deben ser temporales y limitados, pero la realidad del desarrollo de software moderno, con su ritmo rápido y naturaleza multifuncional, hace esto difícil de mantener. Además, la <strong>feature management</strong> va más allá del ámbito de DevOps, abarcando también la gestión de características para usuarios en diferentes contextos.</p>
+<p><strong>Propuestas para Mejorar:</strong></p>
+<ul>
+<li>
+<p><strong>Herramientas de Gestión de Feature Flags:</strong> Necesitamos herramientas que puedan manejar tanto <strong>short-lived</strong> como <strong>long-lived flags</strong> de manera cohesiva, con funciones como:</p>
+</li>
+<li>
+<p>Metadatos adicionales para flags de corta duración, incluyendo fechas de expiración.</p>
+</li>
+<li>Asignación de propietarios para cada flag.</li>
+<li>Capacidad de cambiar el propósito de un flag dentro de la misma herramienta.</li>
+<li>
+<p>Políticas automatizadas para la gestión y revisión de flags.</p>
+</li>
+<li>
+<p><strong>Automatización:</strong> Implementar procesos automatizados de auditoría y mantenimiento para evitar el crecimiento descontrolado de la complejidad.</p>
+</li>
+</ul>
+<p><strong>Conclusión:</strong></p>
+<p>Necesitamos redefinir qué significa la <strong>feature management</strong> en la industria, alineando las prácticas y herramientas con la realidad operativa de nuestros negocios. Esto podría incluir la creación de herramientas que manejen la complejidad inherente de los feature flags, mejorando así la eficiencia y reduciendo los riesgos asociados con su gestión.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/">posted at 12:40</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swngnote.html" rel="tag">SwNg.Note</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/software-engineering.html" class="tags selected">Software Engineering</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/feature-flags.html" class="tags">Feature Flags</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

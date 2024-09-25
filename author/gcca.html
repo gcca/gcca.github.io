@@ -35,238 +35,281 @@
         </div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Oct 04, 2024</h4>
+        <div id="content">            <h4 class="date">Feb 05, 2025</h4>
 
             <article class="post">
                 <h2 class="title">
-                    <a href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Dynamic Round Robin&quot;">Dynamic Round Robin</a>
+                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/" rel="bookmark" title="Permanent Link to &quot;Notas sobre Feature Flags&quot;">Notas sobre Feature Flags</a>
                 </h2>
 
                 
                 
 
-                <p>Continuando lo presentando en <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">Intro to Round Robin</a>, se muestra una adaptación para permitir la adición de elementos a la lista de selección. Para ello se aplicará Round Robin con subconjuntos dinámicos.</p>
-<ol>
-<li><em>Mantener un Historial de Selecciones:</em> Para asegurar la equidad, mantendremos un historial de cuántas veces cada elemento ha sido seleccionado.</li>
-<li><em>Round Robin Modificado:</em> En lugar de un simple round robin, ajustaremos la selección basándonos en el historial de selecciones para asegurar que todos los elementos del subconjunto tengan una oportunidad equitativa.</li>
-<li><em>Reajuste de Historial:</em> Cada vez que el subconjunto cambia, podremos ajustar el historial para reflejar solo las selecciones de los elementos que están actualmente en el subconjunto.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-
-<span class="k">class</span> <span class="nc">DynamicRoundRobin</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
-        <span class="c1"># verifica subconjunto no vacío</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">subset</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="c1"># actualiza el subconjunto y ajusta el historial</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adjust_history</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
-
-        <span class="c1"># encuentra el elemento con la menor cantidad de selecciones</span>
-        <span class="n">min_selections</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="n">min_selections</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># si hay más de un candidato, round robin para decidir</span>
-            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">element</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)]</span>
-                <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="k">return</span> <span class="n">element</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># si solo hay un candidato, selecciona directamente</span>
-            <span class="n">element</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">return</span> <span class="n">element</span>
-
-    <span class="k">def</span> <span class="nf">adjust_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
-        <span class="c1"># elimina el conteo de elementos que ya no están en el subconjunto</span>
-        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
-                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
-
-<span class="c1"># ejemplo</span>
-<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
-<span class="n">selector</span> <span class="o">=</span> <span class="n">DynamicRoundRobin</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
-
-<span class="c1"># simula cambios en el subconjunto y selecciones</span>
-<span class="n">subsets</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span>
-    <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">],</span>
-    <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>
-    <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
-<span class="p">]</span>
-
-<span class="k">for</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">subsets</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>  <span class="c1"># selecciona 3 veces de cada subconjunto</span>
-        <span class="n">selected</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected from </span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">selected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<p>Entonces:</p>
+                <h3>El Auge y la Complejidad de los Feature Flags en DevOps</h3>
+<p>En la última década, los <strong>feature flags</strong> se han convertido en una herramienta fundamental dentro del ecosistema de  despliegue, DevOps y mantenimiento, especialmente para la implementación continua. Permitir que operaciones e ingeniería operen de forma independiente ha sido una de sus mayores ventajas, pero no viene sin desafíos.</p>
+<p><strong>Ventajas y Desafíos:</strong></p>
 <ul>
-<li><em>Inicialización:</em> Se inicia con todos los elementos y un contador de selecciones.</li>
-<li><em>Selección:</em> Para cada selección, se busca el elemento con el menor número de selecciones dentro del subconjunto actual. Si hay más de uno, se usa round robin para decidir entre ellos.</li>
-<li><em>Ajuste de Historial:</em> Cada vez que el subconjunto cambia, se ajusta el historial para reflejar sólo los elementos del nuevo subconjunto.</li>
+<li>
+<p><strong>Ventajas:</strong> Los feature flags permiten lanzamientos controlados, experimentación y la capacidad de activar o desactivar características sin necesidad de nuevos despliegues. Esto facilita el despliegue continuo y la innovación ágil.</p>
+</li>
+<li>
+<p><strong>Desafíos:</strong> Sin embargo, añaden <strong>complexity</strong> al código, aumentan el <strong>overhead</strong> de pruebas, y pueden llevar a <strong>bugs</strong> si no se gestionan adecuadamente. La <strong>lack</strong> de procesos automatizados para el seguimiento y la limpieza de feature flags puede resultar en:</p>
+</li>
+<li>
+<p><strong>Zombie flags</strong>: Feature flags olvidados que siguen en el código, incrementando el <strong>carrying cost</strong> y afectando la legibilidad y mantenimiento del código.</p>
+</li>
+<li>
+<p><strong>Unfinished business</strong>: Despliegues incompletos de feature flags, causando problemas a largo plazo.</p>
+</li>
+<li>
+<p><strong>Ghost flags</strong>: Feature flags eliminados pero aún manipulados por usuarios sin saberlo.</p>
+</li>
 </ul>
-<p>Asegura que:</p>
+<p><strong>Uso Inapropiado:</strong></p>
 <ul>
-<li><em>Equidad:</em> Todos los elementos tienen una oportunidad equitativa de ser seleccionados.</li>
-<li><em>Adaptabilidad:</em> Se adapta dinámicamente a subconjuntos cambiantes.</li>
-<li><em>Balance:</em> Evita sobrecargar cualquier elemento al mantener un historial de selecciones.</li>
+<li>
+<p>Un <strong>feature flag</strong> pensado para un lanzamiento puede usarse para control de acceso a largo plazo, lo que puede llevar a problemas si el servicio externo falla. Esto ha llevado a algunos equipos a separar los sistemas de feature flags en:</p>
+</li>
+<li>
+<p><strong>Short-lived flags</strong> para lanzamientos temporales.</p>
+</li>
+<li><strong>Long-lived flags</strong> para controles de acceso o características permanentes.</li>
 </ul>
+<p>Esta separación, aunque lógica, trae consigo:</p>
+<ul>
+<li><strong>Lack of portability</strong>: Dificultad para mover un flag de un sistema a otro sin cambios de código.</li>
+<li><strong>User confusion</strong>: Frustración por recordar en qué sistema está cada flag.</li>
+<li><strong>Lack of context</strong>: Nombres de flags que no explican su propósito sin documentación adicional.</li>
+</ul>
+<p><strong>La Realidad de la Gestión de Feature Flags:</strong></p>
+<p>El sentido común sugiere que los feature flags deben ser temporales y limitados, pero la realidad del desarrollo de software moderno, con su ritmo rápido y naturaleza multifuncional, hace esto difícil de mantener. Además, la <strong>feature management</strong> va más allá del ámbito de DevOps, abarcando también la gestión de características para usuarios en diferentes contextos.</p>
+<p><strong>Propuestas para Mejorar:</strong></p>
+<ul>
+<li>
+<p><strong>Herramientas de Gestión de Feature Flags:</strong> Necesitamos herramientas que puedan manejar tanto <strong>short-lived</strong> como <strong>long-lived flags</strong> de manera cohesiva, con funciones como:</p>
+</li>
+<li>
+<p>Metadatos adicionales para flags de corta duración, incluyendo fechas de expiración.</p>
+</li>
+<li>Asignación de propietarios para cada flag.</li>
+<li>Capacidad de cambiar el propósito de un flag dentro de la misma herramienta.</li>
+<li>
+<p>Políticas automatizadas para la gestión y revisión de flags.</p>
+</li>
+<li>
+<p><strong>Automatización:</strong> Implementar procesos automatizados de auditoría y mantenimiento para evitar el crecimiento descontrolado de la complejidad.</p>
+</li>
+</ul>
+<p><strong>Conclusión:</strong></p>
+<p>Necesitamos redefinir qué significa la <strong>feature management</strong> en la industria, alineando las prácticas y herramientas con la realidad operativa de nuestros negocios. Esto podría incluir la creación de herramientas que manejen la complejidad inherente de los feature flags, mejorando así la eficiencia y reduciendo los riesgos asociados con su gestión.</p>
                 <div class="clear"></div>
 
                 <div class="info">
-                    <a href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/">posted at 13:11</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/">posted at 12:40</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swngnote.html" rel="tag">SwNg.Note</a>
                     &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/python.html" class="tags">python</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/software-engineering.html" class="tags">Software Engineering</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/feature-flags.html" class="tags">Feature Flags</a>
                 </div>
-            </article>            <h4 class="date">Oct 03, 2024</h4>
+            </article>            <h4 class="date">Jan 29, 2025</h4>
 
             <article class="post">
                 <h2 class="title">
-                    <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Intro to Round Robin&quot;">Intro to Round Robin</a>
+                    <a href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/" rel="bookmark" title="Permanent Link to &quot;Expansiones de Taylor&quot;">Expansiones de Taylor</a>
                 </h2>
 
                 
                 
 
-                <h2>Introducción</h2>
-<p>Round Robin es un algoritmo de planificación de procesos.</p>
-<p>Cada elemento de una lista se selecciona en turno, uno por uno, y cuando se llega al final de la lista, se vuelve al principio.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">choices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+                <div class="math">\begin{align*}
+\frac{1}{1 - x} &amp;= \sum_{n=0}^{\infty} x^n &amp; x \in (-1, 1) \\\\
+e^x &amp;= \sum_{n=0}^{\infty} \frac{x^n}{n!} &amp; x \in \mathbb{R} \\\\
+\ln(1 + x) &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{n+1}}{n+1} &amp; x \in (-1, 1] \\\\
+\sin x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!} &amp; x \in \mathbb{R} \\\\
+\cos x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{(2n)!} &amp; x \in \mathbb{R} \\\\
+\arctan x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{2n+1} &amp; x \in [-1, 1] \\\\
+(1 + x)^r &amp;= \sum_{n=0}^{\infty} \binom{r}{n} x^n &amp; x \in (-1, 1)
+\end{align*}</div>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
 
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
 
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-</code></pre></div>
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
 
-<h2>Alternativas</h2>
-<h3>Aleatorio (Random Selection):</h3>
-<p>Selecciona elementos de manera aleatoria sin reemplazo hasta que se agoten; luego reinicia el proceso.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
 
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
-        <span class="k">yield from</span> <span class="n">choices</span>
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+                <div class="clear"></div>
 
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+                <div class="info">
+                    <a href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/">posted at 08:13</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathnote.html" rel="tag">Math.Note</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
+                </div>
+            </article>            <h4 class="date">Jan 24, 2025</h4>
 
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-</code></pre></div>
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2025/01/24/githubactions-monorepos/" rel="bookmark" title="Permanent Link to &quot;GitHub Actions en monorepos complejos&quot;">GitHub Actions en monorepos complejos</a>
+                </h2>
 
-<h3>Ponderado (Weighted Selection):</h3>
-<p>Cada elemento tiene una probabilidad de ser seleccionado basada en un peso asignado.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+                
+                
 
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">yield</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
-<span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-</code></pre></div>
-
-<h3>Least Recently Used (LRU):</h3>
-<p>Selecciona el elemento que ha sido usado hace más tiempo. Simplificada:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
-
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
-    <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">queue</span><span class="p">:</span>
-            <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
-        <span class="n">item</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
-        <span class="k">yield</span> <span class="n">item</span>
-        <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-</code></pre></div>
-
-<h3>Prioridad (Priority Queue):</h3>
-<p>Los elementos se seleccionan basándose en una prioridad asignada. Usando heapq (con la prioridad invertida para que funcione como una cola de prioridad mínima) para mantener la prioridad:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">heapq</span>
-
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">):</span>
-    <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
-    <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>
-            <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
-            <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">item</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="n">item</span>
-
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
-<span class="n">priorities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
-<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-</code></pre></div>
-
+                <h1>Resumen del artículo sobre GitHub Actions</h1>
 <ul>
-<li><em>Round Robin</em> es ideal para asegurar una distribución equitativa y predecible.</li>
-<li><em>Aleatorio</em> puede ser útil cuando no quieres que haya patrones predecibles.</li>
-<li><em>Ponderado</em> es excelente cuando algunos elementos deben ser seleccionados con mayor frecuencia.</li>
-<li><em>LRU</em> es útil en sistemas donde la recencia de uso es importante.</li>
-<li><em>Prioridad</em> es perfecta para sistemas donde algunos elementos deben ser procesados antes que otros.</li>
+<li>
+<p><strong>Contexto</strong>: Un equipo trabaja en un monorepo con múltiples módulos, cada uno con su propio pipeline. Desarrollo basado en trunk y múltiples despliegues diarios.</p>
+</li>
+<li>
+<p><strong>Limitaciones de GitHub Actions</strong>:</p>
+</li>
+<li><strong>Manejo de Workflows Complejos</strong>: Problemas con workflows complejos en monorepos, especialmente en la reutilización de workflows y en las comprobaciones de pull request.</li>
+<li>
+<p><strong>Dependencia en el Entorno de GitHub</strong>: Limitaciones para correr localmente los mismos workflows de GitHub, afectando desarrollo y depuración.</p>
+</li>
+<li>
+<p><strong>Alternativas y Sugerencias</strong>:</p>
+</li>
+<li>
+<p>Uso de herramientas como Nix o Docker para ejecutar comandos, permitiendo consistencia entre entornos locales y de CI/CD.</p>
+</li>
+<li>
+<p><strong>Conclusión</strong>: Para proyectos grandes y complejos, especialmente monorepos, se recomienda evaluar cuidadosamente el uso de GitHub Actions debido a sus limitaciones en gestión de workflows y consistencia de entornos.</p>
+</li>
 </ul>
                 <div class="clear"></div>
 
                 <div class="info">
-                    <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">posted at 02:01</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    <a href="https://gcca.github.io/2025/01/24/githubactions-monorepos/">posted at 17:51</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swmisc.html" rel="tag">SW.Misc</a>
                     &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/python.html" class="tags">python</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
                 </div>
-            </article>            <h4 class="date">Feb 11, 2024</h4>
+            </article>            <h4 class="date">Dec 14, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
-                    <a href="https://gcca.github.io/2024/02/11/welcome/" rel="bookmark" title="Permanent Link to &quot;Welcome&quot;">Welcome</a>
+                    <a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/" rel="bookmark" title="Permanent Link to &quot;Fast Inverse Square Root (Quake III Arena)&quot;">Fast Inverse Square Root (Quake III Arena)</a>
                 </h2>
 
                 
                 
 
-                <p>Welcome page</p>
+                <p>Cada milisegundo cuenta, especialmente en juegos en tiempo real como los shooters en primera persona. Una de las técnicas de optimización más legendarias y controvertidas es el "Fast Inverse Square Root", implementada en el motor de Quake III Arena.</p>
+<h3>¿Qué es?</h3>
+<p>El "Fast Inverse Square Root" es un algoritmo diseñado para calcular la raíz cuadrada inversa de un número flotante rápidamente, mucho más rápido que los métodos tradicionales. En términos matemáticos, si tenemos un número <code>x</code>, queremos calcular <code>1/sqrt(x)</code> de una manera eficiente.</p>
+<h3>Quake III Arena</h3>
+<p>El código que nos ha dejado perplejos a muchos es el siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="nf">Q_rsqrt</span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">x2</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5F</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">x2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5F</span><span class="p">;</span>
+<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="p">;</span>
+<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">;</span><span class="w">                       </span><span class="c1">// evil floating point bit level hacking</span>
+<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mh">0x5f3759df</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">);</span><span class="w">               </span><span class="c1">// what the fuck?</span>
+<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w">   </span><span class="c1">// 1st iteration</span>
+<span class="c1">//  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>Desglose</h3>
+<p><strong>1 Conversión de bits</strong>:</p>
+<ul>
+<li><code>i = * (long *) &amp;y;</code> Aquí, el código realiza un "hack" a nivel de bits. La representación en memoria de un número flotante en IEEE 754 es convertida a un entero largo. Esto permite manipular directamente los bits del número flotante.</li>
+</ul>
+<p><strong>2 La aproximación</strong>:</p>
+<ul>
+<li><code>i = 0x5f3759df - (i &gt;&gt; 1);</code> La constante <code>0x5f3759df</code> es crucial. Este número mágico fue encontrado mediante experimentación y proporciona una primera aproximación sorprendentemente precisa de <code>1/sqrt(x)</code>. La operación <code>i &gt;&gt; 1</code> es un desplazamiento de bits a la derecha, efectivamente dividiendo <code>i</code> por 2.</li>
+</ul>
+<p><strong>3 Refinamiento</strong>:</p>
+<ul>
+<li><code>y = * (float *) &amp;i;</code> Convierte de vuelta el entero largo a un flotante.</li>
+<li><code>y = y * (threehalfs - (x2 * y * y));</code> Aplica una iteración de Newton-Raphson para mejorar la precisión de la aproximación inicial. La constante <code>threehalfs</code> (1.5 en forma flotante) es usada en este paso de refinamiento.</li>
+</ul>
+<h3>¿Por qué funciona?</h3>
+<p>Esta técnica se aprovecha de las propiedades de la representación de punto flotante. La relación entre el logaritmo de un número y su inversa raíz cuadrada es casi lineal cuando se trabaja con los exponentes y mantisas de los números flotantes. La constante <code>0x5f3759df</code> está ajustada para esta relación, proporcionando una aproximación inicial que luego se refina.</p>
+<h3>Implicaciones y uso</h3>
+<p>El "Fast Inverse Square Root" fue fundamental en Quake III porque era usado en cálculos de vectores y normalización, operaciones comunes en gráficos 3D que necesitan ser extremadamente rápidas. Aunque hoy en día los procesadores son mucho más potentes, hay instrucciones específicas para cálculos de punto flotante y tenemos GPUs, este truco histórico sigue siendo un ejemplo impresionante de ingenio.</p>
                 <div class="clear"></div>
 
                 <div class="info">
-                    <a href="https://gcca.github.io/2024/02/11/welcome/">posted at 13:01</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/miscelanea.html" rel="tag">Miscelánea</a>
+                    <a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/">posted at 09:51</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swmisc.html" rel="tag">SW.Misc</a>
                     &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">misc</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
                 </div>
             </article>
+
+                <div class="clear"></div>
+                <div class="pages">
+
+
+                    <a href="https://gcca.github.io/author/gcca/page/2/" class="next_page">Next&nbsp;&rarr;</a>
+
+                    <span>Page 1 of 3</span>
+                </div>
 
             <div class="clear"></div>
             <footer>
