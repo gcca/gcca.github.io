@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>(gcca) | articles tagged "Tip"</title>
+    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/tip.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales" />
+</head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/tip.html">Tip</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+            <h2>Blog</h2>
+        </div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Dec 12, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/" rel="bookmark" title="Permanent Link to &quot;URLs con nGinx&quot;">URLs con nGinx</a>
+                </h2>
+
+                
+                
+
+                <p>En <code>nginx</code>, se pueden reescribir URLs con la directiva <code>rewrite</code>. Por ejemplo, para redirigir todas las URLs usando NginxHttpRewriteModule, se puede usar:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$host</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">&amp;quot</span><span class="p">;</span><span class="k">^sub.dom.com$&amp;quot</span><span class="p">;</span><span class="k">){</span>
+<span class="w">  </span><span class="s">rewrite</span><span class="w"> </span><span class="s">^.*(?=\/)(.+)</span>$<span class="w"> </span><span class="s">http://www.dom.com/blog</span><span class="nv">$1</span><span class="w"> </span><span class="s">permanent</span><span class="p">;</span>
+<span class="w">  </span><span class="k">break</span><span class="p">;</span>
+<span class="k">}</span>
+</code></pre></div>
+
+<p>Esto redirige URLs del formato antiguo de http://sub.dom.com/2024/12/12/slug-de-la-página al nuevo formato http://www.dom.com/blog/el-slug-de-la-página (en la capa de nginx) usando <a href="http://www.regular-expressions.info/lookaround.html">lookaround</a>, también conocido como “zero-width positive look-ahead assertion”.</p>
+<p>El <em>positive lookahead</em> coincide con el slash (escapado): <code>(?=\/)</code>, sin hacerlo parte de la coincidencia. El símbolo <code>.*</code> significa cualquier carácter y, dado que <code>*</code> consume por defecto, coincide con toda la URL hasta el último carácter de barra diagonal. Finalmente, <code>(.+)</code> forma la primera referencia inversa <code>$1</code> (los lookaheads no crean grupos de captura), la cual se usa en la nueva URL como el segundo argumento para reescribir.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/">posted at 07:40</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swtips.html" rel="tag">SW.Tips</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/tip.html" class="tags selected">Tip</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>
