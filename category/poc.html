@@ -3,6 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08-extended/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="https://gcca.github.io/theme/js/theme.js"></script>
+    <script defer src="https://gcca.github.io/theme/js/math.js"></script>
     <title>(gcca) | articles in the "PoC" category</title>
     <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
     <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
@@ -15,12 +19,20 @@
 </head>
 <body>
     <header>
+        <div class="theme-control" hidden>
+            <label for="theme-preference">Theme</label>
+            <select id="theme-preference" name="theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
         <nav style="overflow: hidden;">
             <ul>
 
                 <li class="ephemeral selected"><a href="https://gcca.github.io/category/poc.html">PoC</a></li>
                 <li><a href="https://gcca.github.io/">Home</a></li>
-                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://x.com/gcca__">X</a></li>
                 <li><a href="https://github.com/gcca">GitHub</a></li>
                 <li><a href="https://gcca.github.io/tags">Tags</a></li>
                 <li><a href="https://gcca.github.io/categories">Categories</a></li>
@@ -29,13 +41,72 @@
         </nav>
         <div class="header_box" style="height: 50px">
         <h1><a href="https://gcca.github.io/">
-            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            <img src="/images/logo.png" class="avatar" width="50" height="50" alt="" /><span class="site_title">(gcca)</span>
             </a></h1></div>
             <h2>Blog</h2>
-        </div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Oct 04, 2024</h4>
+        <div id="content">            <h4 class="date">Oct 24, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/10/24/genuid-lockfree/" rel="bookmark" title="Permanent Link to &quot;Generador de UID y Lock free&quot;">Generador de UID y Lock free</a>
+                </h2>
+
+                
+                
+
+                <p>Exploraremos dos enfoques para generar IDs en C++: uno utilizando mecanismos de bloqueo (LockTierUID) y otro libre de bloqueo (LockFreeUID). Ambos generan IDs de 64 bits y son compatibles con C++11. Estas son sus definiciones:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockTierUID</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockFreeUID</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Un primera versión sencilla para entender el concepto de LockTierUID sería la siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">genuid::LockTierUID</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lock</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">++</span><span class="n">counter</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El ejemplo puede verse en el repositorio <a href="https://github.com/gcca/genuid">genuid</a>.</p>
+<p>El método <em>LockTierUID</em> utiliza un std::mutex para asegurar que la generación de IDs sea segura en entornos multithreaded. Maneja posibles colisiones de timestamp incrementando el número de secuencia o esperando al siguiente ciclo de tiempo si se agota. El método <em>LockFreeUID</em> intenta generar IDs sin necesidad de bloqueo utilizando operaciones atómicas. Si hay un conflicto en el timestamp, intenta actualizar el número de secuencia de manera atómica. En ambos casos, el mecanismo de timestamp busca generar IDs basados en la diferencia de tiempo desde el timestamp de base. Este enfoque permite generar IDs únicos de manera eficiente, con consideraciones para la concurrencia y el desbordamiento de secuencias, adecuado para applicaciones con requerimientos de alto rendimiento y escalabilidad.</p>
+<p>Con el objetivo de probar la concurrencia, se crearon unos tests que muestran cómo las funciones trabajan sobre un entorno multithreading. LockTierUID asegura la exclusión mutua con un mutex, lo cual es más simple pero puede ser menos eficiente en sistemas altamente concurrentes. LockFreeUID intenta evitar bloqueos, potencialmente mejorando el rendimiento pero a costa de una implementación más compleja y con la posibilidad de bucles de espera durante la contención.</p>
+<p>Para validar la unicidad, se usa un unordered-set para verificar de que no hay duplicados mostrando que los IDs son efectivamente únicos. Al generar un gran número de IDs (10,000), estos tests también prueban la capacidad de las funciones para escalar en términos de generación de IDs únicos. Este enfoque no solo muestra cómo se usan las funciones sino también cómo se aseguran que funcionen correctamente en condiciones de alta concurrencia, lo cual es crucial para entender y elegir entre implementaciones con y sin bloqueo.</p>
+<p>Benchmark:</p>
+<div class="highlight"><pre><span></span><code><span class="c">Run on (8 X 24 MHz CPU s)</span>
+<span class="c">CPU Caches:</span>
+<span class="c">  L1 Data 64 KiB</span>
+<span class="c">  L1 Instruction 128 KiB</span>
+<span class="c">  L2 Unified 4096 KiB (x8)</span>
+<span class="c">Load Average: 1</span><span class="nt">.</span><span class="c">27</span><span class="nt">,</span><span class="c"> 0</span><span class="nt">.</span><span class="c">98</span><span class="nt">,</span><span class="c"> 1</span><span class="nt">.</span><span class="c">09</span>
+<span class="nb">------------------------------------------------------</span>
+<span class="c">Benchmark            Time             CPU   Iterations</span>
+<span class="nb">------------------------------------------------------</span>
+<span class="c">BM_LockTier     133613 ns       133613 ns        10000</span>
+<span class="c">BM_LockFree       37</span><span class="nt">.</span><span class="c">3 ns         37</span><span class="nt">.</span><span class="c">3 ns     18792047</span>
+</code></pre></div>
+
+<p>La diferencia en tiempo es amplia, con LockFreeUID siendo aproximadamente 3,582 veces más rápido que LockTierUID en la generación de IDs. Esto se debe a que LockFreeUID evita el costo de adquirir y liberar un mutex en cada operación. No obstante, LockTierUID tiene oportunidades de mejora sin dejar el lock.</p>
+<p>Simplicidad / Complejidad: Aunque LockFreeUID ofrece un rendimiento superior, su implementación y depuración pueden ser más complejas debido a la naturaleza de los algoritmos sin bloqueo. LockTierUID, con su enfoque más tradicional, es más recto en su implementación pero a costa de rendimiento.</p>
+<p>Caso de uso: Para sistemas con baja a mediana concurrencia, LockTierUID puede ser suficiente y más fácil de mantener.
+En aplicaciones de alta concurrencia, como sistemas de transacciones de alta frecuencia, LockFreeUID sería la elección preferida para minimizar latencias.</p>
+<p>Mantenimiento y depuración: Los algoritmos sin bloqueo pueden introducir sutiles errores de concurrencia que son difíciles de detectar y corregir. Por otro lado, las implementaciones con locks son generalmente más predecibles y más fáciles de depurar.</p>
+<p>Entonces, al elegir entre estos métodos, considerar:</p>
+<ul>
+<li>Rendimiento: ¿Hasta qué punto el rendimiento afecta la funcionalidad del sistema?</li>
+<li>Complejidad: ¿El equipo tiene la experiencia y el tiempo para manejar un algoritmo sin bloqueo?</li>
+<li>Escalabilidad: ¿El sistema se espera que maneje un aumento en la concurrencia en el futuro?</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/10/24/genuid-lockfree/">posted at 23:14</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">c++</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>            <h4 class="date">Oct 04, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -51,15 +122,15 @@
 <li><em>Round Robin Modificado:</em> En lugar de un simple round robin, ajustaremos la selección basándonos en el historial de selecciones para asegurar que todos los elementos del subconjunto tengan una oportunidad equitativa.</li>
 <li><em>Reajuste de Historial:</em> Cada vez que el subconjunto cambia, podremos ajustar el historial para reflejar solo las selecciones de los elementos que están actualmente en el subconjunto.</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 
-<span class="k">class</span> <span class="nc">DynamicRoundRobin</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DynamicRoundRobin</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
         <span class="c1"># verifica subconjunto no vacío</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">subset</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -85,7 +156,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">element</span>
 
-    <span class="k">def</span> <span class="nf">adjust_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
         <span class="c1"># elimina el conteo de elementos que ya no están en el subconjunto</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
@@ -143,7 +214,7 @@
                 <h2>Introducción</h2>
 <p>Round Robin es un algoritmo de planificación de procesos.</p>
 <p>Cada elemento de una lista se selecciona en turno, uno por uno, y cuando se llega al final de la lista, se vuelve al principio.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">choices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -159,9 +230,9 @@
 <h2>Alternativas</h2>
 <h3>Aleatorio (Random Selection):</h3>
 <p>Selecciona elementos de manera aleatoria sin reemplazo hasta que se agoten; luego reinicia el proceso.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
         <span class="k">yield from</span> <span class="n">choices</span>
@@ -175,9 +246,9 @@
 
 <h3>Ponderado (Weighted Selection):</h3>
 <p>Cada elemento tiene una probabilidad de ser seleccionado basada en un peso asignado.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -191,9 +262,9 @@
 
 <h3>Least Recently Used (LRU):</h3>
 <p>Selecciona el elemento que ha sido usado hace más tiempo. Simplificada:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
 
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
     <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">queue</span><span class="p">:</span>
@@ -211,9 +282,9 @@
 
 <h3>Prioridad (Priority Queue):</h3>
 <p>Los elementos se seleccionan basándose en una prioridad asignada. Usando heapq (con la prioridad invertida para que funcione como una cola de prioridad mínima) para mantener la prioridad:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">heapq</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">heapq</span>
 
-<span class="k">def</span> <span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">):</span>
     <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
     <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>

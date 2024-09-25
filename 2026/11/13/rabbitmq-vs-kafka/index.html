@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="light dark" name="color-scheme"/>
+<link as="font" crossorigin="" href="https://gcca.github.io/theme/fonts/iosevka-ss08-extended/regular.woff2" rel="preload" type="font/woff2"/>
+<script src="https://gcca.github.io/theme/js/theme.js"></script>
+<script defer="" src="https://gcca.github.io/theme/js/math.js"></script>
+<title>(gcca) | RabbitMQ vs Kafka: ¿Qué plataforma elegir?</title>
+<link href="https://gcca.github.io/favicon.png" rel="shortcut icon" type="image/png"/>
+<link href="https://gcca.github.io/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+<link href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate" title="(gcca) Full RSS Feed" type="application/rss+xml"/>
+<link href="https://gcca.github.io/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/pygments.css" rel="stylesheet" type="text/css"/>
+<meta content="Pelican" name="generator"/>
+<meta content="(gcca) blog" name="description"/>
+<meta content="Cristhian Gonzales" name="author"/>
+<meta content="rabbitmq,kafka,messaging,architecture" name="keywords"/>
+<link href="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/" rel="canonical"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "(gcca)", "item": "https://gcca.github.io"}, {"@type": "ListItem", "position": 2, "name": "2026", "item": "https://gcca.github.io/2026"}, {"@type": "ListItem", "position": 3, "name": "11", "item": "https://gcca.github.io/2026/11"}, {"@type": "ListItem", "position": 4, "name": "13", "item": "https://gcca.github.io/2026/11/13"}, {"@type": "ListItem", "position": 5, "name": "Rabbitmq vs kafka", "item": "https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka"}, {"@type": "ListItem", "position": 6, "name": "Index", "item": "https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/index.html"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "author": {"@type": "Person", "name": "(gcca)"}, "publisher": {"@type": "Organization", "name": "(gcca)"}, "headline": "RabbitMQ vs Kafka: ¿Qué plataforma elegir?", "about": "SW.Misc", "datePublished": "2026-11-13 18:15"}</script><meta content="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/" property="og:url"/><meta content="article" property="og:type"/><meta content="RabbitMQ vs Kafka: ¿Qué plataforma elegir?" property="og:title"/><meta content="en_US" property="og:locale"/></head>
+<body>
+<header>
+<div class="theme-control" hidden="">
+<label for="theme-preference">Theme</label>
+<select id="theme-preference" name="theme">
+<option value="system">System</option>
+<option value="light">Light</option>
+<option value="dark">Dark</option>
+</select>
+</div>
+<nav style="overflow: hidden;">
+<ul>
+<li><a href="https://gcca.github.io/">Home</a></li>
+<li><a href="https://x.com/gcca__">X</a></li>
+<li><a href="https://github.com/gcca">GitHub</a></li>
+<li><a href="https://gcca.github.io/tags">Tags</a></li>
+<li><a href="https://gcca.github.io/categories">Categories</a></li>
+<li><a href="https://gcca.github.io/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="header_box" style="height: 50px">
+<h1><a href="https://gcca.github.io/">
+<img alt="" class="avatar" height="50" src="/images/logo.png" width="50"/><span class="site_title">(gcca)</span>
+</a></h1></div>
+<h2>Blog</h2>
+</header>
+<div id="wrapper">
+<div id="content"> <h4 class="date">Nov 13, 2026</h4>
+<article class="post">
+<h2 class="title">
+<a href="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/" rel="bookmark" title='Permanent Link to "RabbitMQ vs Kafka: ¿Qué plataforma elegir?"'>RabbitMQ vs Kafka: ¿Qué plataforma elegir?</a>
+</h2>
+<p>¿Alguna vez te has encontrado en una encrucijada, tratando de decidir entre RabbitMQ y Kafka para tu sistema basado en microservicios? ¿Te has preguntado cuál de estas plataformas de mensajería es la más adecuada para tu caso de uso?</p>
+<p>RabbitMQ y Apache Kafka son soluciones muy conocidas en el ámbito de la mensajería asíncrona, pero, a pesar de la creencia popular, no son soluciones universales. Como arquitecto de software, he visto de primera mano cómo una decisión equivocada puede romper lo que de otro modo sería una arquitectura de software sólida.</p>
+<p>Profundiza conmigo mientras desmitifico los patrones básicos de la mensajería asíncrona. Revelaré las estructuras particulares de Apache Kafka y RabbitMQ, guiándote a través de sus intrincados diseños y mecanismos.</p>
+<p>Sigue leyendo para descubrir las diferencias clave, los pros y los contras, y obtener consejos expertos sobre cómo tomar la decisión correcta para tu escenario particular. ¡Tu elección ideal podría estar a solo unos párrafos de distancia!</p>
+<h2 id="puntos-clave">Puntos clave</h2>
+<ul>
+<li>RabbitMQ es un message broker, mientras que Kafka es una plataforma distribuida de streaming.</li>
+<li>Kafka sobresale en el streaming de datos en tiempo real y garantiza el procesamiento ordenado de mensajes dentro de las particiones de un topic.</li>
+<li>RabbitMQ ofrece enrutamiento avanzado de mensajes basado en reglas de los suscriptores y soporta funcionalidades como el TTL de mensajes.</li>
+<li>Kafka carece de capacidades de filtrado integradas y de mecanismos de TTL, pero escala bien mediante particionamiento.</li>
+<li>La elección entre RabbitMQ y Kafka depende de los requisitos específicos y del caso de uso deseado.</li>
+</ul>
+<p><strong>Tabla de contenidos</strong></p>
+<ul>
+<li><a href="#puntos-clave">Puntos clave</a></li>
+<li><a href="#patrones-mensajeria-asincrona">¿Qué son los patrones de mensajería asíncrona?</a><ul>
+<li><a href="#message-queuing">Colas de mensajes (Message Queuing)</a></li>
+<li><a href="#publish-subscribe">Publicación/Suscripción</a></li>
+</ul>
+</li>
+<li><a href="#que-es-rabbitmq">¿Qué es RabbitMQ?</a><ul>
+<li><a href="#colas">Colas</a></li>
+<li><a href="#message-exchanges">Message Exchanges</a></li>
+</ul>
+</li>
+<li><a href="#que-es-apache-kafka">¿Qué es Apache Kafka?</a><ul>
+<li><a href="#topics">Topics</a></li>
+<li><a href="#patrones-con-kafka">Implementación de patrones de mensajería con Kafka</a></li>
+</ul>
+</li>
+<li><a href="#diferencias">¿Cuáles son las diferencias entre RabbitMQ y Apache Kafka?</a><ul>
+<li><a href="#orden-mensajes">Orden de los mensajes</a></li>
+<li><a href="#enrutamiento-mensajes">Enrutamiento de mensajes</a></li>
+<li><a href="#temporizacion-mensajes">Temporización de mensajes</a></li>
+<li><a href="#retencion-mensajes">Retención de mensajes</a></li>
+<li><a href="#manejo-fallos">Manejo de fallos</a></li>
+<li><a href="#escala">Escala</a></li>
+<li><a href="#complejidad-consumidor">Complejidad del consumidor</a></li>
+<li><a href="#compatibilidad-protocolos">Compatibilidad de protocolos</a></li>
+</ul>
+</li>
+<li><a href="#que-plataforma-usar">¿Qué plataforma deberías usar? RabbitMQ vs Kafka</a></li>
+<li><a href="#reflexiones-finales">Reflexiones finales</a></li>
+</ul>
+<h2 id="patrones-mensajeria-asincrona">¿Qué son los patrones de mensajería asíncrona?</h2>
+<p>La mensajería asíncrona es un esquema de mensajería en el que la producción de un mensaje por parte de un productor está desacoplada de su procesamiento por parte de un consumidor. Al tratar con sistemas de mensajería, normalmente identificamos dos patrones principales: Message Queuing (colas de mensajes) y Publish/Subscribe (publicación/suscripción).</p>
+<h3 id="message-queuing">Colas de mensajes (Message Queuing)</h3>
+<p>En el patrón de comunicación Message Queuing, las colas desacoplan temporalmente a los productores de los consumidores. Las colas también nos permiten escalar productores y consumidores de forma independiente y proporcionan cierto grado de tolerancia a fallos frente a errores de procesamiento.</p>
+<p>Varios productores pueden enviar mensajes a la misma cola; sin embargo, cuando un consumidor procesa un mensaje, este se bloquea o se elimina de la cola y deja de estar disponible. Solo un único consumidor consume un mensaje específico.</p>
+<p><img alt="Ilustración de una cola de mensajes como transporte entre productores y consumidores" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Message-Queuing.svg"/></p>
+<p><em>Colas de mensajes (Message Queuing)</em></p>
+<p>Si el consumidor no logra procesar un mensaje específico, la plataforma de mensajería normalmente devuelve el mensaje a la cola, dejándolo disponible para otros consumidores.</p>
+<h3 id="publish-subscribe">Publicación/Suscripción</h3>
+<p>En el patrón de comunicación Publish/Subscribe (o Pub/Sub), varios suscriptores pueden recibir y procesar un mismo mensaje de forma concurrente.</p>
+<p><img alt="Ilustración de un intercambio de mensajes pub/sub" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-PubSub.svg"/></p>
+<p><em>Publicación/Suscripción</em></p>
+<p>Por ejemplo, este patrón permite que un publicador notifique a todos los suscriptores que algo ha ocurrido en el sistema.</p>
+<p>Muchas plataformas de colas suelen asociar pub/sub con el término <strong>topics</strong>. En RabbitMQ, los topics son un tipo específico de implementación de pub/sub (un tipo de exchange, para ser exactos), pero a lo largo de este artículo me refiero a los topics como una representación de pub/sub en su conjunto.</p>
+<p>En términos generales, hay dos tipos de suscripciones:</p>
+<ol>
+<li><strong>Una suscripción efímera</strong>, en la que la suscripción solo está activa mientras el consumidor esté en ejecución. Una vez que el consumidor se detiene, su suscripción y los mensajes pendientes de procesar se pierden.</li>
+<li><strong>Una suscripción durable</strong>, en la que la suscripción se mantiene mientras no se elimine explícitamente. Cuando el consumidor se detiene, la plataforma de mensajería mantiene la suscripción y el procesamiento de mensajes puede reanudarse más tarde.</li>
+</ol>
+<h2 id="que-es-rabbitmq">¿Qué es RabbitMQ?</h2>
+<p><a href="https://www.rabbitmq.com/">RabbitMQ</a> es un <a href="https://en.wikipedia.org/wiki/Message_broker">Message Broker</a> de código abierto y también se le suele llamar <a href="https://en.wikipedia.org/wiki/Enterprise_service_bus">Service Bus</a>. Soporta de forma nativa ambos patrones de mensajería descritos arriba.</p>
+<p>Otras implementaciones populares de message brokers incluyen <a href="https://activemq.apache.org/">ActiveMQ</a>, <a href="https://zeromq.org/">ZeroMQ</a>, <a href="https://azure.microsoft.com/en-us/services/service-bus/">Azure Service Bus</a> y <a href="https://aws.amazon.com/sqs/">Amazon Simple Queue Service (SQS)</a>. Estas implementaciones tienen mucho en común; muchos de los conceptos descritos en este artículo se aplican a la mayoría de ellas.</p>
+<h3 id="colas">Colas</h3>
+<p>RabbitMQ soporta Message Queuing clásico de forma nativa. Un desarrollador define colas con nombre y luego los publicadores pueden enviar mensajes a esa cola. Los consumidores, a su vez, usan la misma cola para obtener los mensajes y procesarlos.</p>
+<p>Vale la pena mencionar que, internamente, esta configuración sencilla se emula creando un "Direct Exchange", que filtra la entrega a las colas en función de una regla de enrutamiento simple. Puedes leer más sobre los Message Exchanges en la siguiente sección.</p>
+<h3 id="message-exchanges">Message Exchanges</h3>
+<p>RabbitMQ implementa Pub/Sub mediante el uso de message exchanges. Un publicador publica sus mensajes en un message exchange sin saber quiénes son los suscriptores de dichos mensajes.</p>
+<p>Cada consumidor que desea suscribirse a un exchange crea su propia cola; el message exchange encola entonces los mensajes producidos para que los consumidores los consuman. También puede filtrar mensajes para algunos suscriptores en función de diversas reglas de enrutamiento.</p>
+<p><img alt="Ilustración de un Message Exchange de RabbitMQ" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Message-Exchange.svg"/></p>
+<p><em>Message Exchange de RabbitMQ</em></p>
+<p>Es importante destacar que RabbitMQ soporta suscripciones tanto efímeras como durables. Un consumidor puede decidir qué tipo de suscripción desea emplear a través de la API de RabbitMQ.</p>
+<p>Gracias a la arquitectura de RabbitMQ, también podemos crear un enfoque híbrido en el que algunos suscriptores forman <strong>consumer groups</strong> (grupos de consumidores) que trabajan juntos procesando mensajes como consumidores en competencia sobre una cola específica. De este modo, implementamos el patrón pub/sub y, al mismo tiempo, permitimos que algunos suscriptores escalen para manejar los mensajes recibidos.</p>
+<p><img alt="Ilustración de una topología fanout de RabbitMQ con enrutamiento y consumer groups" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Consumer-Groups.svg"/></p>
+<p><em>Pub/Sub y colas combinados</em></p>
+<h2 id="que-es-apache-kafka">¿Qué es Apache Kafka?</h2>
+<p><a href="https://kafka.apache.org/">Apache Kafka</a> no es una implementación de un message broker. En cambio, es una plataforma distribuida de streaming de eventos de código abierto. A diferencia de RabbitMQ, que se basa en colas y exchanges, la capa de almacenamiento de Kafka utiliza un log de transacciones particionado (más detalles abajo en <a href="#topics">Topics</a>).</p>
+<p>Kafka también ofrece una Streams API para procesar streams en tiempo real y una Connectors API para integrarse fácilmente con diversas fuentes de datos. Sin embargo, estas quedan fuera del alcance de este artículo.</p>
+<p>Los proveedores de nube ofrecen soluciones alternativas a la capa de almacenamiento de Kafka. Entre ellas se encuentran <a href="https://azure.microsoft.com/en-us/services/event-hubs/">Azure Event Hubs</a> y, en cierta medida, AWS Kinesis Data Streams. También existen alternativas específicas de cada nube y de código abierto a las capacidades de procesamiento de streams de Kafka, pero, de nuevo, quedan fuera del alcance de este artículo.</p>
+<h3 id="topics">Topics</h3>
+<p>Kafka no implementa la noción de cola. En cambio, Kafka almacena colecciones de registros en categorías llamadas topics.</p>
+<p>Para cada topic, Kafka mantiene un log de mensajes particionado. Cada partición es una secuencia ordenada e inmutable de registros a la que se añaden mensajes continuamente. Kafka añade los mensajes a estas particiones a medida que llegan. Por defecto, utiliza un particionador round-robin para repartir los mensajes uniformemente entre las particiones.</p>
+<p>Los productores pueden modificar este comportamiento para crear streams lógicos de mensajes. Por ejemplo, en una aplicación multitenant podríamos querer crear streams lógicos de mensajes según el ID de tenant de cada mensaje. En un escenario IoT, podríamos querer asignar la identidad de cada productor a una partición específica de forma constante.</p>
+<p>Asegurar que todos los mensajes del mismo stream lógico se asignen a la misma partición garantiza su entrega ordenada a los consumidores.</p>
+<p><img alt="Ilustración de productores para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Producers.svg"/></p>
+<p><em>Productores de Kafka</em></p>
+<p>Los consumidores consumen mensajes manteniendo un offset (o índice) sobre estas particiones y leyéndolas secuencialmente. Un único consumidor puede consumir varios topics, y los consumidores pueden escalar hasta el número de particiones disponibles. Por ello, al crear un topic, se debe considerar cuidadosamente el throughput de mensajes esperado en ese topic.</p>
+<p>Un grupo de consumidores que trabajan juntos para consumir un topic se denomina <strong>consumer group</strong>. La API de Kafka normalmente se encarga de balancear el procesamiento de particiones entre los consumidores de un consumer group y de almacenar los offsets actuales de partición de los consumidores.</p>
+<p><img alt="Ilustración de consumer groups para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Consumers.svg"/></p>
+<p><em>Consumidores de Kafka</em></p>
+<h3 id="patrones-con-kafka">Implementación de patrones de mensajería con Kafka</h3>
+<p>La implementación de Kafka encaja bastante bien con el patrón pub/sub. Un productor puede enviar mensajes a un topic específico y varios consumer groups pueden consumir el mismo mensaje. Cada consumer group puede escalar individualmente para manejar la carga (hasta el número de particiones disponibles).</p>
+<p>Como los consumidores mantienen su offset de partición, pueden optar por una suscripción durable, que conserva su offset entre reinicios, o por una suscripción efímera, que descarta el offset y reinicia desde el último registro de cada partición cada vez que arranca. Sin embargo, no encaja tan bien con el patrón de Message Queuing.</p>
+<p>Por supuesto, podríamos tener un topic con un único consumer group para emular el Message Queuing clásico. No obstante, esto tiene varios inconvenientes que se discuten más adelante en este artículo.</p>
+<p>Es importante destacar que Kafka retiene los mensajes en las particiones durante un periodo preconfigurado, independientemente de si los consumidores los consumieron o no. Esta retención significa que los consumidores son libres de releer mensajes pasados. Además, los desarrolladores también pueden usar la capa de almacenamiento de Kafka para implementar mecanismos como Event Sourcing y Audit Logs.</p>
+<h2 id="diferencias">¿Cuáles son las diferencias entre RabbitMQ y Apache Kafka?</h2>
+<p>Aunque RabbitMQ y Kafka a veces son intercambiables, sus implementaciones son muy diferentes. Por ello, no podemos verlos como miembros de la misma categoría de herramientas; uno es un message broker y el otro es una plataforma distribuida de streaming de eventos. Como arquitectos de soluciones, debemos reconocer estas diferencias y considerar activamente qué solución usar en cada escenario.</p>
+<p>Por ejemplo, Kafka es más adecuado para procesar streams de datos, mientras que RabbitMQ ofrece garantías mínimas sobre el orden de los mensajes dentro de un stream. Por otro lado, RabbitMQ tiene soporte integrado para lógica de reintentos y dead-letter exchanges, mientras que Kafka deja esas implementaciones en manos de sus usuarios.</p>
+<p>Esta sección destaca estas y otras diferencias notables entre Apache Kafka y RabbitMQ.</p>
+<h3 id="orden-mensajes">Orden de los mensajes</h3>
+<p>RabbitMQ ofrece pocas garantías respecto al orden de los mensajes enviados a una cola o exchange. Aunque pueda parecer evidente que los consumidores procesan los mensajes en el orden en que los productores los envían, esto es muy engañoso. La documentación de RabbitMQ indica lo siguiente sobre sus garantías de orden:</p>
+<blockquote>
+<p>Los mensajes publicados en un canal, que pasan por un exchange, una cola y un canal de salida, se recibirán en el mismo orden en que fueron enviados.</p>
+<p>— <a href="https://www.rabbitmq.com/semantics.html">RabbitMQ Broker Semantics</a></p>
+</blockquote>
+<p>Dicho de otro modo, mientras tengamos un único consumidor de mensajes, este los recibe en orden. Sin embargo, en cuanto varios consumidores leen mensajes de la misma cola, no tenemos ninguna garantía sobre el orden de procesamiento de los mensajes.</p>
+<p>Esta falta de garantía de orden se produce porque los consumidores pueden devolver (o reentregar) mensajes a la cola después de leerlos (por ejemplo, ante un fallo de procesamiento). Una vez devuelto un mensaje, otro consumidor puede tomarlo para procesarlo aunque ya haya consumido un mensaje posterior. Así, el siguiente diagrama muestra que los consumer groups procesan los mensajes fuera de orden.</p>
+<p><img alt="Ejemplo de pérdida del orden de mensajes al usar RabbitMQ" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Message-Ordering-RabbitMQ.svg"/></p>
+<p><em>Ejemplo de pérdida del orden de mensajes al usar RabbitMQ</em></p>
+<p>Por supuesto, podríamos recuperar el orden de los mensajes en RabbitMQ limitando la concurrencia de consumidores a uno. Más precisamente, el número de hilos dentro del único consumidor debería limitarse a uno, ya que cualquier procesamiento paralelo de mensajes puede causar el mismo problema de desorden. Sin embargo, limitarnos a un único consumidor de un solo hilo afecta gravemente nuestra capacidad de escalar el procesamiento de mensajes a medida que el sistema crece. Por ello, no deberíamos asumir este compromiso a la ligera.</p>
+<p>Por otro lado, Kafka ofrece una garantía de orden fiable para el procesamiento de mensajes. Kafka garantiza que todos los mensajes enviados a la misma partición de un topic se procesen en orden. Por defecto, Kafka coloca los mensajes en las particiones con un particionador round-robin.</p>
+<p>Sin embargo, un productor puede establecer una clave de partición en cada mensaje para crear streams lógicos de datos (como mensajes del mismo dispositivo o mensajes que pertenecen al mismo tenant). Todos los mensajes del mismo stream se colocan entonces en la misma partición, lo que hace que los consumer groups los procesen en orden.</p>
+<p>Cabe señalar, sin embargo, que dentro de un consumer group cada partición es procesada por un único hilo de un único consumidor. Por ello, no podemos escalar el procesamiento de una sola partición. No obstante, en Kafka podemos escalar el número de particiones de un topic, haciendo que cada partición reciba menos mensajes y añadiendo consumidores adicionales para las particiones adicionales.</p>
+<p><em><strong>Ganador</strong> – Kafka es el claro ganador, ya que permite procesar mensajes en orden. RabbitMQ solo ofrece garantías débiles en este aspecto.</em></p>
+<h3 id="enrutamiento-mensajes">Enrutamiento de mensajes</h3>
+<p>RabbitMQ puede enrutar mensajes a los suscriptores de un message exchange basándose en reglas de enrutamiento definidas por los suscriptores. Un <a href="https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-topic">Topic Exchange</a> puede enrutar mensajes en función de un header dedicado llamado <em>routing_key</em>. Alternativamente, un <a href="https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-headers">Headers Exchange</a> puede enrutar mensajes en función de headers arbitrarios del mensaje. Ambos exchanges permiten efectivamente que los consumidores especifiquen el tipo de mensajes que desean recibir, proporcionando así a los arquitectos de soluciones una gran flexibilidad.</p>
+<p>Por otro lado, Kafka no permite que los consumidores filtren los mensajes de un topic antes de hacer polling. Un consumidor suscrito recibe todos los mensajes de una partición sin excepción. Como desarrollador, podrías usar un Kafka Stream Job que lea los mensajes del topic, los filtre y los publique en otro topic al que un consumidor pueda suscribirse. No obstante, esto requiere más esfuerzo y mantenimiento, y tiene más piezas móviles.</p>
+<p><em><strong>Ganador</strong> – RabbitMQ ofrece un soporte superior para enrutar y filtrar mensajes para los consumidores.</em></p>
+<h3 id="temporizacion-mensajes">Temporización de mensajes</h3>
+<p>RabbitMQ ofrece varias capacidades relacionadas con la temporización de un mensaje enviado a una cola:</p>
+<ol>
+<li><strong>Time-To-Live (TTL) de mensajes</strong> – se puede asociar un atributo <a href="https://www.rabbitmq.com/ttl.html">TTL</a> a cada mensaje enviado a RabbitMQ. El TTL lo establece directamente el publicador o se define como política en la propia cola. Especificar un TTL permite al sistema limitar el periodo de validez del mensaje. Si un consumidor no lo procesa a tiempo, se elimina automáticamente de la cola (y se transfiere a un dead-letter exchange; más sobre eso más adelante). El TTL es útil para comandos sensibles al tiempo que dejan de ser relevantes tras cierto tiempo sin procesarse.</li>
+<li><strong>Mensajes diferidos/programados</strong> – RabbitMQ soporta mensajes diferidos/programados mediante un <a href="https://github.com/rabbitmq/rabbitmq-delayed-message-exchange">plugin</a>. Cuando este plugin está habilitado en un message exchange, un productor puede enviar un mensaje a RabbitMQ y retrasar el momento en que RabbitMQ enruta ese mensaje a la cola de un consumidor. Esta funcionalidad permite a un desarrollador programar comandos futuros que no deben procesarse antes de tiempo. Por ejemplo, cuando un productor alcanza una regla de throttling, podríamos querer retrasar la ejecución de ciertos comandos para más tarde.</li>
+</ol>
+<p>Kafka no ofrece soporte para tales funcionalidades. Escribe los mensajes en las particiones a medida que llegan, donde quedan inmediatamente disponibles para que los consumidores los consuman. Además, Kafka no ofrece ningún mecanismo de TTL para los mensajes, aunque podríamos implementar uno a nivel de aplicación. También debemos recordar que una partición de Kafka es un log de transacciones de solo anexado (append-only). Por ello, no puede manipular el tiempo del mensaje (ni su ubicación dentro de la partición).</p>
+<p><em><strong>Ganador</strong> – RabbitMQ gana con holgura, ya que la naturaleza de su implementación limita a Kafka.</em></p>
+<h3 id="retencion-mensajes">Retención de mensajes</h3>
+<p>RabbitMQ elimina los mensajes del almacenamiento en cuanto los consumidores los consumen con éxito. Este comportamiento no se puede modificar. Forma parte del diseño de casi todos los message brokers.</p>
+<p>En cambio, Kafka persiste todos los mensajes por diseño hasta un timeout configurado por topic. En cuanto a la retención de mensajes, a Kafka no le importa el estado de consumo de sus consumidores, ya que actúa como un log de mensajes. Los consumidores pueden consumir cada mensaje tantas veces como quieran y viajar hacia adelante y hacia atrás "en el tiempo" manipulando su offset de partición. Periódicamente, Kafka revisa la antigüedad de los mensajes en los topics y elimina los mensajes suficientemente antiguos.</p>
+<p>El rendimiento de Kafka no depende del tamaño del almacenamiento. Así que, en teoría, se pueden almacenar mensajes casi indefinidamente sin afectar el rendimiento (siempre que tus nodos sean lo bastante grandes para albergar esas particiones).</p>
+<p><em><strong>Ganador</strong> – Kafka está diseñado para retener mensajes, mientras que RabbitMQ no. No hay competencia aquí, y Kafka es declarado ganador.</em></p>
+<h3 id="manejo-fallos">Manejo de fallos</h3>
+<p>Al trabajar con mensajes, colas y eventos, los desarrolladores suelen tener la impresión de que el procesamiento de mensajes siempre tiene éxito. Después de todo, como los productores colocan cada mensaje en una cola o topic, aunque un consumidor no logre procesar un mensaje, simplemente puede reintentar hasta tener éxito.</p>
+<p>Aunque esto es cierto, deberíamos dedicarle más reflexión a este proceso. Debemos reconocer que el procesamiento de mensajes puede fallar en algunos escenarios. Debemos manejar estas situaciones de forma elegante, incluso si la solución se compone en parte de intervención humana.</p>
+<p>Hay dos tipos de errores posibles al procesar mensajes:</p>
+<ol>
+<li><strong>Fallos transitorios</strong> – fallos que ocurren debido a un problema temporal como la conectividad de red, la carga de CPU o la caída de un servicio. Normalmente podemos mitigar este tipo de fallo reintentando una y otra vez.</li>
+<li><strong>Fallos persistentes</strong> – fallos que ocurren debido a un problema permanente que no se puede resolver con reintentos adicionales. Las causas comunes de estos fallos son bugs de software o un esquema de mensaje inválido (es decir, un poison message).</li>
+</ol>
+<p>Como arquitectos y desarrolladores, deberíamos preguntarnos: ¿Con qué frecuencia reintentamos ante un fallo de procesamiento de un mensaje? ¿Cuánto tiempo debemos esperar entre reintentos? ¿Cómo distinguimos entre fallos transitorios y persistentes? Y lo más importante: ¿qué hacemos cuando todos los reintentos fallan o nos encontramos con un fallo persistente? Aunque las respuestas a estas preguntas son específicas de cada dominio, las plataformas de mensajería normalmente nos proporcionan las herramientas para implementar nuestra solución.</p>
+<p>RabbitMQ ofrece herramientas como los reintentos de entrega y los dead-letter exchanges (DLX) para manejar fallos en el procesamiento de mensajes. La idea principal de un DLX es que RabbitMQ puede enrutar automáticamente los mensajes fallidos a un DLX según una configuración adecuada y aplicar reglas de procesamiento adicionales sobre el mensaje en ese exchange, incluyendo reintentos diferidos, conteo de reintentos y entrega a una cola de "intervención humana". <a href="https://engineering.nanit.com/rabbitmq-retries-the-full-story-ca4cc6c5b493">Este artículo</a> ofrece información adicional sobre posibles patrones para manejar reintentos en RabbitMQ.</p>
+<p>Lo más importante que hay que recordar aquí es que, en RabbitMQ, cuando un consumidor está ocupado procesando y reintentando un mensaje específico (incluso antes de devolverlo a la cola), otros consumidores pueden procesar concurrentemente los mensajes que le siguen. El procesamiento de mensajes no se bloquea mientras un consumidor concreto reintenta un mensaje en particular. Por ello, un consumidor de mensajes puede reintentar un mensaje de forma síncrona tanto como quiera sin afectar al sistema completo.</p>
+<p><img alt="Ejemplo de manejo de fallos: un consumidor puede continuar reintentando un mensaje mientras otros consumidores siguen procesando mensajes" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-RabbitMQ.svg"/></p>
+<p><em>El consumidor 1 puede continuar reintentando el mensaje 1 mientras otros consumidores siguen procesando mensajes.</em></p>
+<p>A diferencia de RabbitMQ, Kafka no ofrece ninguno de estos mecanismos de forma nativa. Con Kafka, debemos proporcionar e implementar los mecanismos de reintento de mensajes a nivel de aplicación. Además, debemos tener en cuenta que, cuando un consumidor está ocupado reintentando de forma síncrona un mensaje específico, no se pueden procesar otros mensajes de la misma partición.</p>
+<p>No podemos rechazar y reintentar un mensaje específico y hacer commit de un mensaje que llegó después, ya que el consumidor no puede cambiar el orden de los mensajes. Como recordarás, la partición es simplemente un log de solo anexado.</p>
+<p>Una solución a nivel de aplicación puede hacer commit de los mensajes fallidos en un "retry topic" y manejar los reintentos desde allí; sin embargo, en esta solución perdemos el orden de los mensajes. Un ejemplo de este tipo de implementación por parte de Uber Engineering se puede encontrar aquí. Si la latencia del procesamiento de mensajes no es un problema, la solución estándar de Kafka con un monitoreo de errores adecuado podría ser suficiente.</p>
+<p><img alt="Ejemplo de mensajes de una partición que no se procesan si el consumidor queda atascado reintentando un mensaje" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-Kafka.svg"/></p>
+<p><em>Los mensajes de la partición inferior no se procesan si el consumidor queda atascado reintentando un mensaje.</em></p>
+<p><em><strong>Ganador</strong> – RabbitMQ gana por puntos, ya que ofrece de forma nativa algún mecanismo para resolver este problema.</em></p>
+<h3 id="escala">Escala</h3>
+<p>Existen múltiples benchmarks que comparan el rendimiento de RabbitMQ y Kafka. Aunque los benchmarks genéricos tienen una aplicabilidad limitada a casos específicos, Kafka generalmente rinde mejor que RabbitMQ. Kafka usa E/S secuencial de disco para mejorar el rendimiento. Su arquitectura basada en particiones hace que escale horizontalmente (scale-out) mejor que RabbitMQ, que escala mejor verticalmente (scale-up).</p>
+<p>Los despliegues grandes de Kafka pueden manejar habitualmente cientos de miles de mensajes por segundo, e incluso millones por segundo. Pivotal registró en su momento un clúster de RabbitMQ procesando un millón de mensajes por segundo; sin embargo, lo hizo con un clúster de 30 nodos y con la carga repartida de forma óptima entre múltiples colas y exchanges.</p>
+<p>Los despliegues típicos de RabbitMQ incluyen clústeres de 3 a 7 nodos que no necesariamente dividen la carga de forma óptima entre las colas. Estos clústeres típicos normalmente pueden manejar una carga de varias decenas de miles de mensajes por segundo.</p>
+<p><em><strong>Ganador</strong> – aunque ambas plataformas pueden manejar cargas masivas, Kafka normalmente escala mejor y alcanza un mayor throughput que RabbitMQ, por lo que gana esta ronda. Sin embargo, es esencial señalar que la mayoría de los sistemas nunca alcanzan estos límites. Así que, a menos que estés construyendo el próximo gran éxito de software con millones de usuarios, no necesitas preocuparte tanto por la escala, ya que ambas plataformas pueden servirte bien.</em></p>
+<h3 id="complejidad-consumidor">Complejidad del consumidor</h3>
+<p>RabbitMQ usa un enfoque de smart-broker &amp; dumb-consumer (broker inteligente y consumidor simple). Los consumidores se registran para consumir colas y RabbitMQ les envía (push) los mensajes a procesar a medida que llegan. RabbitMQ también tiene una API de pull, pero se usa mucho menos.</p>
+<p>RabbitMQ gestiona la distribución de mensajes a los consumidores y elimina los mensajes de las colas (posiblemente hacia DLXs). El consumidor no necesita preocuparse por nada de esto. La estructura de RabbitMQ también significa que el consumer group de una cola puede escalar eficientemente de un solo consumidor a varios cuando aumenta la carga, sin ningún cambio en el sistema.</p>
+<p><img alt="Ilustración de consumidores de RabbitMQ que escalan hacia arriba y hacia abajo eficientemente" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-RabbitMQ.svg"/></p>
+<p><em>Los consumidores de RabbitMQ escalan hacia arriba y hacia abajo eficientemente.</em></p>
+<p>Kafka, en cambio, usa un enfoque de dumb-broker &amp; smart-consumer (broker simple y consumidor inteligente). Los consumidores de un consumer group necesitan coordinar entre ellos los leases sobre las particiones del topic (para que solo un consumidor del consumer group escuche una partición específica). Los consumidores también necesitan gestionar y almacenar el índice de offset de sus particiones.</p>
+<p>Afortunadamente, el SDK de Kafka se encarga de esto por nosotros, así que no necesitamos gestionarlo nosotros mismos. Sin embargo, cuando la carga es baja, un único consumidor necesita procesar y llevar el control de varias particiones en paralelo, lo que requiere más recursos en el lado del consumidor.</p>
+<p>Además, a medida que aumenta la carga, solo podemos escalar el consumer group hasta el punto en que el número de consumidores iguale el número de particiones del topic. Por encima de eso, necesitamos configurar Kafka para añadir particiones adicionales. Sin embargo, cuando la carga vuelve a disminuir, no podemos eliminar las particiones que ya añadimos, lo que aumenta el trabajo que los consumidores deben hacer. Aunque, como se mencionó arriba, el SDK se encarga de este trabajo extra.</p>
+<p><img alt="Ilustración de particiones de Kafka que no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-Kafka.svg"/></p>
+<p><em>Las particiones de Kafka no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala.</em></p>
+<p><em><strong>Ganador</strong> – RabbitMQ, por diseño, está construido pensando en consumidores simples. Por ello, es el ganador de esta ronda.</em></p>
+<h3 id="compatibilidad-protocolos">Compatibilidad de protocolos</h3>
+<p>Mientras que Apache Kafka usa un <a href="https://kafka.apache.org/protocol.html">protocolo binario propio</a> sobre TCP, RabbitMQ soporta <a href="https://www.rabbitmq.com/protocols.html">protocolos estándar</a> de forma nativa o mediante plugins. En particular, RabbitMQ soporta AMQP 0-9-1 de forma nativa. Añade soporte para AMQP 1.0, MQTT y STOMP mediante plugins.</p>
+<p><em><strong>Ganador</strong> – RabbitMQ, ya que soporta varios protocolos estándar.</em></p>
+<h2 id="que-plataforma-usar">¿Qué plataforma deberías usar? RabbitMQ vs Kafka</h2>
+<p>Llegamos a la pregunta del millón: ¿cuándo deberíamos usar RabbitMQ y cuándo Kafka? Si resumimos las diferencias anteriores entre ambos, llegamos a la siguiente conclusión:</p>
+<ul>
+<li>RabbitMQ es preferible cuando necesitamos:<ol>
+<li>Reglas de enrutamiento avanzadas y flexibles.</li>
+<li>Control de la temporización de mensajes (controlar la expiración o el retraso de los mensajes).</li>
+<li>Capacidades avanzadas de manejo de fallos en casos en que es más probable que los consumidores no logren procesar mensajes (de forma temporal o permanente).</li>
+<li>Implementaciones de consumidores más simples.</li>
+</ol>
+</li>
+<li>Kafka es preferible cuando requerimos:<ol>
+<li>Orden estricto de los mensajes.</li>
+<li>Retención de mensajes durante periodos prolongados, incluyendo la posibilidad de reproducir mensajes pasados.</li>
+<li>La capacidad de alcanzar una gran escala cuando las soluciones tradicionales no son suficientes.</li>
+</ol>
+</li>
+</ul>
+<p>Podemos implementar la mayoría de los casos de uso con ambas plataformas. Sin embargo, como arquitectos de soluciones, debemos elegir la herramienta más adecuada para el trabajo. Al hacer esta elección, debemos considerar tanto las diferencias funcionales, como las destacadas arriba, como las restricciones no funcionales. Estas restricciones incluyen aspectos como:</p>
+<ol>
+<li>El conocimiento existente de los desarrolladores sobre estas plataformas.</li>
+<li>La disponibilidad de una solución gestionada en la nube, si aplica.</li>
+<li>El costo operativo de cada solución.</li>
+<li>La disponibilidad de SDKs para nuestro stack objetivo.</li>
+</ol>
+<p>Al desarrollar sistemas de software complejos, podemos sentir la tentación de implementar todos los casos de uso de mensajería requeridos con la misma plataforma. No obstante, según mi experiencia, la mayoría de las veces usar ambas plataformas puede tener muchos beneficios.</p>
+<p>Por ejemplo, en un sistema basado en una arquitectura orientada a eventos, podríamos usar RabbitMQ para enviar comandos entre microservicios y Kafka para implementar notificaciones de eventos de negocio. Esto se debe a que las notificaciones de eventos se usan a menudo para event sourcing, operaciones por lotes (estilo ETL) o fines de auditoría, lo que hace que Kafka sea muy valioso por sus capacidades de retención de mensajes.</p>
+<p>Los comandos, por otro lado, normalmente requieren procesamiento adicional en el lado del consumidor, procesamiento que podría fallar y necesitar capacidades avanzadas de manejo de fallos. Aquí, RabbitMQ brilla por sus capacidades. Puede que escriba un artículo detallado sobre esto en el futuro, pero debes recordar que tu experiencia puede variar, ya que la idoneidad depende de tus requisitos específicos.</p>
+<h2 id="reflexiones-finales">Reflexiones finales</h2>
+<p>Comencé este artículo señalando que muchos desarrolladores ven a RabbitMQ y Kafka como intercambiables. Espero que revisar sus diferencias haya ayudado a comprender la implementación y las particularidades técnicas de estas plataformas.</p>
+<p>En el panorama de las plataformas de mensajería, que evoluciona rápidamente, RabbitMQ y Kafka destacan como opciones formidables, cada una con sus propias fortalezas y especializaciones.</p>
+<p>Las capacidades avanzadas de enrutamiento y las funcionalidades de temporización de mensajes de RabbitMQ lo hacen especialmente versátil en diversos entornos empresariales. Por otro lado, la destreza de Kafka para manejar grandes streams de datos en tiempo real y sus robustos mecanismos de escalado subrayan su valor en aplicaciones a escala web.</p>
+<p>Como en muchas decisiones tecnológicas, la elección óptima se reduce a las necesidades y objetivos específicos del proyecto en cuestión. Ambas plataformas son potentes por derecho propio, y comprender sus matices puede orientar significativamente la dirección de tus esfuerzos de diseño y desarrollo de software.</p>
+<div class="clear"></div>
+<div class="info">
+<a href="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/">posted at 18:15</a>
+                     · <a href="https://gcca.github.io/category/swmisc.html" rel="tag">SW.Misc</a>
+                     ·
+                     <a class="tags" href="https://gcca.github.io/tag/rabbitmq.html">rabbitmq</a>
+                     <a class="tags" href="https://gcca.github.io/tag/kafka.html">kafka</a>
+                     <a class="tags" href="https://gcca.github.io/tag/messaging.html">messaging</a>
+                     <a class="tags" href="https://gcca.github.io/tag/architecture.html">architecture</a>
+</div>
+</article>
+<div class="clear"></div>
+<footer>
+<p>
+<a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                ·
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                ·
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+</p></footer>
+</div>
+<div class="clear"></div>
+</div>
+</body>
+</html>

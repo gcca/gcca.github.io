@@ -3,6 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08-extended/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="https://gcca.github.io/theme/js/theme.js"></script>
+    <script defer src="https://gcca.github.io/theme/js/math.js"></script>
     <title>(gcca) | articles in the "Miscelánea" category</title>
     <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
     <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
@@ -15,12 +19,20 @@
 </head>
 <body>
     <header>
+        <div class="theme-control" hidden>
+            <label for="theme-preference">Theme</label>
+            <select id="theme-preference" name="theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
         <nav style="overflow: hidden;">
             <ul>
 
                 <li class="ephemeral selected"><a href="https://gcca.github.io/category/miscelanea.html">Miscelánea</a></li>
                 <li><a href="https://gcca.github.io/">Home</a></li>
-                <li><a href="https://x.com/@gcca_at_x">X</a></li>
+                <li><a href="https://x.com/gcca__">X</a></li>
                 <li><a href="https://github.com/gcca">GitHub</a></li>
                 <li><a href="https://gcca.github.io/tags">Tags</a></li>
                 <li><a href="https://gcca.github.io/categories">Categories</a></li>
@@ -29,10 +41,9 @@
         </nav>
         <div class="header_box" style="height: 50px">
         <h1><a href="https://gcca.github.io/">
-            <image src='/images/logo.png' class="avatar" width="50px" /><span class="site_title">(gcca)</span>
+            <img src="/images/logo.png" class="avatar" width="50" height="50" alt="" /><span class="site_title">(gcca)</span>
             </a></h1></div>
             <h2>Blog</h2>
-        </div>
     </header>
     <div id="wrapper">
         <div id="content">            <h4 class="date">Feb 11, 2024</h4>
