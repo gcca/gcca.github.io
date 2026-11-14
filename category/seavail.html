@@ -47,6 +47,10 @@
                 
                 
 
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/" aria-label="Consistent hashing: anotaciones">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/01.jpg" alt="" width="760" height="519" loading="lazy" decoding="async" />
+                </a>
+
                 <p>Para asignar una clave a un servidor podemos usar <code>hash(clave) % cantidad_de_nodos</code>. El problema aparece al agregar o quitar servidores: cambia el divisor y muchas claves cambian de destino. Consistent hashing mantiene un espacio de posiciones fijo y coloca allí tanto nodos como claves.</p>
 <p>Los ejemplos <code>consish/</code> de <a href="https://github.com/gcca/nh35a/tree/aae1135157a5304cad1e715bf07c2483accfbefb">nh35a</a> comparten cuatro partes: calcular una posición, registrar los nodos, ordenarlos y buscar el siguiente nodo del anillo.</p>
 <h2>Del hash al anillo</h2>
@@ -126,6 +130,10 @@
                 
                 
 
+                <a class="thumbnail-link" href="https://gcca.github.io/2024/10/24/genuid-lockfree/" aria-label="Generador de UID y Lock free">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/03.jpg" alt="" width="849" height="490" loading="lazy" decoding="async" />
+                </a>
+
                 <p>Exploraremos dos enfoques para generar IDs en C++: uno utilizando mecanismos de bloqueo (LockTierUID) y otro libre de bloqueo (LockFreeUID). Ambos generan IDs de 64 bits y son compatibles con C++11. Estas son sus definiciones:</p>
 <div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockTierUID</span><span class="p">();</span>
 <span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockFreeUID</span><span class="p">();</span>
@@ -185,6 +193,10 @@ En aplicaciones de alta concurrencia, como sistemas de transacciones de alta fre
 
                 
                 
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/" aria-label="Dynamic Round Robin">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/01.jpg" alt="" width="760" height="519" loading="lazy" decoding="async" />
+                </a>
 
                 <p>Continuando lo presentando en <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">Intro to Round Robin</a>, se muestra una adaptación para permitir la adición de elementos a la lista de selección. Para ello se aplicará Round Robin con subconjuntos dinámicos.</p>
 <ol>
@@ -280,6 +292,10 @@ En aplicaciones de alta concurrencia, como sistemas de transacciones de alta fre
 
                 
                 
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2024/10/03/poc-roundrobin/" aria-label="Intro to Round Robin">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/04.jpg" alt="" width="888" height="490" loading="lazy" decoding="async" />
+                </a>
 
                 <h2>Introducción</h2>
 <p>Round Robin es un algoritmo de planificación de procesos.</p>
