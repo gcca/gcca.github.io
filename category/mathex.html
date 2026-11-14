@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="https://gcca.github.io/theme/js/theme.js"></script>
+    <script defer src="https://gcca.github.io/theme/js/math.js"></script>
+    <title>(gcca) | articles in the "Math.Ex" category</title>
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales C." />
+</head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+
+                <li class="ephemeral selected"><a href="https://gcca.github.io/category/mathex.html">Math.Ex</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/gcca__">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Nov 14, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/" rel="bookmark" title="Permanent Link to &quot;Inducción para una desigualdad&quot;">Inducción para una desigualdad</a>
+                </h2>
+
+                
+                
+
+                <p>Hace poco estuve revisando un pequeño problema en el que se pedía aplicar inducción.</p>
+<blockquote>
+<p><strong>Ejercicio 1.</strong> Sea <span class="math">\(n\)</span> un número natural positivo, <span class="math">\(n\ge2\)</span>. Entonces</p>
+<p>
+<div class="math">$$\sum_{k=1}^n\frac1{k^2}&lt;2-\frac1n.$$</div>
+</p>
+</blockquote>
+<p>Vi lo siguiente en un intento de prueba:</p>
+<div class="math">$$\sum_{k=1}^k\frac1{k^2}+\frac1{(k+1)^2}&lt;2-\frac1{k+1},$$</div>
+<p>sin saber cómo seguir.</p>
+<p>Para obtener la prueba deseada, supongamos que</p>
+<div class="math">$$\sum_{k=1}^n\frac1{k^2}&lt;2-\frac1n.$$</div>
+<p>Entonces</p>
+<div class="math">$$
+\begin{aligned}
+\sum_{k=1}^{n+1}\frac1{k^2}&amp;=&amp;\sum_{k=1}^n\frac1{k^2}+\frac1{(n+1)^2}\\
+&amp;=&amp;2-\frac1n+\frac1{(n+1)^2}.
+\end{aligned}
+$$</div>
+<p>Así, el problema queda reducido a mostrar que</p>
+<div class="math">$$-\frac1n+\frac1{(n+1)^2}\ge-\frac1{n+1},$$</div>
+<p>lo cual es sencillo de realizar con algo de álgebra. El punto es que uno tiene que usar el supuesto que funciona para <span class="math">\(n\)</span>. Además, cuando usamos <span class="math">\(k\)</span> como índice de la suma, no deberíamos usar <span class="math">\(k\)</span> en cualquier lugar, como se hizo anteriormente.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/">posted at 07:18</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathex.html" rel="tag">Math.Ex</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

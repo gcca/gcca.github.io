@@ -50,6 +50,12 @@ pre, code, .linenos, td.code {
     width: 50px;
     height: auto;
 }
+/* Let this article's transparent diagrams blend into the page. */
+img[src*="/rabbitmq_vs_kafka/"] {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
 /* Body and headings are two pixels above upstream; code blocks use 16px. */
 body {
     font-size: 18px;

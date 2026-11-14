@@ -64,6 +64,14 @@
     <lastmod>2026-11-13T20:00:00-05:00</lastmod>
   </url>
   <url>
+    <loc>https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/</loc>
+    <lastmod>2026-11-14T07:18:00-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/</loc>
+    <lastmod>2026-11-14T07:16:00-05:00</lastmod>
+  </url>
+  <url>
     <loc>https://gcca.github.io/2026/11/14/project-euler-01/</loc>
     <lastmod>2026-11-14T06:25:00-05:00</lastmod>
   </url>
@@ -83,13 +91,22 @@
     <loc>https://gcca.github.io/author/gcca/page/4/</loc>
   </url>
   <url>
+    <loc>https://gcca.github.io/author/gcca/page/5/</loc>
+  </url>
+  <url>
     <loc>https://gcca.github.io/authors.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/categories/</loc>
   </url>
   <url>
+    <loc>https://gcca.github.io/category/mathex.html</loc>
+  </url>
+  <url>
     <loc>https://gcca.github.io/category/mathmisc.html</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/category/mathml.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/category/mathnote.html</loc>
@@ -123,6 +140,9 @@
   </url>
   <url>
     <loc>https://gcca.github.io/page/4/</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/page/5/</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/tag/architecture.html</loc>

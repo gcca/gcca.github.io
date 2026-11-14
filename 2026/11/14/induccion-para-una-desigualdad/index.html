@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link as="font" crossorigin="" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" rel="preload" type="font/woff2"/>
+<script src="https://gcca.github.io/theme/js/theme.js"></script>
+<script defer="" src="https://gcca.github.io/theme/js/math.js"></script>
+<title>(gcca) | Inducción para una desigualdad</title>
+<link href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate" title="(gcca) Full RSS Feed" type="application/rss+xml"/>
+<link href="https://gcca.github.io/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/custom.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/theme.css" rel="stylesheet" type="text/css"/>
+<meta content="Pelican" name="generator"/>
+<meta content="Una observación sobre el uso de la hipótesis inductiva y los índices de sumación al demostrar una desigualdad." name="description"/>
+<meta content="Cristhian Gonzales C." name="author"/>
+<meta content="Math,Note" name="keywords"/>
+<link href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/" rel="canonical"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "(gcca)", "item": "https://gcca.github.io"}, {"@type": "ListItem", "position": 2, "name": "2026", "item": "https://gcca.github.io/2026"}, {"@type": "ListItem", "position": 3, "name": "11", "item": "https://gcca.github.io/2026/11"}, {"@type": "ListItem", "position": 4, "name": "14", "item": "https://gcca.github.io/2026/11/14"}, {"@type": "ListItem", "position": 5, "name": "Induccion para una desigualdad", "item": "https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad"}, {"@type": "ListItem", "position": 6, "name": "Index", "item": "https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/index.html"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "author": {"@type": "Person", "name": "(gcca)"}, "publisher": {"@type": "Organization", "name": "(gcca)"}, "headline": "Inducción para una desigualdad", "about": "Math.Ex", "datePublished": "2026-11-14 07:18"}</script><meta content="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/" property="og:url"/><meta content="article" property="og:type"/><meta content="Inducción para una desigualdad" property="og:title"/><meta content="Una observación sobre el uso de la hipótesis inductiva y los índices de sumación al demostrar una desigualdad." property="og:description"/><meta content="es_PE" property="og:locale"/></head>
+<body>
+<header>
+<nav style="overflow: hidden;">
+<ul>
+<li hidden="" id="theme-control"><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+<li><a href="https://gcca.github.io/">Home</a></li>
+<li><a href="https://x.com/gcca__">X</a></li>
+<li><a href="https://github.com/gcca">GitHub</a></li>
+<li><a href="https://gcca.github.io/tags">Tags</a></li>
+<li><a href="https://gcca.github.io/categories">Categories</a></li>
+<li><a href="https://gcca.github.io/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="header_box" style="height: 50px">
+<h1><a href="https://gcca.github.io/">
+<img alt="" class="avatar" height="200" src="/images/logo.png" width="246"/><span class="site_title">(gcca)</span>
+</a></h1></div>
+</header>
+<div id="wrapper">
+<div id="content"> <h4 class="date">Nov 14, 2026</h4>
+<article class="post">
+<h2 class="title">
+<a href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/" rel="bookmark" title='Permanent Link to "Inducción para una desigualdad"'>Inducción para una desigualdad</a>
+</h2>
+<p>Hace poco estuve revisando un pequeño problema en el que se pedía aplicar inducción.</p>
+<blockquote>
+<p><strong>Ejercicio 1.</strong> Sea <span class="math">\(n\)</span> un número natural positivo, <span class="math">\(n\ge2\)</span>. Entonces</p>
+<p>
+<div class="math">$$\sum_{k=1}^n\frac1{k^2}&lt;2-\frac1n.$$</div>
+</p>
+</blockquote>
+<p>Vi lo siguiente en un intento de prueba:</p>
+<div class="math">$$\sum_{k=1}^k\frac1{k^2}+\frac1{(k+1)^2}&lt;2-\frac1{k+1},$$</div>
+<p>sin saber cómo seguir.</p>
+<p>Para obtener la prueba deseada, supongamos que</p>
+<div class="math">$$\sum_{k=1}^n\frac1{k^2}&lt;2-\frac1n.$$</div>
+<p>Entonces</p>
+<div class="math">$$
+\begin{aligned}
+\sum_{k=1}^{n+1}\frac1{k^2}&amp;=&amp;\sum_{k=1}^n\frac1{k^2}+\frac1{(n+1)^2}\\
+&amp;=&amp;2-\frac1n+\frac1{(n+1)^2}.
+\end{aligned}
+$$</div>
+<p>Así, el problema queda reducido a mostrar que</p>
+<div class="math">$$-\frac1n+\frac1{(n+1)^2}\ge-\frac1{n+1},$$</div>
+<p>lo cual es sencillo de realizar con algo de álgebra. El punto es que uno tiene que usar el supuesto que funciona para <span class="math">\(n\)</span>. Además, cuando usamos <span class="math">\(k\)</span> como índice de la suma, no deberíamos usar <span class="math">\(k\)</span> en cualquier lugar, como se hizo anteriormente.</p>
+<div class="clear"></div>
+<div class="info">
+<a href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/">posted at 07:18</a>
+                     · <a href="https://gcca.github.io/category/mathex.html" rel="tag">Math.Ex</a>
+                     ·
+                     <a class="tags" href="https://gcca.github.io/tag/math.html">Math</a>
+                     <a class="tags" href="https://gcca.github.io/tag/note.html">Note</a>
+</div>
+</article>
+<div class="clear"></div>
+<footer>
+<p>
+<a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                ·
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                ·
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+</p>
+</footer>
+</div>
+<div class="clear"></div>
+</div>
+</body>
+</html>

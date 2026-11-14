@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link as="font" crossorigin="" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" rel="preload" type="font/woff2"/>
+<script src="https://gcca.github.io/theme/js/theme.js"></script>
+<script defer="" src="https://gcca.github.io/theme/js/math.js"></script>
+<title>(gcca) | ML, Notas 1: Machine Learning</title>
+<link href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate" title="(gcca) Full RSS Feed" type="application/rss+xml"/>
+<link href="https://gcca.github.io/theme/css/main.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/custom.css" rel="stylesheet" type="text/css"/>
+<link href="https://gcca.github.io/theme/css/theme.css" rel="stylesheet" type="text/css"/>
+<meta content="Pelican" name="generator"/>
+<meta content="Introducción al método de mínimos cuadrados y su aplicación al ajuste de funciones lineales y cuadráticas." name="description"/>
+<meta content="Cristhian Gonzales C." name="author"/>
+<meta content="Math,Note" name="keywords"/>
+<link href="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/" rel="canonical"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "(gcca)", "item": "https://gcca.github.io"}, {"@type": "ListItem", "position": 2, "name": "2026", "item": "https://gcca.github.io/2026"}, {"@type": "ListItem", "position": 3, "name": "11", "item": "https://gcca.github.io/2026/11"}, {"@type": "ListItem", "position": 4, "name": "14", "item": "https://gcca.github.io/2026/11/14"}, {"@type": "ListItem", "position": 5, "name": "Ml notas 1 machine learning prehistoria", "item": "https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria"}, {"@type": "ListItem", "position": 6, "name": "Index", "item": "https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/index.html"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "author": {"@type": "Person", "name": "(gcca)"}, "publisher": {"@type": "Organization", "name": "(gcca)"}, "headline": "ML, Notas 1: Machine Learning", "about": "Math.ML", "datePublished": "2026-11-14 07:16"}</script><meta content="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/" property="og:url"/><meta content="article" property="og:type"/><meta content="ML, Notas 1: Machine Learning" property="og:title"/><meta content="Introducción al método de mínimos cuadrados y su aplicación al ajuste de funciones lineales y cuadráticas." property="og:description"/><meta content="es_PE" property="og:locale"/></head>
+<body>
+<header>
+<nav style="overflow: hidden;">
+<ul>
+<li hidden="" id="theme-control"><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+<li><a href="https://gcca.github.io/">Home</a></li>
+<li><a href="https://x.com/gcca__">X</a></li>
+<li><a href="https://github.com/gcca">GitHub</a></li>
+<li><a href="https://gcca.github.io/tags">Tags</a></li>
+<li><a href="https://gcca.github.io/categories">Categories</a></li>
+<li><a href="https://gcca.github.io/archives">Archives</a></li>
+</ul>
+</nav>
+<div class="header_box" style="height: 50px">
+<h1><a href="https://gcca.github.io/">
+<img alt="" class="avatar" height="200" src="/images/logo.png" width="246"/><span class="site_title">(gcca)</span>
+</a></h1></div>
+</header>
+<div id="wrapper">
+<div id="content"> <h4 class="date">Nov 14, 2026</h4>
+<article class="post">
+<h2 class="title">
+<a href="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/" rel="bookmark" title='Permanent Link to "ML, Notas 1: Machine Learning"'>ML, Notas 1: Machine Learning</a>
+</h2>
+<p>Este artículo es el primero de una serie acerca de los conceptos y herramientas que se manejan en el campo de estudio conocido como Machine Learning, que es un tópico de Inteligencia Artificial, Estadística y Teoría de la Probabilidad.</p>
+<p><strong>— 1. Regresión por el método de mínimos cuadrados —</strong></p>
+<p>Una de las maneras más sencillas de obtener una función a base de datos experimentales es el método de «mínimos cuadrados». Supongamos que necesitamos determinar experimentalmente una dependencia de la magnitud <span class="math">\({y}\)</span> en función de <span class="math">\({x}\)</span>:</p>
+<div class="math">$$
+\displaystyle  y = \varphi(x).
+$$</div>
+<p>Del experimento obtenemos como resultado <span class="math">\({n}\)</span> valores de la función <span class="math">\({y}\)</span> para los valores correspondientes del argumento <span class="math">\({x}\)</span>:</p>
+<div class="math">$$
+\displaystyle  \begin{array}{c|cccc} \mathbf x &amp; x_1 &amp; x_2 &amp; \quad\dotso\quad &amp; x_n \\\hline \mathbf y &amp; y_1 &amp; y_2 &amp; \quad\dotso\quad &amp; y_n \end{array}
+$$</div>
+<p>La forma de la función <span class="math">\({y = \varphi(x)}\)</span> se determina teóricamente o usando la disposición en el plano de coordenadas de los puntos correspondientes a los valores experimentales. Dependiendo de la distribución de estos puntos, elegiremos la forma de la función desconocida <span class="math">\({y = \varphi(x)}\)</span>. Por ejemplo, si vemos que los puntos experimentales no se separan mucho de una recta, entonces se puede buscar la función <span class="math">\({y = \varphi(x)}\)</span> en la forma de una función lineal <span class="math">\({y = ax + b}\)</span>; si los puntos experimentales tienden a «ir hacia arriba», entonces es natural pensar que podemos buscar la función <span class="math">\({y = \varphi(x)}\)</span> en la forma <span class="math">\({y = ax^b}\)</span>; y así sucesivamente; es decir, viendo la distribución de los puntos experimentales, debemos elegir una función conocida (lineal, potencial, trigonométrica, exponencial, logarítmica, etc.) que nos parezca la más adecuada para buscar la función <span class="math">\({y = \varphi(x)}\)</span>. Elegida la forma de la función <span class="math">\({y = \varphi(x, a, b, c, \dotsc)}\)</span>, <em>tenemos que buscar los parámetros</em> <span class="math">\({a,b, c, \dotsc}\)</span> que la integran, de modo tal que la función describa de la mejor manera el proceso examinado.</p>
+<p>El método que tratamos ahora es el de <em>mínimos cuadrados</em>, que consiste en lo siguiente.</p>
+<p>Examinemos una suma de los cuadrados de las diferencias de los valores <span class="math">\({y_i}\)</span>, obtenidos del experimento, y la función <span class="math">\({\varphi(x,a,b,c,\dotsc)}\)</span> en los puntos correspondientes: <a id="eqne"></a></p>
+<div class="math">$$
+\displaystyle   S(a,b,c,\dotsc) = \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]^2. \ \ \ \ \ (1)
+$$</div>
+<p>Elijamos los parámetros <span class="math">\({a,b,c,\dotsc}\)</span> de manera que esta suma tenga valor mínimo:</p>
+<div class="math">$$
+\displaystyle S(a,b,c,\dotsc) = \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]^2 = \min.
+$$</div>
+<p>Así, el problema se ha reducido a la búsqueda de los valores de los parámetros <span class="math">\({a,b,c,\dotsc}\)</span>, para los cuales la función <span class="math">\({S(a,b,c,\dotsc)}\)</span> tiene un mínimo. Esto es posible por la <em>prueba de la primera derivada</em>, estudiada en un curso de Cálculo diferencial; así, en virtud de lo anterior, tenemos que estos valores <span class="math">\({a,b,c,\dotsc}\)</span> satisfacen el sistema de ecuaciones</p>
+<div class="math">$$
+\displaystyle \frac{\partial S}{\partial a} = 0, \frac{\partial S}{\partial b} = 0, \frac{\partial S}{\partial c} = 0, \dotsc,
+$$</div>
+<p>o, en la forma desarrollada <a id="eqnsis"></a></p>
+<div class="math">$$
+\displaystyle   \begin{aligned} \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]\frac{\partial \varphi(x,a,b,c,\dotsc)}{\partial a} = 0, \\ \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]\frac{\partial \varphi(x,a,b,c,\dotsc)}{\partial b} = 0, \\ \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]\frac{\partial \varphi(x,a,b,c,\dotsc)}{\partial c} = 0, \\ \vdots \quad\; \end{aligned} \ \ \ \ \ (2)
+$$</div>
+<p>Notar que el número de ecuaciones es igual al número de incógnitas. En cada caso concreto se investiga la cuestión sobre la existencia de la solución del sistema de ecuaciones <a href="#eqnsis">(2)</a> y del mínimo de la función <span class="math">\({S(a,b,c,\dotsc)}\)</span>.</p>
+<p>Veamos algunos casos de la determinación de la función <span class="math">\({y = \varphi(x,a,b,c,\dotsc)}\)</span>.</p>
+<p><strong>I.</strong> Sea <span class="math">\({y = ax + b}\)</span>. Entonces, la función <span class="math">\({S(a,b)}\)</span>, en la expresión <a href="#eqne">(1)</a>, tiene la forma</p>
+<div class="math">$$
+\displaystyle S(a,b) = \sum_{i=1}^n [y_i - (ax_i + b)]^2.
+$$</div>
+<p>Esta es una función con dos variables, <span class="math">\({a}\)</span> y <span class="math">\({b}\)</span> (<span class="math">\({x_i}\)</span> e <span class="math">\({y_i}\)</span> son parte de los datos experimentales). Por consiguiente,</p>
+<div class="math">$$
+\displaystyle  \begin{aligned} \frac{\partial S}{\partial a} &amp; = -2 \sum_{i=1}^n [y_i - (ax_i + b)]x_i = 0,\\ \frac{\partial S}{\partial b} &amp; = -2 \sum_{i=1}^n [y_i - (ax_i + b)] = 0, \end{aligned}
+$$</div>
+<p>es decir, el sistema de ecuaciones <a href="#eqnsis">(2)</a> en este caso toma la forma</p>
+<div class="math">$$
+\displaystyle  \begin{aligned} &amp;\sum_{i=1}^n y_i x_i - a \sum_{i=1}^n x_i^2 - b \sum_{i=1}^n x_i = 0,\\ &amp;\sum_{i=1}^n y_i - a \sum_{i=1}^n x_i - bn = 0. \end{aligned}
+$$</div>
+<p>Hemos obtenido el sistema de dos ecuaciones lineales con dos incógnitas <span class="math">\({a}\)</span> y <span class="math">\({b}\)</span>. Es fácil ver que el sistema tiene una solución determinada y la función <span class="math">\({S(a,b)}\)</span> tiene un mínimo para los valores hallados <span class="math">\({a}\)</span> y <span class="math">\({b}\)</span>. Esto se verifica fácilmente también a base de las condiciones suficientes para la existencia del mínimo. Recordemos. Sea <span class="math">\({(x_0,y_0)}\)</span> un punto crítico de la función <span class="math">\({f(x,y)}\)</span>, es decir,</p>
+<div class="math">$$
+\displaystyle  \frac{\partial f(x_0,y_0)}{\partial x} = 0, \qquad \frac{\partial f(x_0,y_0)}{\partial y} = 0.
+$$</div>
+<p>Entonces, para <span class="math">\({x = x_0}\)</span> e <span class="math">\({y = y_0}\)</span> se cumple que <span class="math">\({f(x,y)}\)</span> tiene mínimo si</p>
+<div class="math">$$
+\displaystyle  \frac{\partial^2 f(x_0,y_0)}{\partial x^2} \times \frac{\partial^2 f(x_0,y_0)}{\partial y^2} - \left(\frac{\partial^2 f(x_0,y_0)}{\partial x\,\partial y}\right)^2 &gt; 0 \;\;\text{y}\;\; \frac{\partial^2 f(x_0,y_0)}{\partial x^2} &gt; 0.
+$$</div>
+<p>En efecto, tenemos</p>
+<div class="math">$$
+\displaystyle \frac{\partial^2 S}{\partial a^2} = \sum_{i=1}^n x^2_i; \quad \frac{\partial^2 S}{\partial a\,\partial b} = \sum_{i=1}^n x_i; \quad \frac{\partial^2 S}{\partial b^2} = n.
+$$</div>
+<p>Así,</p>
+<div class="math">$$
+\displaystyle  \begin{aligned} &amp;\frac{\partial^2 S}{\partial a^2}\frac{\partial^2 S}{\partial b^2}-\left(\frac{\partial^2 S}{\partial a\,\partial b}\right)^2 = n \sum_{i=1}^n x_i^2 - \left(\sum_{i=1}^n x_i\right)^2 = \sum_{i\ne j} (x_i - x_j)^2 &gt; 0,\\ &amp;\frac{\partial^2 S}{\partial a^2} &gt; 0. \end{aligned}
+$$</div>
+<p><strong>II.</strong> Sea la función de aproximación un trinomio de segundo grado <span class="math">\({y = ax^2 + bx + c}\)</span>. En este caso, la expresión <a href="#eqne">(1)</a> tiene la forma</p>
+<div class="math">$$
+\displaystyle  S(a,b,c) = \sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)]^2.
+$$</div>
+<p>El sistema de ecuaciones <a href="#eqnsis">(2)</a> toma la forma</p>
+<div class="math">$$
+\displaystyle  \begin{aligned} &amp;\sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)]x_i^2 = 0, \\ &amp;\sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)]x_i = 0, \\ &amp;\sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)] = 0, \end{aligned}
+$$</div>
+<p>o, en la forma desarrollada</p>
+<div class="math">$$
+\displaystyle  \begin{aligned} &amp;\sum_{i=1}^n y_i x_i^2 - a \sum_{i=1}^n x_i^4 - b \sum_{i=1}^n x_i^3 - c \sum_{i=1}^n x_i^2 = 0, \\ &amp;\sum_{i=1}^n y_i x_i - a \sum_{i=1}^n x_i^3 - b \sum_{i=1}^n x_i^2 - c \sum_{i=1}^n x_i = 0, \\ &amp;\sum_{i=1}^n y_i - a \sum_{i=1}^n x_i^2 - b \sum_{i=1}^n x_i - cn = 0. \end{aligned}
+$$</div>
+<p>Obtenemos un sistema de ecuaciones lineales para determinar las incógnitas <span class="math">\({a,b,c}\)</span>. De las condiciones del problema se deduce que el sistema tiene una solución determinada y, además, la función <span class="math">\({S(a,b,c)}\)</span> tiene un mínimo para los valores obtenidos de <span class="math">\({a,b,c}\)</span>.</p>
+<p>Continuará…</p>
+<div class="clear"></div>
+<div class="info">
+<a href="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/">posted at 07:16</a>
+                     · <a href="https://gcca.github.io/category/mathml.html" rel="tag">Math.ML</a>
+                     ·
+                     <a class="tags" href="https://gcca.github.io/tag/math.html">Math</a>
+                     <a class="tags" href="https://gcca.github.io/tag/note.html">Note</a>
+</div>
+</article>
+<div class="clear"></div>
+<footer>
+<p>
+<a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                ·
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                ·
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+</p>
+</footer>
+</div>
+<div class="clear"></div>
+</div>
+</body>
+</html>
