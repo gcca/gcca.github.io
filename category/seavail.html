@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="https://gcca.github.io/theme/js/theme.js"></script>
+    <script defer src="https://gcca.github.io/theme/js/math.js"></script>
+    <title>(gcca) | articles in the "SE.Avail" category</title>
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales C." />
+</head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+
+                <li class="ephemeral selected"><a href="https://gcca.github.io/category/seavail.html">SE.Avail</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/gcca__">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Nov 13, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/" rel="bookmark" title="Permanent Link to &quot;Consistent hashing: anotaciones&quot;">Consistent hashing: anotaciones</a>
+                </h2>
+
+                
+                
+
+                <p>Para asignar una clave a un servidor podemos usar <code>hash(clave) % cantidad_de_nodos</code>. El problema aparece al agregar o quitar servidores: cambia el divisor y muchas claves cambian de destino. Consistent hashing mantiene un espacio de posiciones fijo y coloca allí tanto nodos como claves.</p>
+<p>Los ejemplos <code>consish/</code> de <a href="https://github.com/gcca/nh35a/tree/aae1135157a5304cad1e715bf07c2483accfbefb">nh35a</a> comparten cuatro partes: calcular una posición, registrar los nodos, ordenarlos y buscar el siguiente nodo del anillo.</p>
+<h2>Del hash al anillo</h2>
+<p>En Zig, <code>hashS</code> obtiene un digest MD5 de 16 bytes, lee sus dos mitades como enteros de 64 bits en big endian y las combina mediante XOR:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="n">ns</span><span class="o">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">d</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="p">.</span><span class="n">crypto</span><span class="p">.</span><span class="n">hash</span><span class="p">.</span><span class="n">Md5</span><span class="p">.</span><span class="n">hash</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="p">.{});</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">8</span><span class="p">..</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">dh</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">dl</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">ns</span><span class="p">;</span><span class="w"> </span><span class="c1">// posición dentro del anillo</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Aquí <code>ns = 65535</code>: las posiciones van de <code>0</code> a <code>65534</code>. Es el tamaño del anillo, independiente de cuántos nodos haya. Todos deben usar el mismo hash y la misma interpretación de los bytes para reproducir la asignación.</p>
+<p>En <code>Nodes</code>, <code>ds</code> guarda nombres y <code>ss</code> sus posiciones. <code>add</code> incorpora ambos; <code>done</code> los ordena por posición, manteniendo cada nombre junto a su hash. Con los nodos del ejemplo, el orden es <code>B:8630</code>, <code>A:14321</code>, <code>C:35588</code>.</p>
+<h2>Buscar el nodo responsable</h2>
+<p>Cada nodo recibe las claves del intervalo que termina en su posición. La búsqueda encuentra el primer hash mayor o igual al de la clave. Si no existe, vuelve al comienzo del anillo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">bs</span><span class="p">(</span><span class="n">self</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="kr">const</span><span class="w"> </span><span class="n">Nodes</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">@panic</span><span class="p">(</span><span class="s">&quot;no elements&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ns</span><span class="p">);</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">sort</span><span class="p">.</span><span class="n">lowerBound</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">sh</span><span class="p">,</span><span class="w"> </span><span class="n">cmpHash</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// vuelta al primer nodo</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">.{</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ds</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Con las posiciones ordenadas, la búsqueda binaria cuesta <code>O(log N)</code> para <code>N</code> nodos, además del cálculo del hash. El segundo valor retornado, <code>sh</code>, es la posición de la <strong>clave</strong>, no la del nodo elegido.</p>
+<h2>Qué cambia al agregar un nodo</h2>
+<p>La clave <code>"10"</code> cae en <code>41300</code>, después de <code>C</code>; por eso vuelve a <code>B</code>. Si incorporamos <code>D</code>, cuyo hash es <code>50913</code>, pasa a tener un sucesor antes de completar la vuelta:</p>
+<table>
+<thead>
+<tr><th style="padding-right: 1em">Clave</th><th style="padding-right: 1em; text-align: right">Hash</th><th style="padding-right: 1em">Sin D</th><th>Con D</th></tr>
+</thead>
+<tbody>
+<tr><td style="padding-right: 1em"><code>"1"</code></td><td style="padding-right: 1em; text-align: right">21135</td><td style="padding-right: 1em">C</td><td>C</td></tr>
+<tr><td style="padding-right: 1em"><code>"10"</code></td><td style="padding-right: 1em; text-align: right">41300</td><td style="padding-right: 1em">B</td><td>D</td></tr>
+<tr><td style="padding-right: 1em"><code>"100"</code></td><td style="padding-right: 1em; text-align: right">19522</td><td style="padding-right: 1em">C</td><td>C</td></tr>
+</tbody>
+</table>
+
+<p>Este agregado extiende el ejemplo original. Solo las posiciones del intervalo <code>(35588, 50913]</code> pasan de <code>B</code> a <code>D</code>; el resto conserva su propietario. Esa estabilidad al cambiar los nodos es la idea central. En la versión Zig, el ejemplo ampliado requiere inicializar <code>Nodes</code> con capacidad para cuatro elementos, porque <code>add</code> usa <code>appendBounded</code>.</p>
+<h2>Las partes comunes en cada lenguaje</h2>
+<ul>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c/consish/consish.c">C</a></strong>: implementa MD5 y guarda nombres y hashes en arrays paralelos. <code>done</code> usa inserción; la búsqueda binaria es manual. Duplica los nombres y libera la memoria explícitamente.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c%2B%2B/consish/consish.cc">C++</a></strong>: también implementa MD5. Usa vectores, ordena los pares con <code>stable_sort</code> sobre <code>zip</code> y busca con <code>lower_bound</code>. Los contenedores gestionan su memoria.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c3/consish/consish.c3">C3</a></strong>: usa MD5 de la biblioteca estándar y listas paralelas. Construye pares temporales para ordenar con quicksort y consulta mediante <code>binarysearch</code> como punto de inserción.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/go/consish/main.go">Go</a></strong>: usa <code>crypto/md5</code> y <code>binary.BigEndian</code>. <code>sort.Interface</code> intercambia juntos nombres y hashes; <code>slices.BinarySearch</code> encuentra el nodo o su punto de inserción.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/ocaml/consish/consish.ml">OCaml</a></strong>: usa <code>Digest</code> y un array de pares. Ordena y calcula el módulo con operaciones sin signo sobre <code>int64</code>; implementa la búsqueda mediante recursión.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/rust/consish/src/main.rs">Rust</a></strong>: usa el crate <code>md-5</code> y vectores paralelos. Ordena índices para reordenar ambos vectores; <code>partition_point</code> encuentra el primer hash que no sea menor.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/swift/consish/consish.swift">Swift</a></strong>: usa <code>CryptoKit.Insecure.MD5</code>, enteros <code>UInt64</code> y un array de tuplas. <code>sort</code> conserva unidos nombre y posición; la búsqueda binaria es manual.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/zig/consish/src/main.zig">Zig</a></strong>: usa <code>Md5</code>, <code>ArrayList</code> y un allocator explícito. <code>heapContext</code> ordena intercambiando ambas listas; <code>lowerBound</code> resuelve la búsqueda.</li>
+</ul>
+<p>Estos ejemplos colocan un solo punto por nodo, por lo que los intervalos pueden ser desiguales. Los nodos virtuales permiten distribuir cada servidor entre varios puntos del anillo. Las colisiones también requieren una regla compartida de desempate para conservar una asignación reproducible.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/">posted at 20:05</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/seavail.html" rel="tag">SE.Avail</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/architecture.html" class="tags">architecture</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/distributed.html" class="tags">distributed</a>
+                </div>
+            </article>            <h4 class="date">Oct 24, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/10/24/genuid-lockfree/" rel="bookmark" title="Permanent Link to &quot;Generador de UID y Lock free&quot;">Generador de UID y Lock free</a>
+                </h2>
+
+                
+                
+
+                <p>Exploraremos dos enfoques para generar IDs en C++: uno utilizando mecanismos de bloqueo (LockTierUID) y otro libre de bloqueo (LockFreeUID). Ambos generan IDs de 64 bits y son compatibles con C++11. Estas son sus definiciones:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockTierUID</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">LockFreeUID</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Un primera versión sencilla para entender el concepto de LockTierUID sería la siguiente:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">genuid::LockTierUID</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lock</span><span class="p">(</span><span class="n">mtx</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">++</span><span class="n">counter</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>El ejemplo puede verse en el repositorio <a href="https://github.com/gcca/genuid">genuid</a>.</p>
+<p>El método <em>LockTierUID</em> utiliza un std::mutex para asegurar que la generación de IDs sea segura en entornos multithreaded. Maneja posibles colisiones de timestamp incrementando el número de secuencia o esperando al siguiente ciclo de tiempo si se agota. El método <em>LockFreeUID</em> intenta generar IDs sin necesidad de bloqueo utilizando operaciones atómicas. Si hay un conflicto en el timestamp, intenta actualizar el número de secuencia de manera atómica. En ambos casos, el mecanismo de timestamp busca generar IDs basados en la diferencia de tiempo desde el timestamp de base. Este enfoque permite generar IDs únicos de manera eficiente, con consideraciones para la concurrencia y el desbordamiento de secuencias, adecuado para applicaciones con requerimientos de alto rendimiento y escalabilidad.</p>
+<p>Con el objetivo de probar la concurrencia, se crearon unos tests que muestran cómo las funciones trabajan sobre un entorno multithreading. LockTierUID asegura la exclusión mutua con un mutex, lo cual es más simple pero puede ser menos eficiente en sistemas altamente concurrentes. LockFreeUID intenta evitar bloqueos, potencialmente mejorando el rendimiento pero a costa de una implementación más compleja y con la posibilidad de bucles de espera durante la contención.</p>
+<p>Para validar la unicidad, se usa un unordered-set para verificar de que no hay duplicados mostrando que los IDs son efectivamente únicos. Al generar un gran número de IDs (10,000), estos tests también prueban la capacidad de las funciones para escalar en términos de generación de IDs únicos. Este enfoque no solo muestra cómo se usan las funciones sino también cómo se aseguran que funcionen correctamente en condiciones de alta concurrencia, lo cual es crucial para entender y elegir entre implementaciones con y sin bloqueo.</p>
+<p>Benchmark:</p>
+<div class="highlight"><pre><span></span><code><span class="c">Run on (8 X 24 MHz CPU s)</span>
+<span class="c">CPU Caches:</span>
+<span class="c">  L1 Data 64 KiB</span>
+<span class="c">  L1 Instruction 128 KiB</span>
+<span class="c">  L2 Unified 4096 KiB (x8)</span>
+<span class="c">Load Average: 1</span><span class="nt">.</span><span class="c">27</span><span class="nt">,</span><span class="c"> 0</span><span class="nt">.</span><span class="c">98</span><span class="nt">,</span><span class="c"> 1</span><span class="nt">.</span><span class="c">09</span>
+<span class="nb">------------------------------------------------------</span>
+<span class="c">Benchmark            Time             CPU   Iterations</span>
+<span class="nb">------------------------------------------------------</span>
+<span class="c">BM_LockTier     133613 ns       133613 ns        10000</span>
+<span class="c">BM_LockFree       37</span><span class="nt">.</span><span class="c">3 ns         37</span><span class="nt">.</span><span class="c">3 ns     18792047</span>
+</code></pre></div>
+
+<p>La diferencia en tiempo es amplia, con LockFreeUID siendo aproximadamente 3,582 veces más rápido que LockTierUID en la generación de IDs. Esto se debe a que LockFreeUID evita el costo de adquirir y liberar un mutex en cada operación. No obstante, LockTierUID tiene oportunidades de mejora sin dejar el lock.</p>
+<p>Simplicidad / Complejidad: Aunque LockFreeUID ofrece un rendimiento superior, su implementación y depuración pueden ser más complejas debido a la naturaleza de los algoritmos sin bloqueo. LockTierUID, con su enfoque más tradicional, es más recto en su implementación pero a costa de rendimiento.</p>
+<p>Caso de uso: Para sistemas con baja a mediana concurrencia, LockTierUID puede ser suficiente y más fácil de mantener.
+En aplicaciones de alta concurrencia, como sistemas de transacciones de alta frecuencia, LockFreeUID sería la elección preferida para minimizar latencias.</p>
+<p>Mantenimiento y depuración: Los algoritmos sin bloqueo pueden introducir sutiles errores de concurrencia que son difíciles de detectar y corregir. Por otro lado, las implementaciones con locks son generalmente más predecibles y más fáciles de depurar.</p>
+<p>Entonces, al elegir entre estos métodos, considerar:</p>
+<ul>
+<li>Rendimiento: ¿Hasta qué punto el rendimiento afecta la funcionalidad del sistema?</li>
+<li>Complejidad: ¿El equipo tiene la experiencia y el tiempo para manejar un algoritmo sin bloqueo?</li>
+<li>Escalabilidad: ¿El sistema se espera que maneje un aumento en la concurrencia en el futuro?</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/10/24/genuid-lockfree/">posted at 23:14</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/seavail.html" rel="tag">SE.Avail</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">c++</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>            <h4 class="date">Oct 04, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Dynamic Round Robin&quot;">Dynamic Round Robin</a>
+                </h2>
+
+                
+                
+
+                <p>Continuando lo presentando en <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">Intro to Round Robin</a>, se muestra una adaptación para permitir la adición de elementos a la lista de selección. Para ello se aplicará Round Robin con subconjuntos dinámicos.</p>
+<ol>
+<li><em>Mantener un Historial de Selecciones:</em> Para asegurar la equidad, mantendremos un historial de cuántas veces cada elemento ha sido seleccionado.</li>
+<li><em>Round Robin Modificado:</em> En lugar de un simple round robin, ajustaremos la selección basándonos en el historial de selecciones para asegurar que todos los elementos del subconjunto tengan una oportunidad equitativa.</li>
+<li><em>Reajuste de Historial:</em> Cada vez que el subconjunto cambia, podremos ajustar el historial para reflejar solo las selecciones de los elementos que están actualmente en el subconjunto.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DynamicRoundRobin</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
+        <span class="c1"># verifica subconjunto no vacío</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">subset</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># actualiza el subconjunto y ajusta el historial</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjust_history</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+
+        <span class="c1"># encuentra el elemento con la menor cantidad de selecciones</span>
+        <span class="n">min_selections</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="n">min_selections</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># si hay más de un candidato, round robin para decidir</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">return</span> <span class="n">element</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># si solo hay un candidato, selecciona directamente</span>
+            <span class="n">element</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">element</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">adjust_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">):</span>
+        <span class="c1"># elimina el conteo de elementos que ya no están en el subconjunto</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_count</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
+
+<span class="c1"># ejemplo</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">DynamicRoundRobin</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+
+<span class="c1"># simula cambios en el subconjunto y selecciones</span>
+<span class="n">subsets</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">subset</span> <span class="ow">in</span> <span class="n">subsets</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>  <span class="c1"># selecciona 3 veces de cada subconjunto</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">subset</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected from </span><span class="si">{</span><span class="n">subset</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">selected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Entonces:</p>
+<ul>
+<li><em>Inicialización:</em> Se inicia con todos los elementos y un contador de selecciones.</li>
+<li><em>Selección:</em> Para cada selección, se busca el elemento con el menor número de selecciones dentro del subconjunto actual. Si hay más de uno, se usa round robin para decidir entre ellos.</li>
+<li><em>Ajuste de Historial:</em> Cada vez que el subconjunto cambia, se ajusta el historial para reflejar sólo los elementos del nuevo subconjunto.</li>
+</ul>
+<p>Asegura que:</p>
+<ul>
+<li><em>Equidad:</em> Todos los elementos tienen una oportunidad equitativa de ser seleccionados.</li>
+<li><em>Adaptabilidad:</em> Se adapta dinámicamente a subconjuntos cambiantes.</li>
+<li><em>Balance:</em> Evita sobrecargar cualquier elemento al mantener un historial de selecciones.</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/10/04/poc-dyn-roundrobin/">posted at 13:11</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/seavail.html" rel="tag">SE.Avail</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/python.html" class="tags">python</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>            <h4 class="date">Oct 03, 2024</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/" rel="bookmark" title="Permanent Link to &quot;Intro to Round Robin&quot;">Intro to Round Robin</a>
+                </h2>
+
+                
+                
+
+                <h2>Introducción</h2>
+<p>Round Robin es un algoritmo de planificación de procesos.</p>
+<p>Cada elemento de una lista se selecciona en turno, uno por uno, y cuando se llega al final de la lista, se vuelve al principio.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">choices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h2>Alternativas</h2>
+<h3>Aleatorio (Random Selection):</h3>
+<p>Selecciona elementos de manera aleatoria sin reemplazo hasta que se agoten; luego reinicia el proceso.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+        <span class="k">yield from</span> <span class="n">choices</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Ponderado (Weighted Selection):</h3>
+<p>Cada elemento tiene una probabilidad de ser seleccionado basada en un peso asignado.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Least Recently Used (LRU):</h3>
+<p>Selecciona el elemento que ha sido usado hace más tiempo. Simplificada:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">deque</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">):</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="k">yield</span> <span class="n">item</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Prioridad (Priority Queue):</h3>
+<p>Los elementos se seleccionan basándose en una prioridad asignada. Usando heapq (con la prioridad invertida para que funcione como una cola de prioridad mínima) para mantener la prioridad:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">heapq</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">):</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
+    <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">items</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">priorities</span><span class="p">,</span> <span class="n">choices</span><span class="p">)]</span>
+            <span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">item</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">item</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+<span class="n">priorities</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">selection</span><span class="p">(</span><span class="n">choices</span><span class="p">,</span> <span class="n">priorities</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+</code></pre></div>
+
+<ul>
+<li><em>Round Robin</em> es ideal para asegurar una distribución equitativa y predecible.</li>
+<li><em>Aleatorio</em> puede ser útil cuando no quieres que haya patrones predecibles.</li>
+<li><em>Ponderado</em> es excelente cuando algunos elementos deben ser seleccionados con mayor frecuencia.</li>
+<li><em>LRU</em> es útil en sistemas donde la recencia de uso es importante.</li>
+<li><em>Prioridad</em> es perfecta para sistemas donde algunos elementos deben ser procesados antes que otros.</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2024/10/03/poc-roundrobin/">posted at 02:01</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/seavail.html" rel="tag">SE.Avail</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/python.html" class="tags">python</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>
