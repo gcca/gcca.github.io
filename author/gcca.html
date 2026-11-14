@@ -1,34 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08-extended/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
     <script src="https://gcca.github.io/theme/js/theme.js"></script>
     <script defer src="https://gcca.github.io/theme/js/math.js"></script>
     <title>(gcca) | Articles by (gcca)</title>
-    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
     <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
     <meta name="generator" content="Pelican" />
     <meta name="description" content="(gcca) blog" />
-    <meta name="author" content="Cristhian Gonzales" />
+    <meta name="author" content="Cristhian Gonzales C." />
 </head>
 <body>
     <header>
-        <div class="theme-control" hidden>
-            <label for="theme-preference">Theme</label>
-            <select id="theme-preference" name="theme">
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-            </select>
-        </div>
         <nav style="overflow: hidden;">
             <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
 
                 <li class="ephemeral selected"><a href="https://gcca.github.io/author/gcca.html">(gcca)</a></li>
                 <li><a href="https://gcca.github.io/">Home</a></li>
@@ -41,12 +33,355 @@
         </nav>
         <div class="header_box" style="height: 50px">
         <h1><a href="https://gcca.github.io/">
-            <img src="/images/logo.png" class="avatar" width="50" height="50" alt="" /><span class="site_title">(gcca)</span>
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
             </a></h1></div>
-            <h2>Blog</h2>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Nov 13, 2026</h4>
+        <div id="content">            <h4 class="date">Nov 14, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/14/project-euler-01/" rel="bookmark" title="Permanent Link to &quot;Project-Euler 01&quot;">Project-Euler 01</a>
+                </h2>
+
+                
+                
+
+                <p>Primera de una serie de publicaciones con soluciones a los problemas del <a href="https://projecteuler.net">Proyecto Euler</a>. El problema:</p>
+<blockquote>
+<p><strong>Ejercicio 1.</strong> Los naturales menores que <span class="math">\(10\)</span> y múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span> son <span class="math">\(3\)</span>, <span class="math">\(5\)</span>, <span class="math">\(6\)</span> y <span class="math">\(9\)</span>; su suma es <span class="math">\(23\)</span>. Hallar la suma de los múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span> menores que <span class="math">\(1000\)</span>.</p>
+</blockquote>
+<h2>Fuerza bruta</h2>
+<div class="highlight"><pre><span></span><code><span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">suma</span> <span class="o">+=</span> <span class="n">n</span>
+</code></pre></div>
+
+<p>O, más al estilo Python:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Si el límite no se restringe a <span class="math">\(1000\)</span>, el método es ineficiente. ¿Cómo calcular la suma de los múltiplos menores que un millón sin afectar el desempeño?</p>
+<h2>Múltiplos de un número</h2>
+<p>Primero, un problema más sencillo: la suma de los múltiplos de <span class="math">\(k\)</span> menores que <span class="math">\(N\)</span>, con <span class="math">\(k&lt;N\)</span>.</p>
+<p>Intuitivamente, queremos <span class="math">\(1k+2k+3k+\dotsb+nk\)</span>, donde <span class="math">\(nk\)</span> es el último múltiplo de <span class="math">\(k\)</span> menor que <span class="math">\(N\)</span>. Esto es <span class="math">\(k(1+2+3+\dotsb+n)=kn(n+1)/2\)</span>. Falta hallar <span class="math">\(n\)</span>, el mayor factor con <span class="math">\(nk&lt;N\)</span>, es decir, con <span class="math">\(n&lt;N/k\)</span>: basta dividir <span class="math">\(N\)</span> por <span class="math">\(k\)</span> y tomar el mayor natural menor que el cociente.</p>
+<p>Para demostrarlo, sea <span class="math">\(M_k^N:=\{ck : ck&lt;N,\ c\in\mathbf N\}\)</span> el conjunto de los múltiplos de <span class="math">\(k\)</span> menores que <span class="math">\(N\)</span>. Buscamos</p>
+<div class="math">$$\sum_{n\in M_k^N} n.$$</div>
+<p>(Que este conjunto es el buscado se sigue de la definición de múltiplo y del axioma de sustitución; queda al lector.)</p>
+<p><strong>Definición 1 (Múltiplo).</strong> Un natural <span class="math">\(m\)</span> es múltiplo de un natural <span class="math">\(n\)</span> si <span class="math">\(m=kn\)</span> para algún natural <span class="math">\(k\)</span>.</p>
+<p><strong>Proposición 2.</strong> Sean <span class="math">\(X\)</span> un conjunto finito, <span class="math">\(f\colon X\to\mathbf R\)</span> una función y <span class="math">\(g\colon Y\to X\)</span> una biyección. Entonces</p>
+<div class="math">$$\sum_{x\in X}f(x)=\sum_{y\in Y}f\circ g(y).$$</div>
+<p><strong>Proposición 3.</strong> Sean <span class="math">\(X\)</span> un conjunto finito, <span class="math">\(f\colon X\to\mathbf R\)</span> una función y <span class="math">\(c\)</span> un número real. Entonces</p>
+<div class="math">$$\sum_{x\in X}cf(x)=c\sum_{x\in X}f(x).$$</div>
+<p>Por las proposiciones 2 y 3,</p>
+<div class="math">$$\sum_{n\in M_k^N}n=\sum_{n\in I_k^N}kn=k\sum_{n\in I_k^N}n,$$</div>
+<p>donde <span class="math">\(I_k^N=\{n\in\mathbf N : kn&lt;N\}\)</span>.</p>
+<p><span class="math">\(I_k^N\)</span> contiene los números <span class="math">\(1,2,3,\dotsc,L\)</span>, donde <span class="math">\(L=\max I_k^N\)</span> es el mayor con <span class="math">\(Lk&lt;N\)</span>. De <span class="math">\(Lk&lt;N\)</span> se sigue <span class="math">\(L\le(N-1)/k\)</span>; de <span class="math">\((L+1)k\ge N\)</span>, <span class="math">\((N-1)/k&lt;L+1\)</span>. Por definición de parte entera, <span class="math">\(L=\lfloor(N-1)/k\rfloor\)</span> y, por definición de serie finita,</p>
+<div class="math">$$\sum_{n\in M_k^N}n=\sum_{n=1}^{\left\lfloor\frac{N-1}{k}\right\rfloor}kn.$$</div>
+<p>Así, la suma de los múltiplos de <span class="math">\(3\)</span> menores que <span class="math">\(10\)</span>, <span class="math">\(100\)</span> y <span class="math">\(1000\)</span> es:</p>
+<div class="math">$$
+\begin{aligned}
+3\sum_{n=1}^{3}n &amp;= 3\times\frac{3\times4}{2}=18\\
+3\sum_{n=1}^{33}n &amp;= 3\times\frac{33\times34}{2}=1683\\
+3\sum_{n=1}^{333}n &amp;= 3\times\frac{333\times334}{2}=166833
+\end{aligned}
+$$</div>
+<h2>Múltiplos de 3 o 5</h2>
+<p>No basta con sumar ambas sumas,</p>
+<div class="math">$$\sum_{n\in M_{3\text{ o }5}^{1000}}n\ne\sum_{n\in M_3^{1000}}n+\sum_{n\in M_5^{1000}}n,$$</div>
+<p>porque los múltiplos de <span class="math">\(3\)</span> que también lo son de <span class="math">\(5\)</span> se suman dos veces. Por el principio de inclusión-exclusión,</p>
+<div class="math">$$\sum_{n\in M_{3\text{ o }5}^{1000}}n=\sum_{n\in M_3^{1000}}n+\sum_{n\in M_5^{1000}}n-\sum_{n\in M_{3\text{ y }5}^{1000}}n.$$</div>
+<p>¿Cómo calcular el último término? Si <span class="math">\(n\)</span> es múltiplo de <span class="math">\(3\)</span>, entonces <span class="math">\(n=3k\)</span> para algún natural <span class="math">\(k\)</span>. Si además es múltiplo de <span class="math">\(5\)</span>, entonces <span class="math">\(k=5k'\)</span> con <span class="math">\(k'\)</span> natural. Luego <span class="math">\(n=3\cdot5k'=15k'\)</span>: los múltiplos de <span class="math">\(3\)</span> y <span class="math">\(5\)</span> son los múltiplos de <span class="math">\(15\)</span>. (Esto se puede generalizar.)</p>
+<p>En consecuencia,</p>
+<div class="math">$$
+\begin{array}{ccccccc}
+\displaystyle\sum_{n\in M_{3\text{ o }5}^{1000}}n &amp;=&amp; \displaystyle\sum_{n\in M_3^{1000}}n &amp;+&amp; \displaystyle\sum_{n\in M_5^{1000}}n &amp;-&amp; \displaystyle\sum_{n\in M_{3\text{ y }5}^{1000}}n\\
+&amp;=&amp; \displaystyle\sum_{n=1}^{333}3n &amp;+&amp; \displaystyle\sum_{n=1}^{199}5n &amp;-&amp; \displaystyle\sum_{n=1}^{66}15n\\
+&amp;=&amp; 3\times\left(\displaystyle\frac{333\times334}{2}\right) &amp;+&amp; 5\times\left(\displaystyle\frac{199\times200}{2}\right) &amp;-&amp; 15\times\left(\displaystyle\frac{66\times67}{2}\right)\\
+&amp;=&amp; 233168
+\end{array}
+$$</div>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/14/project-euler-01/">posted at 06:25</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathmisc.html" rel="tag">Math.Misc</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/project-euler.html" class="tags">Project Euler</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
+                </div>
+            </article>            <h4 class="date">Nov 13, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/" rel="bookmark" title="Permanent Link to &quot;Consistent hashing: anotaciones&quot;">Consistent hashing: anotaciones</a>
+                </h2>
+
+                
+                
+
+                <p>Para asignar una clave a un servidor podemos usar <code>hash(clave) % cantidad_de_nodos</code>. El problema aparece al agregar o quitar servidores: cambia el divisor y muchas claves cambian de destino. Consistent hashing mantiene un espacio de posiciones fijo y coloca allí tanto nodos como claves.</p>
+<p>Los ejemplos <code>consish/</code> de <a href="https://github.com/gcca/nh35a/tree/aae1135157a5304cad1e715bf07c2483accfbefb">nh35a</a> comparten cuatro partes: calcular una posición, registrar los nodos, ordenarlos y buscar el siguiente nodo del anillo.</p>
+<h2>Del hash al anillo</h2>
+<p>En Zig, <code>hashS</code> obtiene un digest MD5 de 16 bytes, lee sus dos mitades como enteros de 64 bits en big endian y las combina mediante XOR:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="n">ns</span><span class="o">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">d</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="p">.</span><span class="n">crypto</span><span class="p">.</span><span class="n">hash</span><span class="p">.</span><span class="n">Md5</span><span class="p">.</span><span class="n">hash</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="p">.{});</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">8</span><span class="p">..</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">dh</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">dl</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">ns</span><span class="p">;</span><span class="w"> </span><span class="c1">// posición dentro del anillo</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Aquí <code>ns = 65535</code>: las posiciones van de <code>0</code> a <code>65534</code>. Es el tamaño del anillo, independiente de cuántos nodos haya. Todos deben usar el mismo hash y la misma interpretación de los bytes para reproducir la asignación.</p>
+<p>En <code>Nodes</code>, <code>ds</code> guarda nombres y <code>ss</code> sus posiciones. <code>add</code> incorpora ambos; <code>done</code> los ordena por posición, manteniendo cada nombre junto a su hash. Con los nodos del ejemplo, el orden es <code>B:8630</code>, <code>A:14321</code>, <code>C:35588</code>.</p>
+<h2>Buscar el nodo responsable</h2>
+<p>Cada nodo recibe las claves del intervalo que termina en su posición. La búsqueda encuentra el primer hash mayor o igual al de la clave. Si no existe, vuelve al comienzo del anillo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">bs</span><span class="p">(</span><span class="n">self</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="kr">const</span><span class="w"> </span><span class="n">Nodes</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">@panic</span><span class="p">(</span><span class="s">&quot;no elements&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ns</span><span class="p">);</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">sort</span><span class="p">.</span><span class="n">lowerBound</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">sh</span><span class="p">,</span><span class="w"> </span><span class="n">cmpHash</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// vuelta al primer nodo</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">.{</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ds</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Con las posiciones ordenadas, la búsqueda binaria cuesta <code>O(log N)</code> para <code>N</code> nodos, además del cálculo del hash. El segundo valor retornado, <code>sh</code>, es la posición de la <strong>clave</strong>, no la del nodo elegido.</p>
+<h2>Qué cambia al agregar un nodo</h2>
+<p>La clave <code>"10"</code> cae en <code>41300</code>, después de <code>C</code>; por eso vuelve a <code>B</code>. Si incorporamos <code>D</code>, cuyo hash es <code>50913</code>, pasa a tener un sucesor antes de completar la vuelta:</p>
+<table>
+<thead>
+<tr><th style="padding-right: 1em">Clave</th><th style="padding-right: 1em; text-align: right">Hash</th><th style="padding-right: 1em">Sin D</th><th>Con D</th></tr>
+</thead>
+<tbody>
+<tr><td style="padding-right: 1em"><code>"1"</code></td><td style="padding-right: 1em; text-align: right">21135</td><td style="padding-right: 1em">C</td><td>C</td></tr>
+<tr><td style="padding-right: 1em"><code>"10"</code></td><td style="padding-right: 1em; text-align: right">41300</td><td style="padding-right: 1em">B</td><td>D</td></tr>
+<tr><td style="padding-right: 1em"><code>"100"</code></td><td style="padding-right: 1em; text-align: right">19522</td><td style="padding-right: 1em">C</td><td>C</td></tr>
+</tbody>
+</table>
+
+<p>Este agregado extiende el ejemplo original. Solo las posiciones del intervalo <code>(35588, 50913]</code> pasan de <code>B</code> a <code>D</code>; el resto conserva su propietario. Esa estabilidad al cambiar los nodos es la idea central. En la versión Zig, el ejemplo ampliado requiere inicializar <code>Nodes</code> con capacidad para cuatro elementos, porque <code>add</code> usa <code>appendBounded</code>.</p>
+<h2>Las partes comunes en cada lenguaje</h2>
+<ul>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c/consish/consish.c">C</a></strong>: implementa MD5 y guarda nombres y hashes en arrays paralelos. <code>done</code> usa inserción; la búsqueda binaria es manual. Duplica los nombres y libera la memoria explícitamente.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c%2B%2B/consish/consish.cc">C++</a></strong>: también implementa MD5. Usa vectores, ordena los pares con <code>stable_sort</code> sobre <code>zip</code> y busca con <code>lower_bound</code>. Los contenedores gestionan su memoria.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c3/consish/consish.c3">C3</a></strong>: usa MD5 de la biblioteca estándar y listas paralelas. Construye pares temporales para ordenar con quicksort y consulta mediante <code>binarysearch</code> como punto de inserción.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/go/consish/main.go">Go</a></strong>: usa <code>crypto/md5</code> y <code>binary.BigEndian</code>. <code>sort.Interface</code> intercambia juntos nombres y hashes; <code>slices.BinarySearch</code> encuentra el nodo o su punto de inserción.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/ocaml/consish/consish.ml">OCaml</a></strong>: usa <code>Digest</code> y un array de pares. Ordena y calcula el módulo con operaciones sin signo sobre <code>int64</code>; implementa la búsqueda mediante recursión.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/rust/consish/src/main.rs">Rust</a></strong>: usa el crate <code>md-5</code> y vectores paralelos. Ordena índices para reordenar ambos vectores; <code>partition_point</code> encuentra el primer hash que no sea menor.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/swift/consish/consish.swift">Swift</a></strong>: usa <code>CryptoKit.Insecure.MD5</code>, enteros <code>UInt64</code> y un array de tuplas. <code>sort</code> conserva unidos nombre y posición; la búsqueda binaria es manual.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/zig/consish/src/main.zig">Zig</a></strong>: usa <code>Md5</code>, <code>ArrayList</code> y un allocator explícito. <code>heapContext</code> ordena intercambiando ambas listas; <code>lowerBound</code> resuelve la búsqueda.</li>
+</ul>
+<p>Estos ejemplos colocan un solo punto por nodo, por lo que los intervalos pueden ser desiguales. Los nodos virtuales permiten distribuir cada servidor entre varios puntos del anillo. Las colisiones también requieren una regla compartida de desempate para conservar una asignación reproducible.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/">posted at 20:05</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/architecture.html" class="tags">architecture</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/distributed.html" class="tags">distributed</a>
+                </div>
+            </article>            <h4 class="date">Nov 13, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/13/zig-vs-c-sistemas/" rel="bookmark" title="Permanent Link to &quot;Zig frente a C: notas para programación de sistemas&quot;">Zig frente a C: notas para programación de sistemas</a>
+                </h2>
+
+                
+                
+
+                <p>C sigue siendo el lenguaje que más leo. Para código nuevo prefiero Zig: mantiene el mismo nivel de control y detecta más errores en compilación o en modo debug. Estas son las diferencias que más pesan en la práctica.</p>
+<h2>1. Liberar recursos: <code>goto</code> vs <code>defer</code>/<code>errdefer</code></h2>
+<p>En C, la limpieza en orden inverso suele resolverse con una cadena de etiquetas:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">FILE</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fopen</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rb&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="k">goto</span><span class="w"> </span><span class="n">done</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="mi">4096</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">buf</span><span class="p">)</span><span class="w"> </span><span class="k">goto</span><span class="w"> </span><span class="n">close_file</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fread</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4096</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">goto</span><span class="w"> </span><span class="n">free_buf</span><span class="p">;</span>
+
+<span class="w">    </span><span class="o">*</span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
+<span class="w">    </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">goto</span><span class="w"> </span><span class="n">close_file</span><span class="p">;</span>
+
+<span class="nl">free_buf</span><span class="p">:</span>
+<span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+<span class="nl">close_file</span><span class="p">:</span>
+<span class="w">    </span><span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="nl">done</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>En Zig, cada recurso declara su limpieza junto a su adquisición:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">load</span><span class="p">(</span><span class="n">gpa</span><span class="o">:</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">Allocator</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="o">!</span><span class="p">[]</span><span class="kt">u8</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">cwd</span><span class="p">().</span><span class="n">openFile</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="p">.{});</span>
+<span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="n">close</span><span class="p">();</span><span class="w"> </span><span class="c1">// siempre</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="n">gpa</span><span class="p">.</span><span class="n">alloc</span><span class="p">(</span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="mi">4096</span><span class="p">);</span>
+<span class="w">    </span><span class="k">errdefer</span><span class="w"> </span><span class="n">gpa</span><span class="p">.</span><span class="n">free</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span><span class="w"> </span><span class="c1">// solo si se retorna un error</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">error</span><span class="p">.</span><span class="n">EmptyFile</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="n">gpa</span><span class="p">.</span><span class="n">realloc</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>defer</code> se ejecuta al salir del bloque y <code>errdefer</code>, solo en la salida por error. Agregar un recurso nuevo no obliga a reordenar etiquetas.</p>
+<p>Las rutas de fallo también se pueden probar. <code>checkAllAllocationFailures</code> repite la función y hace fallar cada asignación, una por una. <code>std.testing.allocator</code> reporta las fugas de memoria:</p>
+<div class="highlight"><pre><span></span><code><span class="k">test</span><span class="w"> </span><span class="s">&quot;load no pierde memoria&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">testing</span><span class="p">.</span><span class="n">checkAllAllocationFailures</span><span class="p">(</span><span class="n">std</span><span class="p">.</span><span class="n">testing</span><span class="p">.</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="n">loadForTest</span><span class="p">,</span><span class="w"> </span><span class="p">.{});</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>2. La longitud viaja con el dato</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">xs</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w">   </span><span class="cm">/* lee xs[n]: fuera de rango */</span>
+<span class="w">        </span><span class="n">s</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>C compila esto sin advertencias y lee memoria ajena en silencio. En Zig, un slice (<code>[]T</code>) es puntero + longitud:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">xs</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Con el mismo error de índice, el resultado es un panic inmediato en Debug y ReleaseSafe:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">var</span><span class="w"> </span><span class="n">i</span><span class="o">:</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">xs</span><span class="p">.</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">xs</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="c1">// panic: index out of bounds: index 3, len 3</span>
+</code></pre></div>
+
+<p>Los strings son <code>[]const u8</code>: no hace falta <code>strlen()</code> ni existe el terminador <code>\0</code> olvidado.</p>
+<h2>3. Errores que no se pueden ignorar</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">FILE</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fopen</span><span class="p">(</span><span class="s">&quot;config.ini&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
+<span class="n">fgets</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">);</span><span class="w">   </span><span class="cm">/* si f es NULL: comportamiento indefinido */</span>
+</code></pre></div>
+
+<p>En Zig, el error forma parte del tipo de retorno (<code>!T</code>). El compilador obliga a manejarlo:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">cwd</span><span class="p">().</span><span class="n">openFile</span><span class="p">(</span><span class="s">&quot;config.ini&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">.{})</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="o">|</span><span class="n">err</span><span class="o">|</span><span class="w"> </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">error</span><span class="p">.</span><span class="n">FileNotFound</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">defaultConfig</span><span class="p">(),</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">err</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="k">defer</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Si se omite el resultado, el programa no compila:</p>
+<div class="highlight"><pre><span></span><code><span class="n">std</span><span class="p">.</span><span class="n">fs</span><span class="p">.</span><span class="n">cwd</span><span class="p">().</span><span class="n">deleteFile</span><span class="p">(</span><span class="s">&quot;tmp.txt&quot;</span><span class="p">);</span>
+<span class="c1">// error: error union is ignored</span>
+</code></pre></div>
+
+<p>Las opciones son <code>try</code> (propagar), <code>catch</code> (manejar) o <code>if (x) |v| ... else |err| ...</code>.</p>
+<h2>4. <code>comptime</code> en lugar del preprocesador</h2>
+<p>Las macros de C sustituyen texto:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define MAX(a, b) ((a) &gt; (b) ? (a) : (b))</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MAX</span><span class="p">(</span><span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">);</span><span class="w">   </span><span class="cm">/* i++ puede evaluarse dos veces */</span>
+
+<span class="cp">#ifdef _WIN32</span>
+<span class="cp">#define SEP &#39;\\&#39;</span>
+<span class="cp">#else</span>
+<span class="cp">#define SEP &#39;/&#39;</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+
+<p>En Zig se escribe código normal que se evalúa en compilación:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span><span class="w"> </span><span class="n">builtin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">@import</span><span class="p">(</span><span class="s">&quot;builtin&quot;</span><span class="p">);</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="n">max</span><span class="p">(</span><span class="kr">comptime</span><span class="w"> </span><span class="n">T</span><span class="o">:</span><span class="w"> </span><span class="kt">type</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="o">:</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">:</span><span class="w"> </span><span class="n">T</span><span class="p">)</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">const</span><span class="w"> </span><span class="n">sep</span><span class="o">:</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">builtin</span><span class="p">.</span><span class="n">os</span><span class="p">.</span><span class="n">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">.</span><span class="n">windows</span><span class="p">)</span><span class="w"> </span><span class="se">&#39;\\&#39;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s">&#39;/&#39;</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Para los genéricos se usa una función que retorna un tipo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">Stack</span><span class="p">(</span><span class="kr">comptime</span><span class="w"> </span><span class="n">T</span><span class="o">:</span><span class="w"> </span><span class="kt">type</span><span class="p">,</span><span class="w"> </span><span class="kr">comptime</span><span class="w"> </span><span class="n">cap</span><span class="o">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="w"> </span><span class="kt">type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">items</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="n">cap</span><span class="p">]</span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
+<span class="w">        </span><span class="n">len</span><span class="o">:</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">        </span><span class="kr">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="n">push</span><span class="p">(</span><span class="n">self</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="nb">@This</span><span class="p">(),</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">T</span><span class="p">)</span><span class="w"> </span><span class="k">error</span><span class="p">{</span><span class="n">Full</span><span class="p">}</span><span class="o">!</span><span class="kt">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">cap</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">error</span><span class="p">.</span><span class="n">Full</span><span class="p">;</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">            </span><span class="n">self</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kr">var</span><span class="w"> </span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="n">Stack</span><span class="p">(</span><span class="kt">u32</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.{};</span>
+<span class="k">try</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Los argumentos se evalúan una sola vez, hay comprobación de tipos y los errores de compilación son legibles.</p>
+<h2>5. Overflow con semántica explícita</h2>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
+<span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">   </span><span class="cm">/* overflow con signo: comportamiento indefinido */</span>
+</code></pre></div>
+
+<p>En Zig, la intención se escribe en el operador:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">maxInt</span><span class="p">(</span><span class="kt">i32</span><span class="p">);</span>
+
+<span class="kr">const</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+%</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                 </span><span class="c1">// wrapping:   -2147483648</span>
+<span class="kr">const</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+|</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                 </span><span class="c1">// saturación:  2147483647</span>
+<span class="kr">const</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">@addWithOverflow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// .{ -2147483648, 1 }</span>
+
+<span class="kr">var</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="n">y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// Debug/ReleaseSafe: panic: integer overflow</span>
+</code></pre></div>
+
+<h2>6. Zig también compila C</h2>
+<p><code>zig cc</code> es un compilador de C (Clang) con soporte de compilación cruzada integrado:</p>
+<div class="highlight"><pre><span></span><code>zig<span class="w"> </span>cc<span class="w"> </span>-O2<span class="w"> </span>-o<span class="w"> </span>hello<span class="w"> </span>hello.c
+zig<span class="w"> </span>cc<span class="w"> </span>-target<span class="w"> </span>x86_64-linux-musl<span class="w"> </span>-static<span class="w"> </span>-o<span class="w"> </span>hello<span class="w"> </span>hello.c
+zig<span class="w"> </span>cc<span class="w"> </span>-target<span class="w"> </span>aarch64-macos<span class="w"> </span>-o<span class="w"> </span>hello<span class="w"> </span>hello.c
+</code></pre></div>
+
+<p>C y Zig pueden convivir en el mismo <code>build.zig</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">exe</span><span class="p">.</span><span class="n">root_module</span><span class="p">.</span><span class="n">addCSourceFile</span><span class="p">(.{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">path</span><span class="p">(</span><span class="s">&quot;src/legacy.c&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="p">.{</span><span class="s">&quot;-std=c11&quot;</span><span class="p">},</span>
+<span class="p">});</span>
+<span class="n">exe</span><span class="p">.</span><span class="n">root_module</span><span class="p">.</span><span class="n">link_libc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Esto permite migrar un proyecto archivo por archivo.</p>
+<h2>7. Límites</h2>
+<ul>
+<li>Zig no evita use-after-free ni punteros a variables locales que ya no existen.</li>
+<li>En ReleaseFast y ReleaseSmall se eliminan casi todas las comprobaciones de seguridad.</li>
+<li>El lenguaje aún no llega a 1.0, así que sus APIs cambian entre versiones.</li>
+<li>C tiene un ABI estable, más ecosistema y soporte para más arquitecturas.</li>
+</ul>
+<p>Para leer código existente, C sigue siendo indispensable. Para escribir código nuevo, Zig ofrece el mismo control y más errores detectados antes de producción.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/13/zig-vs-c-sistemas/">posted at 20:00</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swtips.html" rel="tag">SW.Tips</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/zig.html" class="tags">Zig</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/programming.html" class="tags">programming</a>
+                </div>
+            </article>            <h4 class="date">Nov 13, 2026</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -105,12 +440,12 @@
 <h3 id="message-queuing">Colas de mensajes (Message Queuing)</h3>
 <p>En el patrón de comunicación Message Queuing, las colas desacoplan temporalmente a los productores de los consumidores. Las colas también nos permiten escalar productores y consumidores de forma independiente y proporcionan cierto grado de tolerancia a fallos frente a errores de procesamiento.</p>
 <p>Varios productores pueden enviar mensajes a la misma cola; sin embargo, cuando un consumidor procesa un mensaje, este se bloquea o se elimina de la cola y deja de estar disponible. Solo un único consumidor consume un mensaje específico.</p>
-<p><img alt="Ilustración de una cola de mensajes como transporte entre productores y consumidores" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Message-Queuing.svg"></p>
+<p><img alt="Ilustración de una cola de mensajes como transporte entre productores y consumidores" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Message-Queuing.svg"></p>
 <p><em>Colas de mensajes (Message Queuing)</em></p>
 <p>Si el consumidor no logra procesar un mensaje específico, la plataforma de mensajería normalmente devuelve el mensaje a la cola, dejándolo disponible para otros consumidores.</p>
 <h3 id="publish-subscribe">Publicación/Suscripción</h3>
 <p>En el patrón de comunicación Publish/Subscribe (o Pub/Sub), varios suscriptores pueden recibir y procesar un mismo mensaje de forma concurrente.</p>
-<p><img alt="Ilustración de un intercambio de mensajes pub/sub" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-PubSub.svg"></p>
+<p><img alt="Ilustración de un intercambio de mensajes pub/sub" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-PubSub.svg"></p>
 <p><em>Publicación/Suscripción</em></p>
 <p>Por ejemplo, este patrón permite que un publicador notifique a todos los suscriptores que algo ha ocurrido en el sistema.</p>
 <p>Muchas plataformas de colas suelen asociar pub/sub con el término <strong>topics</strong>. En RabbitMQ, los topics son un tipo específico de implementación de pub/sub (un tipo de exchange, para ser exactos), pero a lo largo de este artículo me refiero a los topics como una representación de pub/sub en su conjunto.</p>
@@ -128,11 +463,11 @@
 <h3 id="message-exchanges">Message Exchanges</h3>
 <p>RabbitMQ implementa Pub/Sub mediante el uso de message exchanges. Un publicador publica sus mensajes en un message exchange sin saber quiénes son los suscriptores de dichos mensajes.</p>
 <p>Cada consumidor que desea suscribirse a un exchange crea su propia cola; el message exchange encola entonces los mensajes producidos para que los consumidores los consuman. También puede filtrar mensajes para algunos suscriptores en función de diversas reglas de enrutamiento.</p>
-<p><img alt="Ilustración de un Message Exchange de RabbitMQ" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Message-Exchange.svg"></p>
+<p><img alt="Ilustración de un Message Exchange de RabbitMQ" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Message-Exchange.svg"></p>
 <p><em>Message Exchange de RabbitMQ</em></p>
 <p>Es importante destacar que RabbitMQ soporta suscripciones tanto efímeras como durables. Un consumidor puede decidir qué tipo de suscripción desea emplear a través de la API de RabbitMQ.</p>
 <p>Gracias a la arquitectura de RabbitMQ, también podemos crear un enfoque híbrido en el que algunos suscriptores forman <strong>consumer groups</strong> (grupos de consumidores) que trabajan juntos procesando mensajes como consumidores en competencia sobre una cola específica. De este modo, implementamos el patrón pub/sub y, al mismo tiempo, permitimos que algunos suscriptores escalen para manejar los mensajes recibidos.</p>
-<p><img alt="Ilustración de una topología fanout de RabbitMQ con enrutamiento y consumer groups" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Consumer-Groups.svg"></p>
+<p><img alt="Ilustración de una topología fanout de RabbitMQ con enrutamiento y consumer groups" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Consumer-Groups.svg"></p>
 <p><em>Pub/Sub y colas combinados</em></p>
 <h2 id="que-es-apache-kafka">¿Qué es Apache Kafka?</h2>
 <p><a href="https://kafka.apache.org/">Apache Kafka</a> no es una implementación de un message broker. En cambio, es una plataforma distribuida de streaming de eventos de código abierto. A diferencia de RabbitMQ, que se basa en colas y exchanges, la capa de almacenamiento de Kafka utiliza un log de transacciones particionado (más detalles abajo en <a href="#topics">Topics</a>).</p>
@@ -143,11 +478,11 @@
 <p>Para cada topic, Kafka mantiene un log de mensajes particionado. Cada partición es una secuencia ordenada e inmutable de registros a la que se añaden mensajes continuamente. Kafka añade los mensajes a estas particiones a medida que llegan. Por defecto, utiliza un particionador round-robin para repartir los mensajes uniformemente entre las particiones.</p>
 <p>Los productores pueden modificar este comportamiento para crear streams lógicos de mensajes. Por ejemplo, en una aplicación multitenant podríamos querer crear streams lógicos de mensajes según el ID de tenant de cada mensaje. En un escenario IoT, podríamos querer asignar la identidad de cada productor a una partición específica de forma constante.</p>
 <p>Asegurar que todos los mensajes del mismo stream lógico se asignen a la misma partición garantiza su entrega ordenada a los consumidores.</p>
-<p><img alt="Ilustración de productores para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Producers.svg"></p>
+<p><img alt="Ilustración de productores para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Producers.svg"></p>
 <p><em>Productores de Kafka</em></p>
 <p>Los consumidores consumen mensajes manteniendo un offset (o índice) sobre estas particiones y leyéndolas secuencialmente. Un único consumidor puede consumir varios topics, y los consumidores pueden escalar hasta el número de particiones disponibles. Por ello, al crear un topic, se debe considerar cuidadosamente el throughput de mensajes esperado en ese topic.</p>
 <p>Un grupo de consumidores que trabajan juntos para consumir un topic se denomina <strong>consumer group</strong>. La API de Kafka normalmente se encarga de balancear el procesamiento de particiones entre los consumidores de un consumer group y de almacenar los offsets actuales de partición de los consumidores.</p>
-<p><img alt="Ilustración de consumer groups para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Consumers.svg"></p>
+<p><img alt="Ilustración de consumer groups para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Consumers.svg"></p>
 <p><em>Consumidores de Kafka</em></p>
 <h3 id="patrones-con-kafka">Implementación de patrones de mensajería con Kafka</h3>
 <p>La implementación de Kafka encaja bastante bien con el patrón pub/sub. Un productor puede enviar mensajes a un topic específico y varios consumer groups pueden consumir el mismo mensaje. Cada consumer group puede escalar individualmente para manejar la carga (hasta el número de particiones disponibles).</p>
@@ -166,7 +501,7 @@
 </blockquote>
 <p>Dicho de otro modo, mientras tengamos un único consumidor de mensajes, este los recibe en orden. Sin embargo, en cuanto varios consumidores leen mensajes de la misma cola, no tenemos ninguna garantía sobre el orden de procesamiento de los mensajes.</p>
 <p>Esta falta de garantía de orden se produce porque los consumidores pueden devolver (o reentregar) mensajes a la cola después de leerlos (por ejemplo, ante un fallo de procesamiento). Una vez devuelto un mensaje, otro consumidor puede tomarlo para procesarlo aunque ya haya consumido un mensaje posterior. Así, el siguiente diagrama muestra que los consumer groups procesan los mensajes fuera de orden.</p>
-<p><img alt="Ejemplo de pérdida del orden de mensajes al usar RabbitMQ" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Message-Ordering-RabbitMQ.svg"></p>
+<p><img alt="Ejemplo de pérdida del orden de mensajes al usar RabbitMQ" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Message-Ordering-RabbitMQ.svg"></p>
 <p><em>Ejemplo de pérdida del orden de mensajes al usar RabbitMQ</em></p>
 <p>Por supuesto, podríamos recuperar el orden de los mensajes en RabbitMQ limitando la concurrencia de consumidores a uno. Más precisamente, el número de hilos dentro del único consumidor debería limitarse a uno, ya que cualquier procesamiento paralelo de mensajes puede causar el mismo problema de desorden. Sin embargo, limitarnos a un único consumidor de un solo hilo afecta gravemente nuestra capacidad de escalar el procesamiento de mensajes a medida que el sistema crece. Por ello, no deberíamos asumir este compromiso a la ligera.</p>
 <p>Por otro lado, Kafka ofrece una garantía de orden fiable para el procesamiento de mensajes. Kafka garantiza que todos los mensajes enviados a la misma partición de un topic se procesen en orden. Por defecto, Kafka coloca los mensajes en las particiones con un particionador round-robin.</p>
@@ -201,12 +536,12 @@
 <p>Como arquitectos y desarrolladores, deberíamos preguntarnos: ¿Con qué frecuencia reintentamos ante un fallo de procesamiento de un mensaje? ¿Cuánto tiempo debemos esperar entre reintentos? ¿Cómo distinguimos entre fallos transitorios y persistentes? Y lo más importante: ¿qué hacemos cuando todos los reintentos fallan o nos encontramos con un fallo persistente? Aunque las respuestas a estas preguntas son específicas de cada dominio, las plataformas de mensajería normalmente nos proporcionan las herramientas para implementar nuestra solución.</p>
 <p>RabbitMQ ofrece herramientas como los reintentos de entrega y los dead-letter exchanges (DLX) para manejar fallos en el procesamiento de mensajes. La idea principal de un DLX es que RabbitMQ puede enrutar automáticamente los mensajes fallidos a un DLX según una configuración adecuada y aplicar reglas de procesamiento adicionales sobre el mensaje en ese exchange, incluyendo reintentos diferidos, conteo de reintentos y entrega a una cola de "intervención humana". <a href="https://engineering.nanit.com/rabbitmq-retries-the-full-story-ca4cc6c5b493">Este artículo</a> ofrece información adicional sobre posibles patrones para manejar reintentos en RabbitMQ.</p>
 <p>Lo más importante que hay que recordar aquí es que, en RabbitMQ, cuando un consumidor está ocupado procesando y reintentando un mensaje específico (incluso antes de devolverlo a la cola), otros consumidores pueden procesar concurrentemente los mensajes que le siguen. El procesamiento de mensajes no se bloquea mientras un consumidor concreto reintenta un mensaje en particular. Por ello, un consumidor de mensajes puede reintentar un mensaje de forma síncrona tanto como quiera sin afectar al sistema completo.</p>
-<p><img alt="Ejemplo de manejo de fallos: un consumidor puede continuar reintentando un mensaje mientras otros consumidores siguen procesando mensajes" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-RabbitMQ.svg"></p>
+<p><img alt="Ejemplo de manejo de fallos: un consumidor puede continuar reintentando un mensaje mientras otros consumidores siguen procesando mensajes" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-RabbitMQ.svg"></p>
 <p><em>El consumidor 1 puede continuar reintentando el mensaje 1 mientras otros consumidores siguen procesando mensajes.</em></p>
 <p>A diferencia de RabbitMQ, Kafka no ofrece ninguno de estos mecanismos de forma nativa. Con Kafka, debemos proporcionar e implementar los mecanismos de reintento de mensajes a nivel de aplicación. Además, debemos tener en cuenta que, cuando un consumidor está ocupado reintentando de forma síncrona un mensaje específico, no se pueden procesar otros mensajes de la misma partición.</p>
 <p>No podemos rechazar y reintentar un mensaje específico y hacer commit de un mensaje que llegó después, ya que el consumidor no puede cambiar el orden de los mensajes. Como recordarás, la partición es simplemente un log de solo anexado.</p>
 <p>Una solución a nivel de aplicación puede hacer commit de los mensajes fallidos en un "retry topic" y manejar los reintentos desde allí; sin embargo, en esta solución perdemos el orden de los mensajes. Un ejemplo de este tipo de implementación por parte de Uber Engineering se puede encontrar aquí. Si la latencia del procesamiento de mensajes no es un problema, la solución estándar de Kafka con un monitoreo de errores adecuado podría ser suficiente.</p>
-<p><img alt="Ejemplo de mensajes de una partición que no se procesan si el consumidor queda atascado reintentando un mensaje" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-Kafka.svg"></p>
+<p><img alt="Ejemplo de mensajes de una partición que no se procesan si el consumidor queda atascado reintentando un mensaje" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-Kafka.svg"></p>
 <p><em>Los mensajes de la partición inferior no se procesan si el consumidor queda atascado reintentando un mensaje.</em></p>
 <p><em><strong>Ganador</strong> – RabbitMQ gana por puntos, ya que ofrece de forma nativa algún mecanismo para resolver este problema.</em></p>
 <h3 id="escala">Escala</h3>
@@ -217,12 +552,12 @@
 <h3 id="complejidad-consumidor">Complejidad del consumidor</h3>
 <p>RabbitMQ usa un enfoque de smart-broker &amp; dumb-consumer (broker inteligente y consumidor simple). Los consumidores se registran para consumir colas y RabbitMQ les envía (push) los mensajes a procesar a medida que llegan. RabbitMQ también tiene una API de pull, pero se usa mucho menos.</p>
 <p>RabbitMQ gestiona la distribución de mensajes a los consumidores y elimina los mensajes de las colas (posiblemente hacia DLXs). El consumidor no necesita preocuparse por nada de esto. La estructura de RabbitMQ también significa que el consumer group de una cola puede escalar eficientemente de un solo consumidor a varios cuando aumenta la carga, sin ningún cambio en el sistema.</p>
-<p><img alt="Ilustración de consumidores de RabbitMQ que escalan hacia arriba y hacia abajo eficientemente" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-RabbitMQ.svg"></p>
+<p><img alt="Ilustración de consumidores de RabbitMQ que escalan hacia arriba y hacia abajo eficientemente" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-RabbitMQ.svg"></p>
 <p><em>Los consumidores de RabbitMQ escalan hacia arriba y hacia abajo eficientemente.</em></p>
 <p>Kafka, en cambio, usa un enfoque de dumb-broker &amp; smart-consumer (broker simple y consumidor inteligente). Los consumidores de un consumer group necesitan coordinar entre ellos los leases sobre las particiones del topic (para que solo un consumidor del consumer group escuche una partición específica). Los consumidores también necesitan gestionar y almacenar el índice de offset de sus particiones.</p>
 <p>Afortunadamente, el SDK de Kafka se encarga de esto por nosotros, así que no necesitamos gestionarlo nosotros mismos. Sin embargo, cuando la carga es baja, un único consumidor necesita procesar y llevar el control de varias particiones en paralelo, lo que requiere más recursos en el lado del consumidor.</p>
 <p>Además, a medida que aumenta la carga, solo podemos escalar el consumer group hasta el punto en que el número de consumidores iguale el número de particiones del topic. Por encima de eso, necesitamos configurar Kafka para añadir particiones adicionales. Sin embargo, cuando la carga vuelve a disminuir, no podemos eliminar las particiones que ya añadimos, lo que aumenta el trabajo que los consumidores deben hacer. Aunque, como se mencionó arriba, el SDK se encarga de este trabajo extra.</p>
-<p><img alt="Ilustración de particiones de Kafka que no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala" src="https://gcca.github.io/static/2026/1113-rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-Kafka.svg"></p>
+<p><img alt="Ilustración de particiones de Kafka que no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-Kafka.svg"></p>
 <p><em>Las particiones de Kafka no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala.</em></p>
 <p><em><strong>Ganador</strong> – RabbitMQ, por diseño, está construido pensando en consumidores simples. Por ello, es el ganador de esta ronda.</em></p>
 <h3 id="compatibilidad-protocolos">Compatibilidad de protocolos</h3>
@@ -271,128 +606,6 @@
                     &nbsp;<a href="https://gcca.github.io/tag/messaging.html" class="tags">messaging</a>
                     &nbsp;<a href="https://gcca.github.io/tag/architecture.html" class="tags">architecture</a>
                 </div>
-            </article>            <h4 class="date">Feb 05, 2025</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/" rel="bookmark" title="Permanent Link to &quot;Notas sobre Feature Flags&quot;">Notas sobre Feature Flags</a>
-                </h2>
-
-                
-                
-
-                <h3>El Auge y la Complejidad de los Feature Flags en DevOps</h3>
-<p>En la última década, los <strong>feature flags</strong> se han convertido en una herramienta fundamental dentro del ecosistema de  despliegue, DevOps y mantenimiento, especialmente para la implementación continua. Permitir que operaciones e ingeniería operen de forma independiente ha sido una de sus mayores ventajas, pero no viene sin desafíos.</p>
-<p><strong>Ventajas y Desafíos:</strong></p>
-<ul>
-<li><strong>Ventajas:</strong> Los feature flags permiten lanzamientos controlados, experimentación y la capacidad de activar o desactivar características sin necesidad de nuevos despliegues. Esto facilita el despliegue continuo y la innovación ágil.</li>
-<li><strong>Desafíos:</strong> Sin embargo, añaden <strong>complexity</strong> al código, aumentan el <strong>overhead</strong> de pruebas, y pueden llevar a <strong>bugs</strong> si no se gestionan adecuadamente. La <strong>lack</strong> de procesos automatizados para el seguimiento y la limpieza de feature flags puede resultar en:</li>
-<li><strong>Zombie flags</strong>: Feature flags olvidados que siguen en el código, incrementando el <strong>carrying cost</strong> y afectando la legibilidad y mantenimiento del código.</li>
-<li><strong>Unfinished business</strong>: Despliegues incompletos de feature flags, causando problemas a largo plazo.</li>
-<li><strong>Ghost flags</strong>: Feature flags eliminados pero aún manipulados por usuarios sin saberlo.</li>
-</ul>
-<p><strong>Uso Inapropiado:</strong></p>
-<ul>
-<li>Un <strong>feature flag</strong> pensado para un lanzamiento puede usarse para control de acceso a largo plazo, lo que puede llevar a problemas si el servicio externo falla. Esto ha llevado a algunos equipos a separar los sistemas de feature flags en:</li>
-<li><strong>Short-lived flags</strong> para lanzamientos temporales.</li>
-<li><strong>Long-lived flags</strong> para controles de acceso o características permanentes.</li>
-</ul>
-<p>Esta separación, aunque lógica, trae consigo:</p>
-<ul>
-<li><strong>Lack of portability</strong>: Dificultad para mover un flag de un sistema a otro sin cambios de código.</li>
-<li><strong>User confusion</strong>: Frustración por recordar en qué sistema está cada flag.</li>
-<li><strong>Lack of context</strong>: Nombres de flags que no explican su propósito sin documentación adicional.</li>
-</ul>
-<p><strong>La Realidad de la Gestión de Feature Flags:</strong></p>
-<p>El sentido común sugiere que los feature flags deben ser temporales y limitados, pero la realidad del desarrollo de software moderno, con su ritmo rápido y naturaleza multifuncional, hace esto difícil de mantener. Además, la <strong>feature management</strong> va más allá del ámbito de DevOps, abarcando también la gestión de características para usuarios en diferentes contextos.</p>
-<p><strong>Propuestas para Mejorar:</strong></p>
-<ul>
-<li><strong>Herramientas de Gestión de Feature Flags:</strong> Necesitamos herramientas que puedan manejar tanto <strong>short-lived</strong> como <strong>long-lived flags</strong> de manera cohesiva, con funciones como:</li>
-<li>Metadatos adicionales para flags de corta duración, incluyendo fechas de expiración.</li>
-<li>Asignación de propietarios para cada flag.</li>
-<li>Capacidad de cambiar el propósito de un flag dentro de la misma herramienta.</li>
-<li>Políticas automatizadas para la gestión y revisión de flags.</li>
-<li><strong>Automatización:</strong> Implementar procesos automatizados de auditoría y mantenimiento para evitar el crecimiento descontrolado de la complejidad.</li>
-</ul>
-<p><strong>Conclusión:</strong></p>
-<p>Necesitamos redefinir qué significa la <strong>feature management</strong> en la industria, alineando las prácticas y herramientas con la realidad operativa de nuestros negocios. Esto podría incluir la creación de herramientas que manejen la complejidad inherente de los feature flags, mejorando así la eficiencia y reduciendo los riesgos asociados con su gestión.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/">posted at 12:40</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swngnote.html" rel="tag">SwNg.Note</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/software-engineering.html" class="tags">Software Engineering</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/feature-flags.html" class="tags">Feature Flags</a>
-                </div>
-            </article>            <h4 class="date">Jan 29, 2025</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/" rel="bookmark" title="Permanent Link to &quot;Expansiones de Taylor&quot;">Expansiones de Taylor</a>
-                </h2>
-
-                
-                
-
-                <div class="math">\begin{align*}
-\frac{1}{1 - x} &amp;= \sum_{n=0}^{\infty} x^n &amp; x \in (-1, 1) \\\\
-e^x &amp;= \sum_{n=0}^{\infty} \frac{x^n}{n!} &amp; x \in \mathbb{R} \\\\
-\ln(1 + x) &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{n+1}}{n+1} &amp; x \in (-1, 1] \\\\
-\sin x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!} &amp; x \in \mathbb{R} \\\\
-\cos x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{(2n)!} &amp; x \in \mathbb{R} \\\\
-\arctan x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{2n+1} &amp; x \in [-1, 1] \\\\
-(1 + x)^r &amp;= \sum_{n=0}^{\infty} \binom{r}{n} x^n &amp; x \in (-1, 1)
-\end{align*}</div>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/">posted at 08:13</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathnote.html" rel="tag">Math.Note</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
-                </div>
-            </article>            <h4 class="date">Jan 24, 2025</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2025/01/24/githubactions-monorepos/" rel="bookmark" title="Permanent Link to &quot;GitHub Actions en monorepos complejos&quot;">GitHub Actions en monorepos complejos</a>
-                </h2>
-
-                
-                
-
-                <h1>Resumen del artículo sobre GitHub Actions</h1>
-<ul>
-<li>
-<p><strong>Contexto</strong>: Un equipo trabaja en un monorepo con múltiples módulos, cada uno con su propio pipeline. Desarrollo basado en trunk y múltiples despliegues diarios.</p>
-</li>
-<li>
-<p><strong>Limitaciones de GitHub Actions</strong>:</p>
-</li>
-<li><strong>Manejo de Workflows Complejos</strong>: Problemas con workflows complejos en monorepos, especialmente en la reutilización de workflows y en las comprobaciones de pull request.</li>
-<li>
-<p><strong>Dependencia en el Entorno de GitHub</strong>: Limitaciones para correr localmente los mismos workflows de GitHub, afectando desarrollo y depuración.</p>
-</li>
-<li>
-<p><strong>Alternativas y Sugerencias</strong>:</p>
-</li>
-<li>
-<p>Uso de herramientas como Nix o Docker para ejecutar comandos, permitiendo consistencia entre entornos locales y de CI/CD.</p>
-</li>
-<li>
-<p><strong>Conclusión</strong>: Para proyectos grandes y complejos, especialmente monorepos, se recomienda evaluar cuidadosamente el uso de GitHub Actions debido a sus limitaciones en gestión de workflows y consistencia de entornos.</p>
-</li>
-</ul>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2025/01/24/githubactions-monorepos/">posted at 17:51</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/swmisc.html" rel="tag">SW.Misc</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
-                </div>
             </article>
 
                 <div class="clear"></div>
@@ -412,6 +625,7 @@ e^x &amp;= \sum_{n=0}^{\infty} \frac{x^n}{n!} &amp; x \in \mathbb{R} \\\\
                 Powered by <a href="http://getpelican.com">Pelican</a>
                 &middot;
                 <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
             </footer>
         </div>
         <div class="clear"></div>

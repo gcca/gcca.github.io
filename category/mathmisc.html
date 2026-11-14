@@ -1,34 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08-extended/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
     <script src="https://gcca.github.io/theme/js/theme.js"></script>
     <script defer src="https://gcca.github.io/theme/js/math.js"></script>
     <title>(gcca) | articles in the "Math.Misc" category</title>
-    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
     <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
     <meta name="generator" content="Pelican" />
     <meta name="description" content="(gcca) blog" />
-    <meta name="author" content="Cristhian Gonzales" />
+    <meta name="author" content="Cristhian Gonzales C." />
 </head>
 <body>
     <header>
-        <div class="theme-control" hidden>
-            <label for="theme-preference">Theme</label>
-            <select id="theme-preference" name="theme">
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-            </select>
-        </div>
         <nav style="overflow: hidden;">
             <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
 
                 <li class="ephemeral selected"><a href="https://gcca.github.io/category/mathmisc.html">Math.Misc</a></li>
                 <li><a href="https://gcca.github.io/">Home</a></li>
@@ -41,12 +33,85 @@
         </nav>
         <div class="header_box" style="height: 50px">
         <h1><a href="https://gcca.github.io/">
-            <img src="/images/logo.png" class="avatar" width="50" height="50" alt="" /><span class="site_title">(gcca)</span>
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
             </a></h1></div>
-            <h2>Blog</h2>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Nov 20, 2024</h4>
+        <div id="content">            <h4 class="date">Nov 14, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/14/project-euler-01/" rel="bookmark" title="Permanent Link to &quot;Project-Euler 01&quot;">Project-Euler 01</a>
+                </h2>
+
+                
+                
+
+                <p>Primera de una serie de publicaciones con soluciones a los problemas del <a href="https://projecteuler.net">Proyecto Euler</a>. El problema:</p>
+<blockquote>
+<p><strong>Ejercicio 1.</strong> Los naturales menores que <span class="math">\(10\)</span> y múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span> son <span class="math">\(3\)</span>, <span class="math">\(5\)</span>, <span class="math">\(6\)</span> y <span class="math">\(9\)</span>; su suma es <span class="math">\(23\)</span>. Hallar la suma de los múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span> menores que <span class="math">\(1000\)</span>.</p>
+</blockquote>
+<h2>Fuerza bruta</h2>
+<div class="highlight"><pre><span></span><code><span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">suma</span> <span class="o">+=</span> <span class="n">n</span>
+</code></pre></div>
+
+<p>O, más al estilo Python:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Si el límite no se restringe a <span class="math">\(1000\)</span>, el método es ineficiente. ¿Cómo calcular la suma de los múltiplos menores que un millón sin afectar el desempeño?</p>
+<h2>Múltiplos de un número</h2>
+<p>Primero, un problema más sencillo: la suma de los múltiplos de <span class="math">\(k\)</span> menores que <span class="math">\(N\)</span>, con <span class="math">\(k&lt;N\)</span>.</p>
+<p>Intuitivamente, queremos <span class="math">\(1k+2k+3k+\dotsb+nk\)</span>, donde <span class="math">\(nk\)</span> es el último múltiplo de <span class="math">\(k\)</span> menor que <span class="math">\(N\)</span>. Esto es <span class="math">\(k(1+2+3+\dotsb+n)=kn(n+1)/2\)</span>. Falta hallar <span class="math">\(n\)</span>, el mayor factor con <span class="math">\(nk&lt;N\)</span>, es decir, con <span class="math">\(n&lt;N/k\)</span>: basta dividir <span class="math">\(N\)</span> por <span class="math">\(k\)</span> y tomar el mayor natural menor que el cociente.</p>
+<p>Para demostrarlo, sea <span class="math">\(M_k^N:=\{ck : ck&lt;N,\ c\in\mathbf N\}\)</span> el conjunto de los múltiplos de <span class="math">\(k\)</span> menores que <span class="math">\(N\)</span>. Buscamos</p>
+<div class="math">$$\sum_{n\in M_k^N} n.$$</div>
+<p>(Que este conjunto es el buscado se sigue de la definición de múltiplo y del axioma de sustitución; queda al lector.)</p>
+<p><strong>Definición 1 (Múltiplo).</strong> Un natural <span class="math">\(m\)</span> es múltiplo de un natural <span class="math">\(n\)</span> si <span class="math">\(m=kn\)</span> para algún natural <span class="math">\(k\)</span>.</p>
+<p><strong>Proposición 2.</strong> Sean <span class="math">\(X\)</span> un conjunto finito, <span class="math">\(f\colon X\to\mathbf R\)</span> una función y <span class="math">\(g\colon Y\to X\)</span> una biyección. Entonces</p>
+<div class="math">$$\sum_{x\in X}f(x)=\sum_{y\in Y}f\circ g(y).$$</div>
+<p><strong>Proposición 3.</strong> Sean <span class="math">\(X\)</span> un conjunto finito, <span class="math">\(f\colon X\to\mathbf R\)</span> una función y <span class="math">\(c\)</span> un número real. Entonces</p>
+<div class="math">$$\sum_{x\in X}cf(x)=c\sum_{x\in X}f(x).$$</div>
+<p>Por las proposiciones 2 y 3,</p>
+<div class="math">$$\sum_{n\in M_k^N}n=\sum_{n\in I_k^N}kn=k\sum_{n\in I_k^N}n,$$</div>
+<p>donde <span class="math">\(I_k^N=\{n\in\mathbf N : kn&lt;N\}\)</span>.</p>
+<p><span class="math">\(I_k^N\)</span> contiene los números <span class="math">\(1,2,3,\dotsc,L\)</span>, donde <span class="math">\(L=\max I_k^N\)</span> es el mayor con <span class="math">\(Lk&lt;N\)</span>. De <span class="math">\(Lk&lt;N\)</span> se sigue <span class="math">\(L\le(N-1)/k\)</span>; de <span class="math">\((L+1)k\ge N\)</span>, <span class="math">\((N-1)/k&lt;L+1\)</span>. Por definición de parte entera, <span class="math">\(L=\lfloor(N-1)/k\rfloor\)</span> y, por definición de serie finita,</p>
+<div class="math">$$\sum_{n\in M_k^N}n=\sum_{n=1}^{\left\lfloor\frac{N-1}{k}\right\rfloor}kn.$$</div>
+<p>Así, la suma de los múltiplos de <span class="math">\(3\)</span> menores que <span class="math">\(10\)</span>, <span class="math">\(100\)</span> y <span class="math">\(1000\)</span> es:</p>
+<div class="math">$$
+\begin{aligned}
+3\sum_{n=1}^{3}n &amp;= 3\times\frac{3\times4}{2}=18\\
+3\sum_{n=1}^{33}n &amp;= 3\times\frac{33\times34}{2}=1683\\
+3\sum_{n=1}^{333}n &amp;= 3\times\frac{333\times334}{2}=166833
+\end{aligned}
+$$</div>
+<h2>Múltiplos de 3 o 5</h2>
+<p>No basta con sumar ambas sumas,</p>
+<div class="math">$$\sum_{n\in M_{3\text{ o }5}^{1000}}n\ne\sum_{n\in M_3^{1000}}n+\sum_{n\in M_5^{1000}}n,$$</div>
+<p>porque los múltiplos de <span class="math">\(3\)</span> que también lo son de <span class="math">\(5\)</span> se suman dos veces. Por el principio de inclusión-exclusión,</p>
+<div class="math">$$\sum_{n\in M_{3\text{ o }5}^{1000}}n=\sum_{n\in M_3^{1000}}n+\sum_{n\in M_5^{1000}}n-\sum_{n\in M_{3\text{ y }5}^{1000}}n.$$</div>
+<p>¿Cómo calcular el último término? Si <span class="math">\(n\)</span> es múltiplo de <span class="math">\(3\)</span>, entonces <span class="math">\(n=3k\)</span> para algún natural <span class="math">\(k\)</span>. Si además es múltiplo de <span class="math">\(5\)</span>, entonces <span class="math">\(k=5k'\)</span> con <span class="math">\(k'\)</span> natural. Luego <span class="math">\(n=3\cdot5k'=15k'\)</span>: los múltiplos de <span class="math">\(3\)</span> y <span class="math">\(5\)</span> son los múltiplos de <span class="math">\(15\)</span>. (Esto se puede generalizar.)</p>
+<p>En consecuencia,</p>
+<div class="math">$$
+\begin{array}{ccccccc}
+\displaystyle\sum_{n\in M_{3\text{ o }5}^{1000}}n &amp;=&amp; \displaystyle\sum_{n\in M_3^{1000}}n &amp;+&amp; \displaystyle\sum_{n\in M_5^{1000}}n &amp;-&amp; \displaystyle\sum_{n\in M_{3\text{ y }5}^{1000}}n\\
+&amp;=&amp; \displaystyle\sum_{n=1}^{333}3n &amp;+&amp; \displaystyle\sum_{n=1}^{199}5n &amp;-&amp; \displaystyle\sum_{n=1}^{66}15n\\
+&amp;=&amp; 3\times\left(\displaystyle\frac{333\times334}{2}\right) &amp;+&amp; 5\times\left(\displaystyle\frac{199\times200}{2}\right) &amp;-&amp; 15\times\left(\displaystyle\frac{66\times67}{2}\right)\\
+&amp;=&amp; 233168
+\end{array}
+$$</div>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/14/project-euler-01/">posted at 06:25</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathmisc.html" rel="tag">Math.Misc</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/project-euler.html" class="tags">Project Euler</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
+                </div>
+            </article>            <h4 class="date">Nov 20, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -90,6 +155,7 @@
                 Powered by <a href="http://getpelican.com">Pelican</a>
                 &middot;
                 <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
             </footer>
         </div>
         <div class="clear"></div>

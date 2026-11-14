@@ -1,0 +1,74 @@
+/* Local tweaks on top of the upstream theme: Iosevka SS08 and sizes. */
+
+@font-face {
+    font-family: "Iosevka SS08";
+    src: url("../fonts/iosevka-ss08/regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Iosevka SS08";
+    src: url("../fonts/iosevka-ss08/italic.woff2") format("woff2");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Iosevka SS08";
+    src: url("../fonts/iosevka-ss08/bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Iosevka SS08";
+    src: url("../fonts/iosevka-ss08/bold-italic.woff2") format("woff2");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+html {
+    /* Only the bundled 400/700 faces are used; never fake bold or italic. */
+    font-synthesis: none;
+}
+/* Bold emphasis follows the surrounding text color in both themes. */
+strong {
+    color: inherit;
+    font-weight: 700;
+}
+body, h1, h2, h3, h4, h5, h6, .info, .pages, footer, pre, code, .linenos, td.code {
+    font-family: "Iosevka SS08", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+}
+pre, code, .linenos, td.code {
+    font-variant-ligatures: none;
+}
+
+/* Keep the logo's displayed size while its HTML declares intrinsic dimensions. */
+.avatar {
+    width: 50px;
+    height: auto;
+}
+/* Body and headings are two pixels above upstream; code blocks use 16px. */
+body {
+    font-size: 18px;
+}
+h1, h2, h3, header h1, .date {
+    font-size: 26px;
+}
+.post pre, .page pre, .linenos {
+    font-size: 16px;
+}
+/* Inline code sits between block code (16px) and body text (18px); code inside blocks follows its block. */
+code {
+    font-size: 16.5px;
+}
+pre code {
+    font-size: inherit;
+}
+
+/* MathJax: wide display math scrolls instead of overflowing the page. */
+.post div.math, .page div.math {
+    overflow-x: auto;
+}

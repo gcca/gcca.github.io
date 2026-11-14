@@ -1,34 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08-extended/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
     <script src="https://gcca.github.io/theme/js/theme.js"></script>
     <script defer src="https://gcca.github.io/theme/js/math.js"></script>
     <title>(gcca) | articles in the "PoC" category</title>
-    <link rel="shortcut icon" type="image/png" href="https://gcca.github.io/favicon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="https://gcca.github.io/favicon.ico">
     <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
     <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
     <meta name="generator" content="Pelican" />
     <meta name="description" content="(gcca) blog" />
-    <meta name="author" content="Cristhian Gonzales" />
+    <meta name="author" content="Cristhian Gonzales C." />
 </head>
 <body>
     <header>
-        <div class="theme-control" hidden>
-            <label for="theme-preference">Theme</label>
-            <select id="theme-preference" name="theme">
-                <option value="system">System</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-            </select>
-        </div>
         <nav style="overflow: hidden;">
             <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
 
                 <li class="ephemeral selected"><a href="https://gcca.github.io/category/poc.html">PoC</a></li>
                 <li><a href="https://gcca.github.io/">Home</a></li>
@@ -41,12 +33,90 @@
         </nav>
         <div class="header_box" style="height: 50px">
         <h1><a href="https://gcca.github.io/">
-            <img src="/images/logo.png" class="avatar" width="50" height="50" alt="" /><span class="site_title">(gcca)</span>
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
             </a></h1></div>
-            <h2>Blog</h2>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Oct 24, 2024</h4>
+        <div id="content">            <h4 class="date">Nov 13, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/" rel="bookmark" title="Permanent Link to &quot;Consistent hashing: anotaciones&quot;">Consistent hashing: anotaciones</a>
+                </h2>
+
+                
+                
+
+                <p>Para asignar una clave a un servidor podemos usar <code>hash(clave) % cantidad_de_nodos</code>. El problema aparece al agregar o quitar servidores: cambia el divisor y muchas claves cambian de destino. Consistent hashing mantiene un espacio de posiciones fijo y coloca allí tanto nodos como claves.</p>
+<p>Los ejemplos <code>consish/</code> de <a href="https://github.com/gcca/nh35a/tree/aae1135157a5304cad1e715bf07c2483accfbefb">nh35a</a> comparten cuatro partes: calcular una posición, registrar los nodos, ordenarlos y buscar el siguiente nodo del anillo.</p>
+<h2>Del hash al anillo</h2>
+<p>En Zig, <code>hashS</code> obtiene un digest MD5 de 16 bytes, lee sus dos mitades como enteros de 64 bits en big endian y las combina mediante XOR:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="n">ns</span><span class="o">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">d</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="p">.</span><span class="n">crypto</span><span class="p">.</span><span class="n">hash</span><span class="p">.</span><span class="n">Md5</span><span class="p">.</span><span class="n">hash</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="p">.{});</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">8</span><span class="p">..</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">dh</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">dl</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">ns</span><span class="p">;</span><span class="w"> </span><span class="c1">// posición dentro del anillo</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Aquí <code>ns = 65535</code>: las posiciones van de <code>0</code> a <code>65534</code>. Es el tamaño del anillo, independiente de cuántos nodos haya. Todos deben usar el mismo hash y la misma interpretación de los bytes para reproducir la asignación.</p>
+<p>En <code>Nodes</code>, <code>ds</code> guarda nombres y <code>ss</code> sus posiciones. <code>add</code> incorpora ambos; <code>done</code> los ordena por posición, manteniendo cada nombre junto a su hash. Con los nodos del ejemplo, el orden es <code>B:8630</code>, <code>A:14321</code>, <code>C:35588</code>.</p>
+<h2>Buscar el nodo responsable</h2>
+<p>Cada nodo recibe las claves del intervalo que termina en su posición. La búsqueda encuentra el primer hash mayor o igual al de la clave. Si no existe, vuelve al comienzo del anillo:</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">bs</span><span class="p">(</span><span class="n">self</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="kr">const</span><span class="w"> </span><span class="n">Nodes</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">@panic</span><span class="p">(</span><span class="s">&quot;no elements&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ns</span><span class="p">);</span>
+<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">sort</span><span class="p">.</span><span class="n">lowerBound</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">sh</span><span class="p">,</span><span class="w"> </span><span class="n">cmpHash</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// vuelta al primer nodo</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">.{</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ds</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Con las posiciones ordenadas, la búsqueda binaria cuesta <code>O(log N)</code> para <code>N</code> nodos, además del cálculo del hash. El segundo valor retornado, <code>sh</code>, es la posición de la <strong>clave</strong>, no la del nodo elegido.</p>
+<h2>Qué cambia al agregar un nodo</h2>
+<p>La clave <code>"10"</code> cae en <code>41300</code>, después de <code>C</code>; por eso vuelve a <code>B</code>. Si incorporamos <code>D</code>, cuyo hash es <code>50913</code>, pasa a tener un sucesor antes de completar la vuelta:</p>
+<table>
+<thead>
+<tr><th style="padding-right: 1em">Clave</th><th style="padding-right: 1em; text-align: right">Hash</th><th style="padding-right: 1em">Sin D</th><th>Con D</th></tr>
+</thead>
+<tbody>
+<tr><td style="padding-right: 1em"><code>"1"</code></td><td style="padding-right: 1em; text-align: right">21135</td><td style="padding-right: 1em">C</td><td>C</td></tr>
+<tr><td style="padding-right: 1em"><code>"10"</code></td><td style="padding-right: 1em; text-align: right">41300</td><td style="padding-right: 1em">B</td><td>D</td></tr>
+<tr><td style="padding-right: 1em"><code>"100"</code></td><td style="padding-right: 1em; text-align: right">19522</td><td style="padding-right: 1em">C</td><td>C</td></tr>
+</tbody>
+</table>
+
+<p>Este agregado extiende el ejemplo original. Solo las posiciones del intervalo <code>(35588, 50913]</code> pasan de <code>B</code> a <code>D</code>; el resto conserva su propietario. Esa estabilidad al cambiar los nodos es la idea central. En la versión Zig, el ejemplo ampliado requiere inicializar <code>Nodes</code> con capacidad para cuatro elementos, porque <code>add</code> usa <code>appendBounded</code>.</p>
+<h2>Las partes comunes en cada lenguaje</h2>
+<ul>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c/consish/consish.c">C</a></strong>: implementa MD5 y guarda nombres y hashes en arrays paralelos. <code>done</code> usa inserción; la búsqueda binaria es manual. Duplica los nombres y libera la memoria explícitamente.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c%2B%2B/consish/consish.cc">C++</a></strong>: también implementa MD5. Usa vectores, ordena los pares con <code>stable_sort</code> sobre <code>zip</code> y busca con <code>lower_bound</code>. Los contenedores gestionan su memoria.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c3/consish/consish.c3">C3</a></strong>: usa MD5 de la biblioteca estándar y listas paralelas. Construye pares temporales para ordenar con quicksort y consulta mediante <code>binarysearch</code> como punto de inserción.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/go/consish/main.go">Go</a></strong>: usa <code>crypto/md5</code> y <code>binary.BigEndian</code>. <code>sort.Interface</code> intercambia juntos nombres y hashes; <code>slices.BinarySearch</code> encuentra el nodo o su punto de inserción.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/ocaml/consish/consish.ml">OCaml</a></strong>: usa <code>Digest</code> y un array de pares. Ordena y calcula el módulo con operaciones sin signo sobre <code>int64</code>; implementa la búsqueda mediante recursión.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/rust/consish/src/main.rs">Rust</a></strong>: usa el crate <code>md-5</code> y vectores paralelos. Ordena índices para reordenar ambos vectores; <code>partition_point</code> encuentra el primer hash que no sea menor.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/swift/consish/consish.swift">Swift</a></strong>: usa <code>CryptoKit.Insecure.MD5</code>, enteros <code>UInt64</code> y un array de tuplas. <code>sort</code> conserva unidos nombre y posición; la búsqueda binaria es manual.</li>
+<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/zig/consish/src/main.zig">Zig</a></strong>: usa <code>Md5</code>, <code>ArrayList</code> y un allocator explícito. <code>heapContext</code> ordena intercambiando ambas listas; <code>lowerBound</code> resuelve la búsqueda.</li>
+</ul>
+<p>Estos ejemplos colocan un solo punto por nodo, por lo que los intervalos pueden ser desiguales. Los nodos virtuales permiten distribuir cada servidor entre varios puntos del anillo. Las colisiones también requieren una regla compartida de desempate para conservar una asignación reproducible.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/">posted at 20:05</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/poc.html" rel="tag">PoC</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/architecture.html" class="tags">architecture</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/distributed.html" class="tags">distributed</a>
+                </div>
+            </article>            <h4 class="date">Oct 24, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -328,6 +398,7 @@ En aplicaciones de alta concurrencia, como sistemas de transacciones de alta fre
                 Powered by <a href="http://getpelican.com">Pelican</a>
                 &middot;
                 <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
             </footer>
         </div>
         <div class="clear"></div>
