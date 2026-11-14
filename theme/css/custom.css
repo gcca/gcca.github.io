@@ -33,7 +33,10 @@ html {
     /* Only the bundled 400/700 faces are used; never fake bold or italic. */
     font-synthesis: none;
 }
-/* Bold emphasis follows the surrounding text color in both themes. */
+/* Emphasis follows the surrounding text color in both themes. */
+em {
+    color: inherit;
+}
 strong {
     color: inherit;
     font-weight: 700;
