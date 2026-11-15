@@ -76,6 +76,18 @@
     <lastmod>2026-11-14T06:25:00-05:00</lastmod>
   </url>
   <url>
+    <loc>https://gcca.github.io/2026/11/15/algunas-contradicciones/</loc>
+    <lastmod>2026-11-15T01:54:00-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/2026/11/15/la-media-no-dice-nada/</loc>
+    <lastmod>2026-11-15T01:36:00-05:00</lastmod>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/</loc>
+    <lastmod>2026-11-15T01:51:00-05:00</lastmod>
+  </url>
+  <url>
     <loc>https://gcca.github.io/archives/</loc>
   </url>
   <url>
@@ -92,6 +104,9 @@
   </url>
   <url>
     <loc>https://gcca.github.io/author/gcca/page/5/</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/author/gcca/page/6/</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/authors.html</loc>
@@ -112,19 +127,25 @@
     <loc>https://gcca.github.io/category/mathnote.html</loc>
   </url>
   <url>
+    <loc>https://gcca.github.io/category/mathstat.html</loc>
+  </url>
+  <url>
     <loc>https://gcca.github.io/category/miscelanea.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/category/seavail.html</loc>
   </url>
   <url>
-    <loc>https://gcca.github.io/category/sec-senews.html</loc>
+    <loc>https://gcca.github.io/category/sec.html</loc>
   </url>
   <url>
-    <loc>https://gcca.github.io/category/sec-setips.html</loc>
+    <loc>https://gcca.github.io/category/secpp.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/category/semisc.html</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/category/senews.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/category/senote.html</loc>
@@ -145,10 +166,19 @@
     <loc>https://gcca.github.io/page/5/</loc>
   </url>
   <url>
+    <loc>https://gcca.github.io/page/6/</loc>
+  </url>
+  <url>
     <loc>https://gcca.github.io/tag/architecture.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/tag/c.html</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/tag/c/page/2/</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/tag/data-structures.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/tag/distributed.html</loc>
@@ -158,6 +188,9 @@
   </url>
   <url>
     <loc>https://gcca.github.io/tag/kafka.html</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/tag/linux.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/tag/math.html</loc>
@@ -185,6 +218,9 @@
   </url>
   <url>
     <loc>https://gcca.github.io/tag/software-engineering.html</loc>
+  </url>
+  <url>
+    <loc>https://gcca.github.io/tag/statistics.html</loc>
   </url>
   <url>
     <loc>https://gcca.github.io/tag/tips.html</loc>

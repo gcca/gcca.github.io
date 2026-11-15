@@ -51,7 +51,326 @@
             </a></h1></div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Jan 24, 2025</h4>
+        <div id="content">            <h4 class="date">Nov 13, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/" rel="bookmark" title="Permanent Link to &quot;RabbitMQ vs Kafka: ¿Qué plataforma elegir?&quot;">RabbitMQ vs Kafka: ¿Qué plataforma elegir?</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/" aria-label="RabbitMQ vs Kafka: ¿Qué plataforma elegir?">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/02.jpg" alt="" width="720" height="356" loading="lazy" decoding="async" />
+                </a>
+
+                <p>¿Alguna vez te has encontrado en una encrucijada, tratando de decidir entre RabbitMQ y Kafka para tu sistema basado en microservicios? ¿Te has preguntado cuál de estas plataformas de mensajería es la más adecuada para tu caso de uso?</p>
+<p>RabbitMQ y Apache Kafka son soluciones muy conocidas en el ámbito de la mensajería asíncrona, pero, a pesar de la creencia popular, no son soluciones universales. Como arquitecto de software, he visto de primera mano cómo una decisión equivocada puede romper lo que de otro modo sería una arquitectura de software sólida.</p>
+<p>Profundiza conmigo mientras desmitifico los patrones básicos de la mensajería asíncrona. Revelaré las estructuras particulares de Apache Kafka y RabbitMQ, guiándote a través de sus intrincados diseños y mecanismos.</p>
+<p>Sigue leyendo para descubrir las diferencias clave, los pros y los contras, y obtener consejos expertos sobre cómo tomar la decisión correcta para tu escenario particular. ¡Tu elección ideal podría estar a solo unos párrafos de distancia!</p>
+<h2 id="puntos-clave">Puntos clave</h2>
+<ul>
+<li>RabbitMQ es un message broker, mientras que Kafka es una plataforma distribuida de streaming.</li>
+<li>Kafka sobresale en el streaming de datos en tiempo real y garantiza el procesamiento ordenado de mensajes dentro de las particiones de un topic.</li>
+<li>RabbitMQ ofrece enrutamiento avanzado de mensajes basado en reglas de los suscriptores y soporta funcionalidades como el TTL de mensajes.</li>
+<li>Kafka carece de capacidades de filtrado integradas y de mecanismos de TTL, pero escala bien mediante particionamiento.</li>
+<li>La elección entre RabbitMQ y Kafka depende de los requisitos específicos y del caso de uso deseado.</li>
+</ul>
+<p><strong>Tabla de contenidos</strong></p>
+<ul>
+<li><a href="#puntos-clave">Puntos clave</a></li>
+<li><a href="#patrones-mensajeria-asincrona">¿Qué son los patrones de mensajería asíncrona?</a><ul>
+<li><a href="#message-queuing">Colas de mensajes (Message Queuing)</a></li>
+<li><a href="#publish-subscribe">Publicación/Suscripción</a></li>
+</ul>
+</li>
+<li><a href="#que-es-rabbitmq">¿Qué es RabbitMQ?</a><ul>
+<li><a href="#colas">Colas</a></li>
+<li><a href="#message-exchanges">Message Exchanges</a></li>
+</ul>
+</li>
+<li><a href="#que-es-apache-kafka">¿Qué es Apache Kafka?</a><ul>
+<li><a href="#topics">Topics</a></li>
+<li><a href="#patrones-con-kafka">Implementación de patrones de mensajería con Kafka</a></li>
+</ul>
+</li>
+<li><a href="#diferencias">¿Cuáles son las diferencias entre RabbitMQ y Apache Kafka?</a><ul>
+<li><a href="#orden-mensajes">Orden de los mensajes</a></li>
+<li><a href="#enrutamiento-mensajes">Enrutamiento de mensajes</a></li>
+<li><a href="#temporizacion-mensajes">Temporización de mensajes</a></li>
+<li><a href="#retencion-mensajes">Retención de mensajes</a></li>
+<li><a href="#manejo-fallos">Manejo de fallos</a></li>
+<li><a href="#escala">Escala</a></li>
+<li><a href="#complejidad-consumidor">Complejidad del consumidor</a></li>
+<li><a href="#compatibilidad-protocolos">Compatibilidad de protocolos</a></li>
+</ul>
+</li>
+<li><a href="#que-plataforma-usar">¿Qué plataforma deberías usar? RabbitMQ vs Kafka</a></li>
+<li><a href="#reflexiones-finales">Reflexiones finales</a></li>
+</ul>
+<h2 id="patrones-mensajeria-asincrona">¿Qué son los patrones de mensajería asíncrona?</h2>
+<p>La mensajería asíncrona es un esquema de mensajería en el que la producción de un mensaje por parte de un productor está desacoplada de su procesamiento por parte de un consumidor. Al tratar con sistemas de mensajería, normalmente identificamos dos patrones principales: Message Queuing (colas de mensajes) y Publish/Subscribe (publicación/suscripción).</p>
+<h3 id="message-queuing">Colas de mensajes (Message Queuing)</h3>
+<p>En el patrón de comunicación Message Queuing, las colas desacoplan temporalmente a los productores de los consumidores. Las colas también nos permiten escalar productores y consumidores de forma independiente y proporcionan cierto grado de tolerancia a fallos frente a errores de procesamiento.</p>
+<p>Varios productores pueden enviar mensajes a la misma cola; sin embargo, cuando un consumidor procesa un mensaje, este se bloquea o se elimina de la cola y deja de estar disponible. Solo un único consumidor consume un mensaje específico.</p>
+<p><img alt="Ilustración de una cola de mensajes como transporte entre productores y consumidores" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Message-Queuing.svg"></p>
+<p><em>Colas de mensajes (Message Queuing)</em></p>
+<p>Si el consumidor no logra procesar un mensaje específico, la plataforma de mensajería normalmente devuelve el mensaje a la cola, dejándolo disponible para otros consumidores.</p>
+<h3 id="publish-subscribe">Publicación/Suscripción</h3>
+<p>En el patrón de comunicación Publish/Subscribe (o Pub/Sub), varios suscriptores pueden recibir y procesar un mismo mensaje de forma concurrente.</p>
+<p><img alt="Ilustración de un intercambio de mensajes pub/sub" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-PubSub.svg"></p>
+<p><em>Publicación/Suscripción</em></p>
+<p>Por ejemplo, este patrón permite que un publicador notifique a todos los suscriptores que algo ha ocurrido en el sistema.</p>
+<p>Muchas plataformas de colas suelen asociar pub/sub con el término <strong>topics</strong>. En RabbitMQ, los topics son un tipo específico de implementación de pub/sub (un tipo de exchange, para ser exactos), pero a lo largo de este artículo me refiero a los topics como una representación de pub/sub en su conjunto.</p>
+<p>En términos generales, hay dos tipos de suscripciones:</p>
+<ol>
+<li><strong>Una suscripción efímera</strong>, en la que la suscripción solo está activa mientras el consumidor esté en ejecución. Una vez que el consumidor se detiene, su suscripción y los mensajes pendientes de procesar se pierden.</li>
+<li><strong>Una suscripción durable</strong>, en la que la suscripción se mantiene mientras no se elimine explícitamente. Cuando el consumidor se detiene, la plataforma de mensajería mantiene la suscripción y el procesamiento de mensajes puede reanudarse más tarde.</li>
+</ol>
+<h2 id="que-es-rabbitmq">¿Qué es RabbitMQ?</h2>
+<p><a href="https://www.rabbitmq.com/">RabbitMQ</a> es un <a href="https://en.wikipedia.org/wiki/Message_broker">Message Broker</a> de código abierto y también se le suele llamar <a href="https://en.wikipedia.org/wiki/Enterprise_service_bus">Service Bus</a>. Soporta de forma nativa ambos patrones de mensajería descritos arriba.</p>
+<p>Otras implementaciones populares de message brokers incluyen <a href="https://activemq.apache.org/">ActiveMQ</a>, <a href="https://zeromq.org/">ZeroMQ</a>, <a href="https://azure.microsoft.com/en-us/services/service-bus/">Azure Service Bus</a> y <a href="https://aws.amazon.com/sqs/">Amazon Simple Queue Service (SQS)</a>. Estas implementaciones tienen mucho en común; muchos de los conceptos descritos en este artículo se aplican a la mayoría de ellas.</p>
+<h3 id="colas">Colas</h3>
+<p>RabbitMQ soporta Message Queuing clásico de forma nativa. Un desarrollador define colas con nombre y luego los publicadores pueden enviar mensajes a esa cola. Los consumidores, a su vez, usan la misma cola para obtener los mensajes y procesarlos.</p>
+<p>Vale la pena mencionar que, internamente, esta configuración sencilla se emula creando un "Direct Exchange", que filtra la entrega a las colas en función de una regla de enrutamiento simple. Puedes leer más sobre los Message Exchanges en la siguiente sección.</p>
+<h3 id="message-exchanges">Message Exchanges</h3>
+<p>RabbitMQ implementa Pub/Sub mediante el uso de message exchanges. Un publicador publica sus mensajes en un message exchange sin saber quiénes son los suscriptores de dichos mensajes.</p>
+<p>Cada consumidor que desea suscribirse a un exchange crea su propia cola; el message exchange encola entonces los mensajes producidos para que los consumidores los consuman. También puede filtrar mensajes para algunos suscriptores en función de diversas reglas de enrutamiento.</p>
+<p><img alt="Ilustración de un Message Exchange de RabbitMQ" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Message-Exchange.svg"></p>
+<p><em>Message Exchange de RabbitMQ</em></p>
+<p>Es importante destacar que RabbitMQ soporta suscripciones tanto efímeras como durables. Un consumidor puede decidir qué tipo de suscripción desea emplear a través de la API de RabbitMQ.</p>
+<p>Gracias a la arquitectura de RabbitMQ, también podemos crear un enfoque híbrido en el que algunos suscriptores forman <strong>consumer groups</strong> (grupos de consumidores) que trabajan juntos procesando mensajes como consumidores en competencia sobre una cola específica. De este modo, implementamos el patrón pub/sub y, al mismo tiempo, permitimos que algunos suscriptores escalen para manejar los mensajes recibidos.</p>
+<p><img alt="Ilustración de una topología fanout de RabbitMQ con enrutamiento y consumer groups" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-RabbitMQ-Consumer-Groups.svg"></p>
+<p><em>Pub/Sub y colas combinados</em></p>
+<h2 id="que-es-apache-kafka">¿Qué es Apache Kafka?</h2>
+<p><a href="https://kafka.apache.org/">Apache Kafka</a> no es una implementación de un message broker. En cambio, es una plataforma distribuida de streaming de eventos de código abierto. A diferencia de RabbitMQ, que se basa en colas y exchanges, la capa de almacenamiento de Kafka utiliza un log de transacciones particionado (más detalles abajo en <a href="#topics">Topics</a>).</p>
+<p>Kafka también ofrece una Streams API para procesar streams en tiempo real y una Connectors API para integrarse fácilmente con diversas fuentes de datos. Sin embargo, estas quedan fuera del alcance de este artículo.</p>
+<p>Los proveedores de nube ofrecen soluciones alternativas a la capa de almacenamiento de Kafka. Entre ellas se encuentran <a href="https://azure.microsoft.com/en-us/services/event-hubs/">Azure Event Hubs</a> y, en cierta medida, AWS Kinesis Data Streams. También existen alternativas específicas de cada nube y de código abierto a las capacidades de procesamiento de streams de Kafka, pero, de nuevo, quedan fuera del alcance de este artículo.</p>
+<h3 id="topics">Topics</h3>
+<p>Kafka no implementa la noción de cola. En cambio, Kafka almacena colecciones de registros en categorías llamadas topics.</p>
+<p>Para cada topic, Kafka mantiene un log de mensajes particionado. Cada partición es una secuencia ordenada e inmutable de registros a la que se añaden mensajes continuamente. Kafka añade los mensajes a estas particiones a medida que llegan. Por defecto, utiliza un particionador round-robin para repartir los mensajes uniformemente entre las particiones.</p>
+<p>Los productores pueden modificar este comportamiento para crear streams lógicos de mensajes. Por ejemplo, en una aplicación multitenant podríamos querer crear streams lógicos de mensajes según el ID de tenant de cada mensaje. En un escenario IoT, podríamos querer asignar la identidad de cada productor a una partición específica de forma constante.</p>
+<p>Asegurar que todos los mensajes del mismo stream lógico se asignen a la misma partición garantiza su entrega ordenada a los consumidores.</p>
+<p><img alt="Ilustración de productores para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Producers.svg"></p>
+<p><em>Productores de Kafka</em></p>
+<p>Los consumidores consumen mensajes manteniendo un offset (o índice) sobre estas particiones y leyéndolas secuencialmente. Un único consumidor puede consumir varios topics, y los consumidores pueden escalar hasta el número de particiones disponibles. Por ello, al crear un topic, se debe considerar cuidadosamente el throughput de mensajes esperado en ese topic.</p>
+<p>Un grupo de consumidores que trabajan juntos para consumir un topic se denomina <strong>consumer group</strong>. La API de Kafka normalmente se encarga de balancear el procesamiento de particiones entre los consumidores de un consumer group y de almacenar los offsets actuales de partición de los consumidores.</p>
+<p><img alt="Ilustración de consumer groups para un topic de Kafka y su estructura interna" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Kafka-Consumers.svg"></p>
+<p><em>Consumidores de Kafka</em></p>
+<h3 id="patrones-con-kafka">Implementación de patrones de mensajería con Kafka</h3>
+<p>La implementación de Kafka encaja bastante bien con el patrón pub/sub. Un productor puede enviar mensajes a un topic específico y varios consumer groups pueden consumir el mismo mensaje. Cada consumer group puede escalar individualmente para manejar la carga (hasta el número de particiones disponibles).</p>
+<p>Como los consumidores mantienen su offset de partición, pueden optar por una suscripción durable, que conserva su offset entre reinicios, o por una suscripción efímera, que descarta el offset y reinicia desde el último registro de cada partición cada vez que arranca. Sin embargo, no encaja tan bien con el patrón de Message Queuing.</p>
+<p>Por supuesto, podríamos tener un topic con un único consumer group para emular el Message Queuing clásico. No obstante, esto tiene varios inconvenientes que se discuten más adelante en este artículo.</p>
+<p>Es importante destacar que Kafka retiene los mensajes en las particiones durante un periodo preconfigurado, independientemente de si los consumidores los consumieron o no. Esta retención significa que los consumidores son libres de releer mensajes pasados. Además, los desarrolladores también pueden usar la capa de almacenamiento de Kafka para implementar mecanismos como Event Sourcing y Audit Logs.</p>
+<h2 id="diferencias">¿Cuáles son las diferencias entre RabbitMQ y Apache Kafka?</h2>
+<p>Aunque RabbitMQ y Kafka a veces son intercambiables, sus implementaciones son muy diferentes. Por ello, no podemos verlos como miembros de la misma categoría de herramientas; uno es un message broker y el otro es una plataforma distribuida de streaming de eventos. Como arquitectos de soluciones, debemos reconocer estas diferencias y considerar activamente qué solución usar en cada escenario.</p>
+<p>Por ejemplo, Kafka es más adecuado para procesar streams de datos, mientras que RabbitMQ ofrece garantías mínimas sobre el orden de los mensajes dentro de un stream. Por otro lado, RabbitMQ tiene soporte integrado para lógica de reintentos y dead-letter exchanges, mientras que Kafka deja esas implementaciones en manos de sus usuarios.</p>
+<p>Esta sección destaca estas y otras diferencias notables entre Apache Kafka y RabbitMQ.</p>
+<h3 id="orden-mensajes">Orden de los mensajes</h3>
+<p>RabbitMQ ofrece pocas garantías respecto al orden de los mensajes enviados a una cola o exchange. Aunque pueda parecer evidente que los consumidores procesan los mensajes en el orden en que los productores los envían, esto es muy engañoso. La documentación de RabbitMQ indica lo siguiente sobre sus garantías de orden:</p>
+<blockquote>
+<p>Los mensajes publicados en un canal, que pasan por un exchange, una cola y un canal de salida, se recibirán en el mismo orden en que fueron enviados.</p>
+<p>— <a href="https://www.rabbitmq.com/semantics.html">RabbitMQ Broker Semantics</a></p>
+</blockquote>
+<p>Dicho de otro modo, mientras tengamos un único consumidor de mensajes, este los recibe en orden. Sin embargo, en cuanto varios consumidores leen mensajes de la misma cola, no tenemos ninguna garantía sobre el orden de procesamiento de los mensajes.</p>
+<p>Esta falta de garantía de orden se produce porque los consumidores pueden devolver (o reentregar) mensajes a la cola después de leerlos (por ejemplo, ante un fallo de procesamiento). Una vez devuelto un mensaje, otro consumidor puede tomarlo para procesarlo aunque ya haya consumido un mensaje posterior. Así, el siguiente diagrama muestra que los consumer groups procesan los mensajes fuera de orden.</p>
+<p><img alt="Ejemplo de pérdida del orden de mensajes al usar RabbitMQ" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Message-Ordering-RabbitMQ.svg"></p>
+<p><em>Ejemplo de pérdida del orden de mensajes al usar RabbitMQ</em></p>
+<p>Por supuesto, podríamos recuperar el orden de los mensajes en RabbitMQ limitando la concurrencia de consumidores a uno. Más precisamente, el número de hilos dentro del único consumidor debería limitarse a uno, ya que cualquier procesamiento paralelo de mensajes puede causar el mismo problema de desorden. Sin embargo, limitarnos a un único consumidor de un solo hilo afecta gravemente nuestra capacidad de escalar el procesamiento de mensajes a medida que el sistema crece. Por ello, no deberíamos asumir este compromiso a la ligera.</p>
+<p>Por otro lado, Kafka ofrece una garantía de orden fiable para el procesamiento de mensajes. Kafka garantiza que todos los mensajes enviados a la misma partición de un topic se procesen en orden. Por defecto, Kafka coloca los mensajes en las particiones con un particionador round-robin.</p>
+<p>Sin embargo, un productor puede establecer una clave de partición en cada mensaje para crear streams lógicos de datos (como mensajes del mismo dispositivo o mensajes que pertenecen al mismo tenant). Todos los mensajes del mismo stream se colocan entonces en la misma partición, lo que hace que los consumer groups los procesen en orden.</p>
+<p>Cabe señalar, sin embargo, que dentro de un consumer group cada partición es procesada por un único hilo de un único consumidor. Por ello, no podemos escalar el procesamiento de una sola partición. No obstante, en Kafka podemos escalar el número de particiones de un topic, haciendo que cada partición reciba menos mensajes y añadiendo consumidores adicionales para las particiones adicionales.</p>
+<p><em><strong>Ganador</strong> – Kafka es el claro ganador, ya que permite procesar mensajes en orden. RabbitMQ solo ofrece garantías débiles en este aspecto.</em></p>
+<h3 id="enrutamiento-mensajes">Enrutamiento de mensajes</h3>
+<p>RabbitMQ puede enrutar mensajes a los suscriptores de un message exchange basándose en reglas de enrutamiento definidas por los suscriptores. Un <a href="https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-topic">Topic Exchange</a> puede enrutar mensajes en función de un header dedicado llamado <em>routing_key</em>. Alternativamente, un <a href="https://www.rabbitmq.com/tutorials/amqp-concepts.html#exchange-headers">Headers Exchange</a> puede enrutar mensajes en función de headers arbitrarios del mensaje. Ambos exchanges permiten efectivamente que los consumidores especifiquen el tipo de mensajes que desean recibir, proporcionando así a los arquitectos de soluciones una gran flexibilidad.</p>
+<p>Por otro lado, Kafka no permite que los consumidores filtren los mensajes de un topic antes de hacer polling. Un consumidor suscrito recibe todos los mensajes de una partición sin excepción. Como desarrollador, podrías usar un Kafka Stream Job que lea los mensajes del topic, los filtre y los publique en otro topic al que un consumidor pueda suscribirse. No obstante, esto requiere más esfuerzo y mantenimiento, y tiene más piezas móviles.</p>
+<p><em><strong>Ganador</strong> – RabbitMQ ofrece un soporte superior para enrutar y filtrar mensajes para los consumidores.</em></p>
+<h3 id="temporizacion-mensajes">Temporización de mensajes</h3>
+<p>RabbitMQ ofrece varias capacidades relacionadas con la temporización de un mensaje enviado a una cola:</p>
+<ol>
+<li><strong>Time-To-Live (TTL) de mensajes</strong> – se puede asociar un atributo <a href="https://www.rabbitmq.com/ttl.html">TTL</a> a cada mensaje enviado a RabbitMQ. El TTL lo establece directamente el publicador o se define como política en la propia cola. Especificar un TTL permite al sistema limitar el periodo de validez del mensaje. Si un consumidor no lo procesa a tiempo, se elimina automáticamente de la cola (y se transfiere a un dead-letter exchange; más sobre eso más adelante). El TTL es útil para comandos sensibles al tiempo que dejan de ser relevantes tras cierto tiempo sin procesarse.</li>
+<li><strong>Mensajes diferidos/programados</strong> – RabbitMQ soporta mensajes diferidos/programados mediante un <a href="https://github.com/rabbitmq/rabbitmq-delayed-message-exchange">plugin</a>. Cuando este plugin está habilitado en un message exchange, un productor puede enviar un mensaje a RabbitMQ y retrasar el momento en que RabbitMQ enruta ese mensaje a la cola de un consumidor. Esta funcionalidad permite a un desarrollador programar comandos futuros que no deben procesarse antes de tiempo. Por ejemplo, cuando un productor alcanza una regla de throttling, podríamos querer retrasar la ejecución de ciertos comandos para más tarde.</li>
+</ol>
+<p>Kafka no ofrece soporte para tales funcionalidades. Escribe los mensajes en las particiones a medida que llegan, donde quedan inmediatamente disponibles para que los consumidores los consuman. Además, Kafka no ofrece ningún mecanismo de TTL para los mensajes, aunque podríamos implementar uno a nivel de aplicación. También debemos recordar que una partición de Kafka es un log de transacciones de solo anexado (append-only). Por ello, no puede manipular el tiempo del mensaje (ni su ubicación dentro de la partición).</p>
+<p><em><strong>Ganador</strong> – RabbitMQ gana con holgura, ya que la naturaleza de su implementación limita a Kafka.</em></p>
+<h3 id="retencion-mensajes">Retención de mensajes</h3>
+<p>RabbitMQ elimina los mensajes del almacenamiento en cuanto los consumidores los consumen con éxito. Este comportamiento no se puede modificar. Forma parte del diseño de casi todos los message brokers.</p>
+<p>En cambio, Kafka persiste todos los mensajes por diseño hasta un timeout configurado por topic. En cuanto a la retención de mensajes, a Kafka no le importa el estado de consumo de sus consumidores, ya que actúa como un log de mensajes. Los consumidores pueden consumir cada mensaje tantas veces como quieran y viajar hacia adelante y hacia atrás "en el tiempo" manipulando su offset de partición. Periódicamente, Kafka revisa la antigüedad de los mensajes en los topics y elimina los mensajes suficientemente antiguos.</p>
+<p>El rendimiento de Kafka no depende del tamaño del almacenamiento. Así que, en teoría, se pueden almacenar mensajes casi indefinidamente sin afectar el rendimiento (siempre que tus nodos sean lo bastante grandes para albergar esas particiones).</p>
+<p><em><strong>Ganador</strong> – Kafka está diseñado para retener mensajes, mientras que RabbitMQ no. No hay competencia aquí, y Kafka es declarado ganador.</em></p>
+<h3 id="manejo-fallos">Manejo de fallos</h3>
+<p>Al trabajar con mensajes, colas y eventos, los desarrolladores suelen tener la impresión de que el procesamiento de mensajes siempre tiene éxito. Después de todo, como los productores colocan cada mensaje en una cola o topic, aunque un consumidor no logre procesar un mensaje, simplemente puede reintentar hasta tener éxito.</p>
+<p>Aunque esto es cierto, deberíamos dedicarle más reflexión a este proceso. Debemos reconocer que el procesamiento de mensajes puede fallar en algunos escenarios. Debemos manejar estas situaciones de forma elegante, incluso si la solución se compone en parte de intervención humana.</p>
+<p>Hay dos tipos de errores posibles al procesar mensajes:</p>
+<ol>
+<li><strong>Fallos transitorios</strong> – fallos que ocurren debido a un problema temporal como la conectividad de red, la carga de CPU o la caída de un servicio. Normalmente podemos mitigar este tipo de fallo reintentando una y otra vez.</li>
+<li><strong>Fallos persistentes</strong> – fallos que ocurren debido a un problema permanente que no se puede resolver con reintentos adicionales. Las causas comunes de estos fallos son bugs de software o un esquema de mensaje inválido (es decir, un poison message).</li>
+</ol>
+<p>Como arquitectos y desarrolladores, deberíamos preguntarnos: ¿Con qué frecuencia reintentamos ante un fallo de procesamiento de un mensaje? ¿Cuánto tiempo debemos esperar entre reintentos? ¿Cómo distinguimos entre fallos transitorios y persistentes? Y lo más importante: ¿qué hacemos cuando todos los reintentos fallan o nos encontramos con un fallo persistente? Aunque las respuestas a estas preguntas son específicas de cada dominio, las plataformas de mensajería normalmente nos proporcionan las herramientas para implementar nuestra solución.</p>
+<p>RabbitMQ ofrece herramientas como los reintentos de entrega y los dead-letter exchanges (DLX) para manejar fallos en el procesamiento de mensajes. La idea principal de un DLX es que RabbitMQ puede enrutar automáticamente los mensajes fallidos a un DLX según una configuración adecuada y aplicar reglas de procesamiento adicionales sobre el mensaje en ese exchange, incluyendo reintentos diferidos, conteo de reintentos y entrega a una cola de "intervención humana". <a href="https://engineering.nanit.com/rabbitmq-retries-the-full-story-ca4cc6c5b493">Este artículo</a> ofrece información adicional sobre posibles patrones para manejar reintentos en RabbitMQ.</p>
+<p>Lo más importante que hay que recordar aquí es que, en RabbitMQ, cuando un consumidor está ocupado procesando y reintentando un mensaje específico (incluso antes de devolverlo a la cola), otros consumidores pueden procesar concurrentemente los mensajes que le siguen. El procesamiento de mensajes no se bloquea mientras un consumidor concreto reintenta un mensaje en particular. Por ello, un consumidor de mensajes puede reintentar un mensaje de forma síncrona tanto como quiera sin afectar al sistema completo.</p>
+<p><img alt="Ejemplo de manejo de fallos: un consumidor puede continuar reintentando un mensaje mientras otros consumidores siguen procesando mensajes" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-RabbitMQ.svg"></p>
+<p><em>El consumidor 1 puede continuar reintentando el mensaje 1 mientras otros consumidores siguen procesando mensajes.</em></p>
+<p>A diferencia de RabbitMQ, Kafka no ofrece ninguno de estos mecanismos de forma nativa. Con Kafka, debemos proporcionar e implementar los mecanismos de reintento de mensajes a nivel de aplicación. Además, debemos tener en cuenta que, cuando un consumidor está ocupado reintentando de forma síncrona un mensaje específico, no se pueden procesar otros mensajes de la misma partición.</p>
+<p>No podemos rechazar y reintentar un mensaje específico y hacer commit de un mensaje que llegó después, ya que el consumidor no puede cambiar el orden de los mensajes. Como recordarás, la partición es simplemente un log de solo anexado.</p>
+<p>Una solución a nivel de aplicación puede hacer commit de los mensajes fallidos en un "retry topic" y manejar los reintentos desde allí; sin embargo, en esta solución perdemos el orden de los mensajes. Un ejemplo de este tipo de implementación por parte de Uber Engineering se puede encontrar aquí. Si la latencia del procesamiento de mensajes no es un problema, la solución estándar de Kafka con un monitoreo de errores adecuado podría ser suficiente.</p>
+<p><img alt="Ejemplo de mensajes de una partición que no se procesan si el consumidor queda atascado reintentando un mensaje" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Fault-Handling-Kafka.svg"></p>
+<p><em>Los mensajes de la partición inferior no se procesan si el consumidor queda atascado reintentando un mensaje.</em></p>
+<p><em><strong>Ganador</strong> – RabbitMQ gana por puntos, ya que ofrece de forma nativa algún mecanismo para resolver este problema.</em></p>
+<h3 id="escala">Escala</h3>
+<p>Existen múltiples benchmarks que comparan el rendimiento de RabbitMQ y Kafka. Aunque los benchmarks genéricos tienen una aplicabilidad limitada a casos específicos, Kafka generalmente rinde mejor que RabbitMQ. Kafka usa E/S secuencial de disco para mejorar el rendimiento. Su arquitectura basada en particiones hace que escale horizontalmente (scale-out) mejor que RabbitMQ, que escala mejor verticalmente (scale-up).</p>
+<p>Los despliegues grandes de Kafka pueden manejar habitualmente cientos de miles de mensajes por segundo, e incluso millones por segundo. Pivotal registró en su momento un clúster de RabbitMQ procesando un millón de mensajes por segundo; sin embargo, lo hizo con un clúster de 30 nodos y con la carga repartida de forma óptima entre múltiples colas y exchanges.</p>
+<p>Los despliegues típicos de RabbitMQ incluyen clústeres de 3 a 7 nodos que no necesariamente dividen la carga de forma óptima entre las colas. Estos clústeres típicos normalmente pueden manejar una carga de varias decenas de miles de mensajes por segundo.</p>
+<p><em><strong>Ganador</strong> – aunque ambas plataformas pueden manejar cargas masivas, Kafka normalmente escala mejor y alcanza un mayor throughput que RabbitMQ, por lo que gana esta ronda. Sin embargo, es esencial señalar que la mayoría de los sistemas nunca alcanzan estos límites. Así que, a menos que estés construyendo el próximo gran éxito de software con millones de usuarios, no necesitas preocuparte tanto por la escala, ya que ambas plataformas pueden servirte bien.</em></p>
+<h3 id="complejidad-consumidor">Complejidad del consumidor</h3>
+<p>RabbitMQ usa un enfoque de smart-broker &amp; dumb-consumer (broker inteligente y consumidor simple). Los consumidores se registran para consumir colas y RabbitMQ les envía (push) los mensajes a procesar a medida que llegan. RabbitMQ también tiene una API de pull, pero se usa mucho menos.</p>
+<p>RabbitMQ gestiona la distribución de mensajes a los consumidores y elimina los mensajes de las colas (posiblemente hacia DLXs). El consumidor no necesita preocuparse por nada de esto. La estructura de RabbitMQ también significa que el consumer group de una cola puede escalar eficientemente de un solo consumidor a varios cuando aumenta la carga, sin ningún cambio en el sistema.</p>
+<p><img alt="Ilustración de consumidores de RabbitMQ que escalan hacia arriba y hacia abajo eficientemente" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-RabbitMQ.svg"></p>
+<p><em>Los consumidores de RabbitMQ escalan hacia arriba y hacia abajo eficientemente.</em></p>
+<p>Kafka, en cambio, usa un enfoque de dumb-broker &amp; smart-consumer (broker simple y consumidor inteligente). Los consumidores de un consumer group necesitan coordinar entre ellos los leases sobre las particiones del topic (para que solo un consumidor del consumer group escuche una partición específica). Los consumidores también necesitan gestionar y almacenar el índice de offset de sus particiones.</p>
+<p>Afortunadamente, el SDK de Kafka se encarga de esto por nosotros, así que no necesitamos gestionarlo nosotros mismos. Sin embargo, cuando la carga es baja, un único consumidor necesita procesar y llevar el control de varias particiones en paralelo, lo que requiere más recursos en el lado del consumidor.</p>
+<p>Además, a medida que aumenta la carga, solo podemos escalar el consumer group hasta el punto en que el número de consumidores iguale el número de particiones del topic. Por encima de eso, necesitamos configurar Kafka para añadir particiones adicionales. Sin embargo, cuando la carga vuelve a disminuir, no podemos eliminar las particiones que ya añadimos, lo que aumenta el trabajo que los consumidores deben hacer. Aunque, como se mencionó arriba, el SDK se encarga de este trabajo extra.</p>
+<p><img alt="Ilustración de particiones de Kafka que no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala" src="https://gcca.github.io/static/year=2026/month=11/day=13/rabbitmq_vs_kafka/RabbitMQ-vs-Kafka-Part-2-Scaling-Kafka.svg"></p>
+<p><em>Las particiones de Kafka no se pueden eliminar, dejando a los consumidores con más trabajo tras reducir la escala.</em></p>
+<p><em><strong>Ganador</strong> – RabbitMQ, por diseño, está construido pensando en consumidores simples. Por ello, es el ganador de esta ronda.</em></p>
+<h3 id="compatibilidad-protocolos">Compatibilidad de protocolos</h3>
+<p>Mientras que Apache Kafka usa un <a href="https://kafka.apache.org/protocol.html">protocolo binario propio</a> sobre TCP, RabbitMQ soporta <a href="https://www.rabbitmq.com/protocols.html">protocolos estándar</a> de forma nativa o mediante plugins. En particular, RabbitMQ soporta AMQP 0-9-1 de forma nativa. Añade soporte para AMQP 1.0, MQTT y STOMP mediante plugins.</p>
+<p><em><strong>Ganador</strong> – RabbitMQ, ya que soporta varios protocolos estándar.</em></p>
+<h2 id="que-plataforma-usar">¿Qué plataforma deberías usar? RabbitMQ vs Kafka</h2>
+<p>Llegamos a la pregunta del millón: ¿cuándo deberíamos usar RabbitMQ y cuándo Kafka? Si resumimos las diferencias anteriores entre ambos, llegamos a la siguiente conclusión:</p>
+<ul>
+<li>RabbitMQ es preferible cuando necesitamos:<ol>
+<li>Reglas de enrutamiento avanzadas y flexibles.</li>
+<li>Control de la temporización de mensajes (controlar la expiración o el retraso de los mensajes).</li>
+<li>Capacidades avanzadas de manejo de fallos en casos en que es más probable que los consumidores no logren procesar mensajes (de forma temporal o permanente).</li>
+<li>Implementaciones de consumidores más simples.</li>
+</ol>
+</li>
+<li>Kafka es preferible cuando requerimos:<ol>
+<li>Orden estricto de los mensajes.</li>
+<li>Retención de mensajes durante periodos prolongados, incluyendo la posibilidad de reproducir mensajes pasados.</li>
+<li>La capacidad de alcanzar una gran escala cuando las soluciones tradicionales no son suficientes.</li>
+</ol>
+</li>
+</ul>
+<p>Podemos implementar la mayoría de los casos de uso con ambas plataformas. Sin embargo, como arquitectos de soluciones, debemos elegir la herramienta más adecuada para el trabajo. Al hacer esta elección, debemos considerar tanto las diferencias funcionales, como las destacadas arriba, como las restricciones no funcionales. Estas restricciones incluyen aspectos como:</p>
+<ol>
+<li>El conocimiento existente de los desarrolladores sobre estas plataformas.</li>
+<li>La disponibilidad de una solución gestionada en la nube, si aplica.</li>
+<li>El costo operativo de cada solución.</li>
+<li>La disponibilidad de SDKs para nuestro stack objetivo.</li>
+</ol>
+<p>Al desarrollar sistemas de software complejos, podemos sentir la tentación de implementar todos los casos de uso de mensajería requeridos con la misma plataforma. No obstante, según mi experiencia, la mayoría de las veces usar ambas plataformas puede tener muchos beneficios.</p>
+<p>Por ejemplo, en un sistema basado en una arquitectura orientada a eventos, podríamos usar RabbitMQ para enviar comandos entre microservicios y Kafka para implementar notificaciones de eventos de negocio. Esto se debe a que las notificaciones de eventos se usan a menudo para event sourcing, operaciones por lotes (estilo ETL) o fines de auditoría, lo que hace que Kafka sea muy valioso por sus capacidades de retención de mensajes.</p>
+<p>Los comandos, por otro lado, normalmente requieren procesamiento adicional en el lado del consumidor, procesamiento que podría fallar y necesitar capacidades avanzadas de manejo de fallos. Aquí, RabbitMQ brilla por sus capacidades. Puede que escriba un artículo detallado sobre esto en el futuro, pero debes recordar que tu experiencia puede variar, ya que la idoneidad depende de tus requisitos específicos.</p>
+<h2 id="reflexiones-finales">Reflexiones finales</h2>
+<p>Comencé este artículo señalando que muchos desarrolladores ven a RabbitMQ y Kafka como intercambiables. Espero que revisar sus diferencias haya ayudado a comprender la implementación y las particularidades técnicas de estas plataformas.</p>
+<p>En el panorama de las plataformas de mensajería, que evoluciona rápidamente, RabbitMQ y Kafka destacan como opciones formidables, cada una con sus propias fortalezas y especializaciones.</p>
+<p>Las capacidades avanzadas de enrutamiento y las funcionalidades de temporización de mensajes de RabbitMQ lo hacen especialmente versátil en diversos entornos empresariales. Por otro lado, la destreza de Kafka para manejar grandes streams de datos en tiempo real y sus robustos mecanismos de escalado subrayan su valor en aplicaciones a escala web.</p>
+<p>Como en muchas decisiones tecnológicas, la elección óptima se reduce a las necesidades y objetivos específicos del proyecto en cuestión. Ambas plataformas son potentes por derecho propio, y comprender sus matices puede orientar significativamente la dirección de tus esfuerzos de diseño y desarrollo de software.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/13/rabbitmq-vs-kafka/">posted at 18:15</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/semisc.html" rel="tag">SE.Misc</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/rabbitmq.html" class="tags">rabbitmq</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/kafka.html" class="tags">kafka</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/messaging.html" class="tags">messaging</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/architecture.html" class="tags">architecture</a>
+                </div>
+            </article>            <h4 class="date">Feb 05, 2025</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/" rel="bookmark" title="Permanent Link to &quot;Notas sobre Feature Flags&quot;">Notas sobre Feature Flags</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2025/02/05/feature-flags-notes/" aria-label="Notas sobre Feature Flags">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/01.jpg" alt="" width="760" height="519" loading="lazy" decoding="async" />
+                </a>
+
+                <h3>El Auge y la Complejidad de los Feature Flags en DevOps</h3>
+<p>En la última década, los <strong>feature flags</strong> se han convertido en una herramienta fundamental dentro del ecosistema de  despliegue, DevOps y mantenimiento, especialmente para la implementación continua. Permitir que operaciones e ingeniería operen de forma independiente ha sido una de sus mayores ventajas, pero no viene sin desafíos.</p>
+<p><strong>Ventajas y Desafíos:</strong></p>
+<ul>
+<li><strong>Ventajas:</strong> Los feature flags permiten lanzamientos controlados, experimentación y la capacidad de activar o desactivar características sin necesidad de nuevos despliegues. Esto facilita el despliegue continuo y la innovación ágil.</li>
+<li><strong>Desafíos:</strong> Sin embargo, añaden <strong>complexity</strong> al código, aumentan el <strong>overhead</strong> de pruebas, y pueden llevar a <strong>bugs</strong> si no se gestionan adecuadamente. La <strong>lack</strong> de procesos automatizados para el seguimiento y la limpieza de feature flags puede resultar en:</li>
+<li><strong>Zombie flags</strong>: Feature flags olvidados que siguen en el código, incrementando el <strong>carrying cost</strong> y afectando la legibilidad y mantenimiento del código.</li>
+<li><strong>Unfinished business</strong>: Despliegues incompletos de feature flags, causando problemas a largo plazo.</li>
+<li><strong>Ghost flags</strong>: Feature flags eliminados pero aún manipulados por usuarios sin saberlo.</li>
+</ul>
+<p><strong>Uso Inapropiado:</strong></p>
+<ul>
+<li>Un <strong>feature flag</strong> pensado para un lanzamiento puede usarse para control de acceso a largo plazo, lo que puede llevar a problemas si el servicio externo falla. Esto ha llevado a algunos equipos a separar los sistemas de feature flags en:</li>
+<li><strong>Short-lived flags</strong> para lanzamientos temporales.</li>
+<li><strong>Long-lived flags</strong> para controles de acceso o características permanentes.</li>
+</ul>
+<p>Esta separación, aunque lógica, trae consigo:</p>
+<ul>
+<li><strong>Lack of portability</strong>: Dificultad para mover un flag de un sistema a otro sin cambios de código.</li>
+<li><strong>User confusion</strong>: Frustración por recordar en qué sistema está cada flag.</li>
+<li><strong>Lack of context</strong>: Nombres de flags que no explican su propósito sin documentación adicional.</li>
+</ul>
+<p><strong>La Realidad de la Gestión de Feature Flags:</strong></p>
+<p>El sentido común sugiere que los feature flags deben ser temporales y limitados, pero la realidad del desarrollo de software moderno, con su ritmo rápido y naturaleza multifuncional, hace esto difícil de mantener. Además, la <strong>feature management</strong> va más allá del ámbito de DevOps, abarcando también la gestión de características para usuarios en diferentes contextos.</p>
+<p><strong>Propuestas para Mejorar:</strong></p>
+<ul>
+<li><strong>Herramientas de Gestión de Feature Flags:</strong> Necesitamos herramientas que puedan manejar tanto <strong>short-lived</strong> como <strong>long-lived flags</strong> de manera cohesiva, con funciones como:</li>
+<li>Metadatos adicionales para flags de corta duración, incluyendo fechas de expiración.</li>
+<li>Asignación de propietarios para cada flag.</li>
+<li>Capacidad de cambiar el propósito de un flag dentro de la misma herramienta.</li>
+<li>Políticas automatizadas para la gestión y revisión de flags.</li>
+<li><strong>Automatización:</strong> Implementar procesos automatizados de auditoría y mantenimiento para evitar el crecimiento descontrolado de la complejidad.</li>
+</ul>
+<p><strong>Conclusión:</strong></p>
+<p>Necesitamos redefinir qué significa la <strong>feature management</strong> en la industria, alineando las prácticas y herramientas con la realidad operativa de nuestros negocios. Esto podría incluir la creación de herramientas que manejen la complejidad inherente de los feature flags, mejorando así la eficiencia y reduciendo los riesgos asociados con su gestión.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2025/02/05/feature-flags-notes/">posted at 12:40</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/senote.html" rel="tag">SE.Note</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/software-engineering.html" class="tags">Software Engineering</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/feature-flags.html" class="tags">Feature Flags</a>
+                </div>
+            </article>            <h4 class="date">Jan 29, 2025</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/" rel="bookmark" title="Permanent Link to &quot;Expansiones de Taylor&quot;">Expansiones de Taylor</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/" aria-label="Expansiones de Taylor">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/03.jpg" alt="" width="849" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <div class="math">\begin{align*}
+\frac{1}{1 - x} &amp;= \sum_{n=0}^{\infty} x^n &amp; x \in (-1, 1) \\\\
+e^x &amp;= \sum_{n=0}^{\infty} \frac{x^n}{n!} &amp; x \in \mathbb{R} \\\\
+\ln(1 + x) &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{n+1}}{n+1} &amp; x \in (-1, 1] \\\\
+\sin x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!} &amp; x \in \mathbb{R} \\\\
+\cos x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{(2n)!} &amp; x \in \mathbb{R} \\\\
+\arctan x &amp;= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{2n+1} &amp; x \in [-1, 1] \\\\
+(1 + x)^r &amp;= \sum_{n=0}^{\infty} \binom{r}{n} x^n &amp; x \in (-1, 1)
+\end{align*}</div>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2025/01/29/math-note-taylor-expansion/">posted at 08:13</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathnote.html" rel="tag">Math.Note</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
+                </div>
+            </article>            <h4 class="date">Jan 24, 2025</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -95,389 +414,6 @@
                     &nbsp;&middot;
                     &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
                 </div>
-            </article>            <h4 class="date">Dec 14, 2024</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/" rel="bookmark" title="Permanent Link to &quot;Fast Inverse Square Root (Quake III Arena)&quot;">Fast Inverse Square Root (Quake III Arena)</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/" aria-label="Fast Inverse Square Root (Quake III Arena)">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/02.jpg" alt="" width="720" height="356" loading="lazy" decoding="async" />
-                </a>
-
-                <p>Cada milisegundo cuenta, especialmente en juegos en tiempo real como los shooters en primera persona. Una de las técnicas de optimización más legendarias y controvertidas es el "Fast Inverse Square Root", implementada en el motor de Quake III Arena.</p>
-<h3>¿Qué es?</h3>
-<p>El "Fast Inverse Square Root" es un algoritmo diseñado para calcular la raíz cuadrada inversa de un número flotante rápidamente, mucho más rápido que los métodos tradicionales. En términos matemáticos, si tenemos un número <code>x</code>, queremos calcular <code>1/sqrt(x)</code> de una manera eficiente.</p>
-<h3>Quake III Arena</h3>
-<p>El código que nos ha dejado perplejos a muchos es el siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="nf">Q_rsqrt</span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">x2</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5F</span><span class="p">;</span>
-
-<span class="w">    </span><span class="n">x2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.5F</span><span class="p">;</span>
-<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">number</span><span class="p">;</span>
-<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">;</span><span class="w">                       </span><span class="c1">// evil floating point bit level hacking</span>
-<span class="w">    </span><span class="n">i</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mh">0x5f3759df</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">);</span><span class="w">               </span><span class="c1">// what the fuck?</span>
-<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">;</span>
-<span class="w">    </span><span class="n">y</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">threehalfs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w">   </span><span class="c1">// 1st iteration</span>
-<span class="c1">//  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3>Desglose</h3>
-<p><strong>1 Conversión de bits</strong>:</p>
-<ul>
-<li><code>i = * (long *) &amp;y;</code> Aquí, el código realiza un "hack" a nivel de bits. La representación en memoria de un número flotante en IEEE 754 es convertida a un entero largo. Esto permite manipular directamente los bits del número flotante.</li>
-</ul>
-<p><strong>2 La aproximación</strong>:</p>
-<ul>
-<li><code>i = 0x5f3759df - (i &gt;&gt; 1);</code> La constante <code>0x5f3759df</code> es crucial. Este número mágico fue encontrado mediante experimentación y proporciona una primera aproximación sorprendentemente precisa de <code>1/sqrt(x)</code>. La operación <code>i &gt;&gt; 1</code> es un desplazamiento de bits a la derecha, efectivamente dividiendo <code>i</code> por 2.</li>
-</ul>
-<p><strong>3 Refinamiento</strong>:</p>
-<ul>
-<li><code>y = * (float *) &amp;i;</code> Convierte de vuelta el entero largo a un flotante.</li>
-<li><code>y = y * (threehalfs - (x2 * y * y));</code> Aplica una iteración de Newton-Raphson para mejorar la precisión de la aproximación inicial. La constante <code>threehalfs</code> (1.5 en forma flotante) es usada en este paso de refinamiento.</li>
-</ul>
-<h3>¿Por qué funciona?</h3>
-<p>Esta técnica se aprovecha de las propiedades de la representación de punto flotante. La relación entre el logaritmo de un número y su inversa raíz cuadrada es casi lineal cuando se trabaja con los exponentes y mantisas de los números flotantes. La constante <code>0x5f3759df</code> está ajustada para esta relación, proporcionando una aproximación inicial que luego se refina.</p>
-<h3>Implicaciones y uso</h3>
-<p>El "Fast Inverse Square Root" fue fundamental en Quake III porque era usado en cálculos de vectores y normalización, operaciones comunes en gráficos 3D que necesitan ser extremadamente rápidas. Aunque hoy en día los procesadores son mucho más potentes, hay instrucciones específicas para cálculos de punto flotante y tenemos GPUs, este truco histórico sigue siendo un ejemplo impresionante de ingenio.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2024/12/14/fast-inv-sqrt/">posted at 09:51</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/semisc.html" rel="tag">SE.Misc</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
-                </div>
-            </article>            <h4 class="date">Dec 13, 2024</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/" rel="bookmark" title="Permanent Link to &quot;memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C&quot;">memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/" aria-label="memcpy(nullptr, nullptr, 0) y otros casos de comportamiento indefinido en C">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/04.jpg" alt="" width="888" height="490" loading="lazy" decoding="async" />
-                </a>
-
-                <p>El comportamiento indefinido (UB) en el lenguaje de programación C es una fuente regular de acaloradas discusiones entre programadores. Por un lado, el UB puede ser importante para las optimizaciones del compilador. Por otro lado, facilita la introducción de errores que pueden llevar a problemas de seguridad.</p>
-<p>La buena noticia es que N3322 ha sido aceptado para C2y, lo cual eliminará el comportamiento indefinido de un rincón específico del lenguaje C, haciendo que lo siguiente sea bien definido:</p>
-<div class="highlight"><pre><span></span><code><span class="n">memcpy</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="n">memcmp</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="p">;</span>
-</code></pre></div>
-
-<p>Esto solo se aplica cuando un puntero nulo se combina con una operación de "longitud cero". Lo siguiente sigue siendo indefinido:</p>
-<div class="highlight"><pre><span></span><code><span class="n">memcpy</span><span class="p">(</span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">nullptr</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
-<span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">nullptr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
-</code></pre></div>
-
-<p>La eliminación de este comportamiento indefinido no se espera que tenga un impacto negativo en el rendimiento. De hecho, ocurre lo contrario.</p>
-<p><strong>Motivación</strong></p>
-<p>Los ejemplos anteriores son un poco tontos porque codifican de manera dura una constante NULL/nullptr. Sin embargo, es fácil encontrarse con esta situación con un puntero que a veces es nulo. Por ejemplo, considere una representación típica para una cadena con una longitud conocida:</p>
-<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">;</span>
-<span class="w">   </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
-<span class="p">};</span>
-</code></pre></div>
-
-<p>Una cadena vacía normalmente se representaría como <code>(struct str) { .data = nullptr, .len = 0 }</code>, con el puntero de datos siendo nullptr. Ahora, considere una función que comprueba si dos cadenas son iguales:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="nf">str_eq</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">          </span><span class="n">memcmp</span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Esta implementación parece razonable a primera vista. Sin embargo, muestra comportamiento indefinido si ambas entradas son cadenas vacías. En ese caso, llamaremos a <code>memcmp(nullptr, nullptr, 0)</code>, lo cual es comportamiento indefinido según el estándar de C.</p>
-<p>Este tipo de UB introduce el riesgo de que el compilador optimice las comprobaciones de punteros nulos subsiguientes. Por ejemplo, GCC eliminará alegremente la rama <code>dest == nullptr</code> en el siguiente código, mientras que Clang deliberadamente no realiza esta optimización:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
-<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dest</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nullptr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="c1">// Esta rama será eliminada por GCC debido al comportamiento indefinido.</span>
-<span class="w">   </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>La manera correcta de escribir la función <code>str_eq</code> es:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">bool</span><span class="w"> </span><span class="nf">str_eq</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str1</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">str</span><span class="w"> </span><span class="o">*</span><span class="n">str2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-<span class="w">          </span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span>
-<span class="w">           </span><span class="n">memcmp</span><span class="p">(</span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str2</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">str1</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>El nuevo código es correcto, pero peor en todos los demás aspectos:</p>
-<ul>
-<li>Aumenta el tamaño del código, requiriendo una comprobación adicional en cada sitio de llamada inlinada.</li>
-<li>Disminuye el rendimiento, comprobando redundante algo que <code>memcmp</code> debe manejar de todas formas.</li>
-<li>Aumenta la complejidad del código.</li>
-</ul>
-<p>Al mismo tiempo, no hay una manera útil en la que la biblioteca de C pueda aprovechar este comportamiento indefinido para proporcionar una implementación más eficiente. Este es el tipo de UB que no beneficia a nadie y debería ser eliminado del lenguaje.</p>
-<p><strong>Aritmética de puntero nulo</strong></p>
-<p>La propuesta original se centró en eliminar UB para las llamadas de la biblioteca de memoria, pero un revisor temprano señaló que esto no es suficiente. Después de todo, también necesitamos tener en cuenta cómo se implementan estas funciones de biblioteca.</p>
-<p>Por ejemplo, consideremos una implementación típica para una función tipo <code>memcpy</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dst</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="n">src</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="o">*</span><span class="n">dst</span><span class="o">++</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">src</span><span class="p">;</span>
-<span class="w">   </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Esta función muestra comportamiento indefinido cuando se llama como <code>copy(nullptr, nullptr, 0)</code>, porque nullptr + 0 es comportamiento indefinido en C.</p>
-<p>Para evitar esto, y hacer que el lenguaje sea autoconsistente, necesitamos definir nullptr + 0 como devolviendo nullptr y nullptr - nullptr como devolviendo 0. Esto también alinea C con las semánticas de C++, donde esto ya estaba bien definido.</p>
-<p><strong>Oposición</strong></p>
-<p>Cuando se discutió esta propuesta en dos reuniones de WG14, la oposición no vino de la dirección que esperaba.</p>
-<p>La parte más controvertida de la propuesta fue definir nullptr - nullptr como devolviendo 0. La razón para esto es que cuando los espacios de direcciones entran en juego (que no son parte del C estándar, pero pueden ser implementados como extensión), puede haber múltiples representaciones de un puntero nulo. Asegurarse de que la resta de dos "diferentes" nulos aún resulte en cero podría requerir la generación de código adicional, rompiendo la premisa de que este cambio es completamente gratuito.</p>
-<p>Sin embargo, la oposición más vocal vino desde la perspectiva del análisis estático: Haciendo que los punteros nulos sean bien definidos para longitud cero significa que los analizadores estáticos ya no pueden reportar incondicionalmente nullptr siendo pasado a funciones como <code>memcpy</code>—también deben tener en cuenta la longitud ahora. Si un calificador <code>_Optional</code> se introduce en el futuro, los argumentos de <code>memcpy</code> tendrían que ser calificados con él. GCC está considerando la introducción de un atributo <code>nonnull_if_nonzero</code> para representar la nueva precondición.</p>
-<p>Después de la discusión aparentemente negativa, me sorprendió que el voto no solo fuera fuertemente a favor del cambio, sino que también viniera con una recomendación a los implementadores para aplicar el cambio retroactivamente a versiones antiguas del estándar. Esto significa que, una vez que los compiladores y las bibliotecas de C hayan implementado el cambio, debería aplicarse incluso sin especificar la bandera -std=c2y.</p>
-<p><strong>Funciones integradas del compilador</strong></p>
-<p>Trabajo en el medio de la cadena de herramientas de compilador LLVM. Al estar lejos de cualquier parte "orientada al usuario" del compilador, generalmente no estoy involucrado en esfuerzos de estandarización.</p>
-<p>La razón por la que me involucré aquí fue la especificación para el intrínseco interno de memcpy de LLVM:</p>
-<blockquote>
-<p>Los intrínsecos llvm.memcpy.* copian un bloque de memoria desde la ubicación de origen a la ubicación de destino, que deben ser iguales o no superpuestas. [...]</p>
-<p>Si <len> es 0, es un no-op modulo el comportamiento de los atributos adjuntos a los argumentos. [...]</p>
-</blockquote>
-<p>El intrínseco llvm.memcpy puede reducirse a una llamada a la función memcpy, que se trata aquí como un "compilador runtime builtin", aunque en última instancia también es proporcionada por la biblioteca C.</p>
-<p>Cuando se usa como un builtin, LLVM requiere que tanto <code>memcpy(x, x, s)</code> como <code>memcpy(nullptr, nullptr, 0)</code> estén bien definidos, aunque el estándar C dice que son UB. GCC y MSVC tienen suposiciones similares.</p>
-<p>Hacer que <code>memcpy(nullptr, nullptr, 0)</code> sea oficialmente bien definido elimina una de las suposiciones, mientras que el caso de <code>memcpy(x, x, s)</code> permanece por ahora. Permitir esto fue originalmente también parte de la propuesta, pero más tarde se descartó porque no encajaba bien con los otros cambios.</p>
-<p>En un giro extraño de los eventos, este cambio en el estándar de C surgió porque los desarrolladores de Rust seguían quejándose sobre la discrepancia entre las semánticas de LLVM y C.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2024/12/13/memcpy_nn0_ub/">posted at 08:46</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/sec-senews.html" rel="tag">SE.C SE.News</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C</a>
-                </div>
-            </article>            <h4 class="date">Dec 13, 2024</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2024/12/13/c++14_features/" rel="bookmark" title="Permanent Link to &quot;Algunas características de C++&quot;">Algunas características de C++</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2024/12/13/c++14_features/" aria-label="Algunas características de C++">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/04.jpg" alt="" width="888" height="490" loading="lazy" decoding="async" />
-                </a>
-
-                <h2>Características de C++26</h2>
-<h3>Bucles infinitos triviales y UB</h3>
-<p>Esta propuesta acerca un poco más a C y C++. El estándar de C++ definía el progreso hacia adelante de manera que asumía que incluso los bucles infinitos triviales terminarían; si no lo hacían, el programa entraba en comportamiento indefinido (UB). Esto es un problema si escribes código de bajo nivel donde estos bucles son comunes. La propuesta añade una definición de una declaración de iteración trivialmente vacía, donde un bucle cuya expresión de control es una expresión constante que evalúa a true es un bucle infinito trivial; ahora estos se incluyen en la definición de progreso hacia adelante. Por ejemplo, en GCC 14, el siguiente fragmento ya no causa comportamiento indefinido (en todos los dialectos de C++, no solo C++26):</p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span>
-<span class="nf">g</span><span class="w"> </span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
-<span class="w">  </span><span class="cm">/* do something */</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3>Almacenamiento estático para inicializadores con llaves</h3>
-<p>Esta propuesta, implementada en GCC 14, permite al compilador optimizar mejor el código que usa <code>std::initializer_list</code>. La implementación de <code>std::initializer_list</code> usa un array de respaldo para sus datos. Antes de esta propuesta, el estándar no permitía al compilador asignar el array de respaldo en almacenamiento estático incluso cuando los datos eran constantes porque todos los arrays de respaldo tenían que ser distintos. Ahora, esta restricción ya no está mandatada, permitiendo que los arrays de respaldo se compartan (lo cual ya era el caso para las cadenas literales). En resumen, GCC 14 optimiza eliminando las llamadas memcpy que copian el array de respaldo en el siguiente fragmento:</p>
-<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;initializer_list&gt;</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">initializer_list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">il</span><span class="p">);</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="n">f</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">});</span><span class="w"> </span><span class="c1">// array en .rodata</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3>Cadenas no evaluadas</h3>
-<p>GCC 14, en modo C++26, implementa P2361R6, que introduce el concepto de cadenas no evaluadas. Estas cadenas aparecen en contextos como _Pragma, static_assert, o los atributos <code>[[nodiscard]]</code> y <code>[[deprecated]]</code>. No se usan en tiempo de ejecución, por lo que no se convierten a la codificación de ejecución como las cadenas evaluadas. Dado que no se convertirán a otro tipo de codificación de cadena, no pueden contener secuencias de escape numéricas ni prefijos. En la práctica, esto significa que las siguientes dos líneas causarán diagnósticos en modo C++26:</p>
-<div class="highlight"><pre><span></span><code><span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="sa">u</span><span class="s">&quot;foo&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// error en C++26</span>
-<span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;\x{20}&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// advertencia en C++26 en modo pedántico</span>
-</code></pre></div>
-
-<h3><code>constexpr</code> cast desde <code>void*</code></h3>
-<p>GCC 14 implementa P2738R1, lo que significa que el siguiente test es aceptado en C++26. Esta característica permite realizar varios trucos de borrado de tipo en código constexpr. (En C++23 y antes, el compilador todavía emitía un error al intentar hacer un cast desde <code>void*</code> en una expresión constante):</p>
-<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-<span class="k">struct</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-<span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="p">};</span>
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">;</span>
-<span class="w">  </span><span class="n">A</span><span class="o">*</span><span class="w"> </span><span class="n">ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">A</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w"> </span><span class="c1">// OK</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">ap</span><span class="o">-&gt;</span><span class="n">i</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">42</span><span class="p">);</span>
-</code></pre></div>
-
-<h3>Mensajes de static_assert generados por el usuario</h3>
-<p>Con esta propuesta implementada en GCC 14, los usuarios pueden usar <code>static_assert</code> de manera más general ya que ahora acepta mensajes generados por el usuario (que deben ser evaluados como constantes). Por ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">error</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">size</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">sizeof</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="nf">data</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="p">};</span>
-<span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">{});</span>
-</code></pre></div>
-
-<p>Esto produce el siguiente mensaje de error:</p>
-<blockquote>
-<p>error: static assertion failed: hello</p>
-</blockquote>
-<h3>Variables placeholder</h3>
-<p>GCC 14 implementa la propuesta P2169R4. Esta propuesta permite usar la variable especial <code>_</code>, que actúa como marcador de posición para una variable sin nombre que no produce el diagnóstico de "variable no usada" incluso cuando no se usa. <code>_</code> también puede redefinir una declaración existente en el ámbito actual (pero usar <code>_</code> generaría un error si más de una variable se ha declarado con ese nombre):</p>
-<div class="highlight"><pre><span></span><code><span class="n">X</span><span class="w"> </span><span class="nf">foo</span><span class="w"> </span><span class="p">();</span>
-<span class="kt">void</span>
-<span class="nf">g</span><span class="w"> </span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="p">();</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w">       </span><span class="c1">// OK</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_</span><span class="p">;</span><span class="w">         </span><span class="c1">// error: referencia a ‘_’ es ambigua</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3>Retorno de referencia a temporal</h3>
-<p>P2748R5 hace que sea mal formado retornar una referencia a un temporal. GCC ha advertido sobre este tipo de código peligroso por mucho tiempo, pero C++26 lo convierte en un error:</p>
-<div class="highlight"><pre><span></span><code><span class="k">auto</span><span class="o">&amp;&amp;</span>
-<span class="n">foo</span><span class="w"> </span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w">  </span><span class="c1">// mal formado en C++26</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h2>Características de C++23</h2>
-<h3>Deducir this</h3>
-<p>GCC 14 implementó esta propuesta, muy solicitada. Permite añadir un parámetro this explícito a las funciones miembro no estáticas; esto se denomina parámetro de objeto explícito. De esta manera, puedes deducir el tipo y la categoría de valor del objeto de la clase. Es útil para evitar la duplicación de código; antes, el desarrollador tenía que escribir varias sobrecargas de funciones miembro: <code>no-const</code>, <code>const</code>, y con calificadores de referencia incluso const <code>&amp;</code> y <code>&amp;&amp;</code> (ignorando detalles como volatile). Con esta propuesta, en lugar de:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">S</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">value</span><span class="p">;</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="p">};</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="n">S</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">S</span><span class="o">&amp;</span><span class="w"> </span><span class="n">sr</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">int</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">.</span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">i3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">S</span><span class="p">{}.</span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i3</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<h3>Puedes simplificar el código a:</h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">S</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">value</span><span class="p">;</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Self</span><span class="o">&gt;</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">get_add</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">Self</span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="p">};</span>
-<span class="n">S</span><span class="w"> </span><span class="n">s</span><span class="p">{};</span>
-<span class="n">s</span><span class="p">.</span><span class="n">get_add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w">                </span><span class="c1">// Self se deduce como S&amp;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">get_add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w">     </span><span class="c1">// Self se deduce como S</span>
-<span class="n">std</span><span class="o">::</span><span class="n">as_const</span><span class="p">(</span><span class="n">s</span><span class="p">).</span><span class="n">get_add</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="c1">// Self se deduce como const S&amp;</span>
-</code></pre></div>
-
-<p>Deducir this también permite escribir lambdas recursivas. Por ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">int</span>
-<span class="nf">main</span><span class="w"> </span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">fib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">this</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">self</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">self</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
-<span class="w">  </span><span class="p">};</span>
-<span class="w">  </span><span class="k">static_assert</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Hay muchos más ejemplos donde el parámetro de objeto explícito puede ser útil. Tiene algunas restricciones; por ejemplo, una función miembro explícita no puede ser estática o virtual.</p>
-<h3>Referencias en expresiones constantes</h3>
-<p>Una forma moderna de C++ para implementar una función que obtenga el tamaño de un array puede ser:</p>
-<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;</span>
-<span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="p">)[</span><span class="n">N</span><span class="p">])</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Esta función se puede usar como en el siguiente ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="w"> </span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">arr</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="p">};</span>
-<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>El código funciona sin sorpresas. Sin embargo, cuando el array era un parámetro, como en este ejemplo:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="p">(</span><span class="n">arr</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>El compilador, debido a ciertas reglas bastante complejas, rechazaba el código con el error: ‘arr’ no es una expresión constante. Las reglas se han ajustado y el código funciona como se espera con GCC 14 (en todos los dialectos de C++).</p>
-<h3><code>consteval</code> necesita propagarse hacia arriba</h3>
-<p>Implementar esta propuesta en GCC 14 resultó algo complicado. Hace que ciertas funciones se promuevan a consteval, es decir, convertir en funciones inmediatas. Considera:</p>
-<div class="highlight"><pre><span></span><code><span class="k">consteval</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">id</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
-<span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">t</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="p">(</span><span class="n">t</span><span class="p">);</span><span class="w"> </span><span class="c1">// id causa que f&lt;int&gt; se promueva a consteval</span>
-<span class="p">}</span>
-<span class="kt">void</span><span class="w"> </span><span class="n">g</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Anteriormente, el código era inválido y el compilador emitía un error diciendo que t en f no era una expresión constante válida. Con esta propuesta, f se promueve a consteval, lo que significa que la llamada id(t) está en un contexto inmediato, por lo que la llamada no necesita ser una expresión constante. (Así es como funciona la composición de funciones consteval – una función consteval llamando a otra). Ten en cuenta que hacer f<int> consteval implica que la llamada f(3) debe ser una expresión constante válida.</p>
-<p>El estándar describe cuáles expresiones causan que su función envolvente se promueva a consteval; estas expresiones se llaman inmediatas-escaladas. Por ejemplo, una llamada a una función inmediata (es decir, consteval) que no es una expresión constante y no es una subexpresión de una invocación inmediata es una expresión inmediata-escalada. No todas las funciones pueden promoverse a consteval. El estándar dice que solo las funciones de escalada inmediata pueden promoverse. Un ejemplo de función de escalada inmediata es una función de plantilla declarada como constexpr.</p>
-<p>El comportamiento descrito en la propuesta está habilitado por defecto en el modo C++20 o posterior, pero puedes suprimir la escalada de funciones con la opción de línea de comandos -fno-immediate-escalation.</p>
-<h3>CTAD desde constructores heredados</h3>
-<p>GCC 14 soporta P2582R1, una propuesta que extiende CTAD (Deducción de Argumentos de Plantilla de Clase) para constructores heredados. Por lo tanto, el siguiente caso de prueba compila en modo C++23:</p>
-<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="p">{</span>
-<span class="n">B</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
-<span class="p">};</span>
-<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">C</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">B</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="k">using</span><span class="w"> </span><span class="n">B</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;::</span><span class="n">B</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
-<span class="n">C</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w"> </span><span class="c1">// OK, deduce C&lt;int&gt;</span>
-</code></pre></div>
-
-<h3>Resolución de informes de defectos</h3>
-<p>GCC 14 implementa varias resoluciones de informes de defectos, que generalmente se aplican a todos los dialectos afectados por -std, no solo a los estándares más nuevos. Consulta nuestra tabla de DR de C++ para un estado más detallado.</p>
-<h3>stricter constinit</h3>
-<p>El problema CWG 2543 aclara que las variables constinit con inicializadores no constantes deben ser diagnosticadas, incluso si la variable podría inicializarse estáticamente.</p>
-<h3><code>goto</code> y objetos inicializados trivialmente</h3>
-<p>Desde el problema CWG 2256, goto puede cruzar la inicialización de un objeto inicializado trivialmente con un destructor no trivial:</p>
-<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="o">~</span><span class="n">A</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
-<span class="p">};</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">f</span><span class="p">()</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="k">goto</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
-<span class="w">  </span><span class="n">A</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
-<span class="nl">L</span><span class="p">:</span>
-<span class="w">  </span><span class="k">return</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2024/12/13/c++14_features/">posted at 08:01</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/sec-setips.html" rel="tag">SE.C++ SE.Tips</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C++</a>
-                </div>
             </article>
 
                 <div class="clear"></div>
@@ -487,7 +423,7 @@
 
                     <a href="https://gcca.github.io/author/gcca/page/4/" class="next_page">Next&nbsp;&rarr;</a>
 
-                    <span>Page 3 of 5</span>
+                    <span>Page 3 of 6</span>
                 </div>
 
             <div class="clear"></div>

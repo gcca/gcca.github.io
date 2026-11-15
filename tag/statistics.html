@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="https://gcca.github.io/theme/js/theme.js"></script>
+    <script defer src="https://gcca.github.io/theme/js/math.js"></script>
+    <title>(gcca) | articles tagged "Statistics"</title>
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/statistics.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales C." />
+
+<meta property="og:title" content="(gcca) | articles tagged &quot;Statistics&quot;" />
+<meta property="og:description" content="(gcca) blog" />
+<meta property="og:url" content="https://gcca.github.io/tag/statistics.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="(gcca)" />
+<meta property="og:locale" content="es_PE" />
+<meta property="og:image" content="https://gcca.github.io/images/thumbnails/01.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="(gcca) | articles tagged &quot;Statistics&quot;" />
+<meta name="twitter:description" content="(gcca) blog" />
+<meta name="twitter:image" content="https://gcca.github.io/images/thumbnails/01.jpg" />
+<meta property="og:image:width" content="760" />
+<meta property="og:image:height" content="519" />
+<meta property="og:image:type" content="image/jpeg" /></head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/statistics.html">Statistics</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/gcca__">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Nov 15, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/" rel="bookmark" title="Permanent Link to &quot;La media no dice nada&quot;">La media no dice nada</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/" aria-label="La media no dice nada">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/05.jpg" alt="" width="784" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>Imagina un panel de monitoreo con cuatro servicios. Al lado de cada nombre hay un único número: <strong>latencia media, 120 ms</strong>. Los cuatro tienen el mismo color verde, nadie recibe alertas y el informe semanal dice que «todo está estable».</p>
+<p>Sin embargo, en uno de ellos casi todas las peticiones tardan lo mismo; en otro, la mitad de los usuarios recibe respuesta en menos de 90 ms mientras que uno de cada cien espera más de medio segundo; en un tercero hay dos grupos de peticiones que no se parecen en nada, y en el cuarto, de vez en cuando, alguien espera varios segundos. El número es idéntico; la experiencia, no.</p>
+<p>En este artículo explico por qué la media es un resumen tan pobre para medir rendimiento, qué propiedades matemáticas la hacen frágil y qué conviene mirar en su lugar.</p>
+<h2 id="mismo-promedio">Mismo promedio, cuatro historias</h2>
+<p>Para el ejemplo generé 20 000 latencias sintéticas por servicio y las reescalé para que la media de cada uno fuera exactamente 120 ms:</p>
+<ul>
+<li><strong>A, simétrico:</strong> distribución normal con poca dispersión. Es lo que uno imagina cuando lee «120 ms».</li>
+<li><strong>B, sesgado:</strong> distribución log-normal, típica de tiempos de respuesta: muchas peticiones rápidas y una cola larga a la derecha.</li>
+<li><strong>C, bimodal:</strong> el 70 % de las peticiones se resuelve desde una caché (~50 ms) y el 30 % restante va al almacenamiento (~280 ms). Ninguna petición tarda 120 ms.</li>
+<li><strong>D, cola pesada:</strong> una distribución de Pareto desplazada. La mayoría es rápida, pero los valores extremos son mucho más grandes que en B.</li>
+</ul>
+<p><img alt="Cuatro histogramas de latencia con la misma media de 120 ms: uno simétrico y estrecho, uno sesgado a la derecha, uno con dos picos en 50 y 280 ms, y uno con cola larga; en cada uno se marcan la media y la mediana" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/media-igual-histogramas.svg"></p>
+<p>La línea discontinua (la media) está en el mismo lugar en los cuatro paneles. La línea punteada (la mediana) no. En A coinciden; en B y D la mediana queda muy a la izquierda, porque la cola arrastra la media hacia la derecha; en C la media cae justo en el hueco entre los dos picos, donde no hay ninguna petición. <strong>La media puede describir un valor que nunca ocurre.</strong></p>
+<h2 id="que-resume-la-media">Qué resume realmente la media</h2>
+<p>Dada una muestra <span class="math">\(x_1, \dots, x_n\)</span>, la media es</p>
+<div class="math">$$
+\bar x = \frac{1}{n}\sum_{i=1}^{n} x_i.
+$$</div>
+<p>Una forma útil de entenderla es como la solución de un problema de optimización. Si buscamos el número <span class="math">\(c\)</span> que minimiza el error cuadrático total,</p>
+<div class="math">$$
+S_2(c) = \sum_{i=1}^{n} (x_i - c)^2,
+$$</div>
+<p>derivamos e igualamos a cero:</p>
+<div class="math">$$
+S_2'(c) = -2\sum_{i=1}^{n} (x_i - c) = 0 \quad\Longrightarrow\quad c = \frac{1}{n}\sum_{i=1}^{n} x_i = \bar x.
+$$</div>
+<p>En cambio, si minimizamos el error absoluto,</p>
+<div class="math">$$
+S_1(c) = \sum_{i=1}^{n} |x_i - c|,
+$$</div>
+<p>la (sub)derivada es <span class="math">\(S_1'(c) = \#\{x_i &lt; c\} - \#\{x_i &gt; c\}\)</span>, que se anula cuando hay tantos puntos a la izquierda de <span class="math">\(c\)</span> como a la derecha. Ese punto es la <strong>mediana</strong>.</p>
+<p>La diferencia está en el cuadrado. Un punto alejado a distancia <span class="math">\(d\)</span> aporta <span class="math">\(d^2\)</span> a <span class="math">\(S_2\)</span> pero solo <span class="math">\(d\)</span> a <span class="math">\(S_1\)</span>, de modo que la media «paga» muchísimo por acercarse a los valores extremos. Por eso la cola de B y D desplaza la media y apenas mueve la mediana.</p>
+<p>Un ejemplo concreto: 1000 peticiones que tardan 100 ms cada una tienen media y mediana de 100 ms. Si una sola de ellas cae en un <em>timeout</em> de 30 s, la mediana sigue en 100 ms, pero la media sube a</p>
+<div class="math">$$
+\frac{999 \cdot 100 + 30\,000}{1000} = 129.9 \text{ ms}.
+$$</div>
+<p>Una petición entre mil movió la media casi un 30 %. En estadística robusta esto se mide con el <strong>punto de ruptura</strong>: la fracción de datos que hay que corromper para llevar el estimador a un valor arbitrario. Para la media es <span class="math">\(1/n\)</span>, que tiende a 0; para la mediana es 50 %.</p>
+<p>La fragilidad también se nota al estimar con muestras pequeñas. Tomé 5000 muestras de 200 peticiones del servicio D y calculé en cada una la media y la mediana, divididas por su valor real:</p>
+<p><img alt="Dos histogramas de las estimaciones relativas al valor real: la mediana se concentra entre 0.9 y 1.13, mientras que la media se dispersa entre 0.85 y 1.23 y tiene una cola larga hacia la derecha" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/bootstrap-media-mediana.svg"></p>
+<p>Con las mismas 200 peticiones, el 95 % de las medias cae entre 0.85 y 1.23 veces su valor real; el 95 % de las medianas, entre 0.90 y 1.13. El coeficiente de variación de la media (11 %) casi duplica el de la mediana (6 %), y la media tiene una cola a la derecha: cada cierto tiempo, una muestra que incluye un valor extremo produce un promedio muy inflado. Comparar dos promedios semanales de un servicio así es, en buena parte, comparar ruido.</p>
+<h2 id="percentiles">Percentiles y la cola</h2>
+<p>Si la media no sirve, ¿qué número usar? La respuesta honesta es que ninguno basta, pero los <strong>percentiles</strong> se acercan mucho más. El percentil <span class="math">\(q\)</span> es el valor por debajo del cual queda una fracción <span class="math">\(q\)</span> de las observaciones. Formalmente, a partir de la función de distribución empírica</p>
+<div class="math">$$
+\hat F_n(x) = \frac{1}{n}\,\#\{\, i : x_i \le x \,\},
+$$</div>
+<p>se define</p>
+<div class="math">$$
+Q(q) = \inf\{\, x : \hat F_n(x) \ge q \,\}.
+$$</div>
+<p>La mediana es <span class="math">\(Q(0.5)\)</span>, o <span class="math">\(p_{50}\)</span>. Para los cuatro servicios:</p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th style="text-align: right;">media</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p95</th>
+<th style="text-align: right;">p99</th>
+<th style="text-align: right;">p99.9</th>
+<th style="text-align: right;">máximo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A · simétrico</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">165</td>
+<td style="text-align: right;">176</td>
+</tr>
+<tr>
+<td>B · sesgado</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">323</td>
+<td style="text-align: right;">563</td>
+<td style="text-align: right;">1019</td>
+<td style="text-align: right;">2882</td>
+</tr>
+<tr>
+<td>C · bimodal</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">310</td>
+<td style="text-align: right;">335</td>
+<td style="text-align: right;">362</td>
+<td style="text-align: right;">390</td>
+</tr>
+<tr>
+<td>D · cola pesada</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">322</td>
+<td style="text-align: right;">674</td>
+<td style="text-align: right;">1689</td>
+<td style="text-align: right;">7702</td>
+</tr>
+</tbody>
+</table>
+<p><em>(latencias en ms)</em></p>
+<p>Ahora sí aparecen las diferencias. En A el p99 apenas supera la media; en D es más de cinco veces la media y el p99.9 pasa de 1.6 s. B y D tienen p95 casi iguales, pero se separan en la cola extrema. C tiene la mediana más baja de todos y, aun así, casi un tercio de sus peticiones tarda más del doble de la media.</p>
+<p>La herramienta que muestra todos los percentiles a la vez es la propia <span class="math">\(\hat F_n\)</span>, la <strong>ECDF</strong> (<em>empirical cumulative distribution function</em>). Cada percentil se lee cortando la curva con una recta horizontal:</p>
+<p><img alt="Funciones de distribución empírica de los cuatro servicios, con líneas horizontales en p50, p95 y p99; la curva del servicio A sube de golpe cerca de 120 ms, la del C tiene un escalón plano entre 70 y 220 ms, y las de B y D se acercan a 1 muy lentamente" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/ecdf-percentiles.svg"></p>
+<p>La ECDF tiene ventajas sobre el histograma: no depende de elegir el ancho de las barras, no suaviza nada y permite comparar varias distribuciones en un mismo gráfico. Algunas lecturas rápidas:</p>
+<ul>
+<li><strong>Una subida vertical</strong> significa que muchas peticiones tardan casi lo mismo (A).</li>
+<li><strong>Un tramo plano</strong> es un hueco: no hay peticiones con esas latencias (C, entre 70 y 220 ms). Casi siempre indica dos caminos distintos en el código.</li>
+<li><strong>Una curva que tarda en llegar a 1</strong> es una cola larga (B y D). Si dos curvas se cruzan, ninguna distribución es «mejor» en todos los percentiles.</li>
+</ul>
+<h2 id="comparar-versiones">Comparar dos versiones</h2>
+<p>El caso donde la media hace más daño es la comparación antes/después. Supongamos un despliegue que acelera el camino normal, pero hace que el 3 % de las peticiones caiga en un camino nuevo y lento. Con 8000 peticiones por versión:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">media</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>antes</td>
+<td style="text-align: right;">120 ms</td>
+<td style="text-align: right;">105 ms</td>
+<td style="text-align: right;">340 ms</td>
+</tr>
+<tr>
+<td>después</td>
+<td style="text-align: right;">101 ms</td>
+<td style="text-align: right;">80 ms</td>
+<td style="text-align: right;">646 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Si solo se mira la media, el despliegue fue un éxito: <strong>19 ms menos</strong>. Pero el p99 casi se duplicó.</p>
+<p>Para no depender de un par de percentiles elegidos a mano, conviene graficar la diferencia percentil a percentil, <span class="math">\(\Delta(q) = Q_{\text{después}}(q) - Q_{\text{antes}}(q)\)</span>, para todo <span class="math">\(q\)</span>. Para saber qué parte de esa curva es ruido, repetí el cálculo sobre 400 remuestreos <em>bootstrap</em> (muestras con reemplazo del mismo tamaño) y sombreé el intervalo que contiene el 95 % central de los resultados:</p>
+<p><img alt="Diferencia de latencia entre la versión nueva y la anterior para cada percentil: negativa y decreciente hasta el percentil 96, con un mínimo cercano a −60 ms, y luego un salto brusco hasta unos +300 ms en el percentil 99; una línea horizontal marca la diferencia de medias de −19 ms" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/diferencia-cuantiles.svg"></p>
+<p>La gráfica cuenta toda la historia en un vistazo: hasta el percentil 96 la versión nueva es más rápida, y la mejora crece con el percentil; por encima del 97, es cientos de milisegundos más lenta, y la banda deja claro que no es ruido. La diferencia de medias (−19 ms) es un promedio ponderado de ambos efectos que no describe a ningún usuario real.</p>
+<h2 id="fan-out">Fan-out: por qué la cola es lo que importa</h2>
+<p>Podría pensarse que el p99 es un detalle: solo afecta a una petición de cada cien. El problema es que, en un sistema distribuido, una petición del usuario rara vez toca un único servicio. Una página que se arma consultando <span class="math">\(n\)</span> servicios en paralelo tarda tanto como <strong>el más lento</strong> de ellos.</p>
+<p>Si cada servicio responde lento (por encima de su p99) con probabilidad <span class="math">\(p = 0.01\)</span>, y suponemos independencia, la probabilidad de que la petición completa sea lenta es</p>
+<div class="math">$$
+P(\text{lenta}) = 1 - P(\text{ninguno lento}) = 1 - (1 - p)^n.
+$$</div>
+<p>Con <span class="math">\(n = 10\)</span>, eso da <span class="math">\(1 - 0.99^{10} \approx 9.6\,\%\)</span>. Con <span class="math">\(n = 100\)</span>, <span class="math">\(1 - 0.99^{100} \approx 63\,\%\)</span>: el p99 de cada componente se convierte en la mediana del sistema.</p>
+<p><img alt="Probabilidad de que una petición sea lenta en función del número de servicios consultados: para p = 0.01 la curva sube a 10 % con 10 servicios y a 63 % con 100; para p = 0.001 crece mucho más despacio y llega a 18 % con 200" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/fan-out.svg"></p>
+<p>Para <span class="math">\(p\)</span> pequeño, <span class="math">\(1-(1-p)^n \approx np\)</span> mientras <span class="math">\(np \ll 1\)</span>, así que la probabilidad crece casi linealmente con el número de dependencias. Bajar la cola de cada componente de <span class="math">\(p=0.01\)</span> a <span class="math">\(p=0.001\)</span> es lo que permite que la curva naranja se mantenga baja. Ninguna mejora de la media consigue eso.</p>
+<h2 id="medir-mejor">Medir mejor</h2>
+<p>Algunas reglas que aplico al medir latencias:</p>
+<ol>
+<li><strong>Guardar la distribución, no un resumen.</strong> Registrar histogramas (con <em>buckets</em> fijos o logarítmicos) o sketches de cuantiles, como el <em>t-digest</em>, en lugar de un promedio o un único percentil precalculado. A partir de la distribución se puede calcular cualquier cosa; a partir de un resumen, no.</li>
+<li><strong>Nunca promediar percentiles.</strong> El p99 de dos máquinas juntas <em>no</em> es el promedio de sus p99: si una atiende 900 peticiones y la otra 100, el promedio simple ignora esa diferencia y, aunque se pondere, los percentiles no se combinan linealmente. Lo correcto es sumar los histogramas y calcular el percentil sobre el resultado.</li>
+<li><strong>Reportar al menos p50, p95 y p99</strong>, y el p99.9 cuando haya tráfico suficiente. Con <span class="math">\(n\)</span> observaciones, el percentil <span class="math">\(q\)</span> se apoya en unas <span class="math">\(n(1-q)\)</span> de ellas: con 1000 peticiones, el p99.9 depende de un solo dato.</li>
+<li><strong>Indicar siempre el tamaño de muestra y la ventana de tiempo.</strong> Un p99 de 5 minutos y uno de 24 horas no son comparables.</li>
+<li><strong>Mirar la forma antes de resumir.</strong> Un histograma o una ECDF revelan en segundos la bimodalidad, los huecos y las colas que ningún número resume.</li>
+<li><strong>Comparar versiones con la distribución completa</strong>: una gráfica de <span class="math">\(\Delta(q)\)</span> con su banda de incertidumbre vale más que una tabla de medias.</li>
+</ol>
+<h2 id="cierre">Cierre</h2>
+<p>La media responde a una pregunta muy específica: si repartiéramos el tiempo total en partes iguales, ¿cuánto le tocaría a cada petición? Esa pregunta casi nunca es la que nos importa. Los usuarios no perciben el promedio; perciben <em>su</em> petición, y las peticiones que más recuerdan son las de la cola.</p>
+<p>La próxima vez que un panel muestre un único número verde, vale la pena preguntarse qué forma tiene la distribución que hay detrás. Cuatro servicios con 120 ms de media pueden ser cuatro sistemas completamente distintos.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/">posted at 01:36</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathstat.html" rel="tag">Math.Stat</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/statistics.html" class="tags selected">Statistics</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

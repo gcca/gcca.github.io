@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preload" href="https://gcca.github.io/theme/fonts/iosevka-ss08/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <script src="https://gcca.github.io/theme/js/theme.js"></script>
+    <script defer src="https://gcca.github.io/theme/js/math.js"></script>
+    <title>(gcca) | articles tagged "data structures"</title>
+    <link href="https://gcca.github.io/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Full RSS Feed" />
+    <link href="https://gcca.github.io/feeds/data-structures.rss.xml" type="application/rss+xml" rel="alternate" title="(gcca) Tags RSS Feed" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/main.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="https://gcca.github.io/theme/css/theme.css" type="text/css" />
+    <meta name="generator" content="Pelican" />
+    <meta name="description" content="(gcca) blog" />
+    <meta name="author" content="Cristhian Gonzales C." />
+
+<meta property="og:title" content="(gcca) | articles tagged &quot;data structures&quot;" />
+<meta property="og:description" content="(gcca) blog" />
+<meta property="og:url" content="https://gcca.github.io/tag/data-structures.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="(gcca)" />
+<meta property="og:locale" content="es_PE" />
+<meta property="og:image" content="https://gcca.github.io/images/thumbnails/01.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="(gcca) | articles tagged &quot;data structures&quot;" />
+<meta name="twitter:description" content="(gcca) blog" />
+<meta name="twitter:image" content="https://gcca.github.io/images/thumbnails/01.jpg" />
+<meta property="og:image:width" content="760" />
+<meta property="og:image:height" content="519" />
+<meta property="og:image:type" content="image/jpeg" /></head>
+<body>
+    <header>
+        <nav style="overflow: hidden;">
+            <ul>
+                <li id="theme-control" hidden><label for="theme-select">Theme</label> <select id="theme-select"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+                <li class="ephemeral selected"><a href="https://gcca.github.io/tag/data-structures.html">data structures</a></li>
+                <li><a href="https://gcca.github.io/">Home</a></li>
+                <li><a href="https://x.com/gcca__">X</a></li>
+                <li><a href="https://github.com/gcca">GitHub</a></li>
+                <li><a href="https://gcca.github.io/tags">Tags</a></li>
+                <li><a href="https://gcca.github.io/categories">Categories</a></li>
+                <li><a href="https://gcca.github.io/archives">Archives</a></li>
+            </ul>
+        </nav>
+        <div class="header_box" style="height: 50px">
+        <h1><a href="https://gcca.github.io/">
+            <img src="/images/logo.png" class="avatar" alt="" width="246" height="200" /><span class="site_title">(gcca)</span>
+            </a></h1></div>
+    </header>
+    <div id="wrapper">
+        <div id="content">            <h4 class="date">Nov 15, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/" rel="bookmark" title="Permanent Link to &quot;Lista doblemente enlazada en el kernel Linux&quot;">Lista doblemente enlazada en el kernel Linux</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/" aria-label="Lista doblemente enlazada en el kernel Linux">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/04.jpg" alt="" width="888" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>El kernel Linux es una pieza de código enorme. Como todo kernel de un sistema operativo moderno, contiene planificadores que administran procesos y recursos, una pila de red, varios sistemas de archivos, miles de controladores de dispositivos y muchísimo más. Al mismo tiempo, tiene que gestionar todo esto de la forma más eficiente posible. Y la eficiencia no siempre consiste en escribir instrucciones más rápidas o algoritmos ingeniosos. Muy a menudo, como en cualquier aplicación de espacio de usuario, empieza con una pregunta mucho más fundamental: ¿cómo están organizados los datos?</p>
+<p>Como <a href="https://lore.kernel.org/git/Pine.LNX.4.64.0607270936200.4168@g5.osdl.org/">escribió</a> alguna vez Linus Torvalds:</p>
+<blockquote>
+<p>Los buenos programadores se preocupan por las estructuras de datos y sus relaciones.</p>
+<p>— Linus Torvalds, lista de correo de <em>git</em>, 27 de julio de 2006</p>
+</blockquote>
+<p>El kernel necesita llevar la cuenta de procesos, páginas de memoria, archivos, temporizadores, dispositivos, conexiones de red e innumerables objetos más. Algunos deben buscarse rápido, otros deben mantenerse siempre ordenados, otros se recorren con frecuencia y otros tienen que insertarse o eliminarse con el menor costo posible. Elegir una representación adecuada para estos datos puede influir directamente en el rendimiento y en el consumo de memoria.</p>
+<p>Esto es especialmente importante en un software como el kernel de un sistema operativo. Idealmente, debería ser casi invisible para el usuario y añadir la menor sobrecarga posible.</p>
+<p>Si alguna vez has leído el código fuente del kernel, probablemente notaste que listas enlazadas, árboles, colas, mapas de bits, tablas hash y muchas otras estructuras de datos aparecen en casi todos sus subsistemas. Algunas resultan familiares por los libros clásicos de ciencias de la computación; otras se adaptaron a los requisitos particulares y al estilo de programación del kernel.</p>
+<p>En este artículo veremos uno de estos bloques básicos, para reconocerlo cuando exploremos los principales subsistemas del kernel.</p>
+<h2 id="listas-enlazadas">Listas enlazadas</h2>
+<p>La primera estructura de datos que veremos es la <a href="https://es.wikipedia.org/wiki/Lista_enlazada">lista enlazada</a>.</p>
+<p>Me parece una buena elección para empezar porque, por un lado, es relativamente sencilla y, por otro, es omnipresente. Decir que es omnipresente no es exagerar: encontramos listas enlazadas en muchas partes distintas del kernel. Para tener una idea aproximada de cuán común es:</p>
+<div class="highlight"><pre><span></span><code>rg<span class="w"> </span>-w<span class="w"> </span><span class="s1">&#39;struct list_head&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="m">17143</span>
+</code></pre></div>
+
+<p>¡Más de diecisiete mil apariciones! Sin duda vale la pena entender cómo se implementa y se usa la lista enlazada en el kernel.</p>
+<p>Uno de los usos principales de esta estructura es organizar distintos tipos de objetos en secuencias. Pero antes de entrar en la implementación del kernel, repasemos brevemente la estructura en general.</p>
+<p>Según <a href="https://es.wikipedia.org/wiki/Lista_enlazada">Wikipedia</a>:</p>
+<blockquote>
+<p>En ciencias de la computación, una <em>lista enlazada</em> es una estructura de datos lineal compuesta por una secuencia de nodos. Cada nodo almacena uno o más valores de datos y una o varias referencias —también llamadas <em>enlaces</em> o <em>punteros</em>— hacia otros nodos de la lista.</p>
+<p>— <a href="https://es.wikipedia.org/wiki/Lista_enlazada">Wikipedia, «Lista enlazada»</a></p>
+</blockquote>
+<p>En otras palabras, a diferencia de un <a href="https://es.wikipedia.org/wiki/Vector_(inform%C3%A1tica)">arreglo</a>, los elementos de una lista enlazada no tienen que ocupar posiciones contiguas en memoria. La relación entre ellos se representa explícitamente mediante enlaces. En el caso más simple, cada nodo contiene un único enlace al nodo siguiente:</p>
+<p><img alt="Lista simplemente enlazada: el puntero head apunta al primer nodo; cada nodo tiene un campo datos (d0, d1, d2) y un campo next que apunta al nodo siguiente, y el next del último nodo es NULL" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/singly-linked-list.svg"></p>
+<p>Una lista así se llama <strong>lista simplemente enlazada</strong> y solo puede recorrerse en un sentido: partimos de <code>head</code> y seguimos el puntero <code>next</code> de cada nodo hasta llegar al final. Su definición y la implementación de sus operaciones básicas son bastante simples. Si has leído, por ejemplo, <a href="https://www.amazon.com/Algorithms-4th-Robert-Sedgewick/dp/032157351X">Algorithms</a> de Robert Sedgewick y Kevin Wayne, conoces la representación clásica:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Node</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Item</span><span class="w"> </span><span class="n">item</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Node</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Cada <code>Node</code> guarda un elemento y una referencia al nodo siguiente. Por ejemplo, si la lista contiene tres elementos, el primer nodo apunta al segundo y el segundo al tercero. El último nodo no apunta a nada: su enlace vale <code>null</code>, y así se determina el final de la lista.</p>
+<p>Agregar un elemento nuevo no exige mover los elementos existentes en memoria: basta con crear un nodo y ajustar los enlaces correspondientes. Para eliminar un elemento, cambiamos el enlace del nodo anterior para que se salte el nodo eliminado.</p>
+<p>Muchas veces esto no es suficiente. Algunas operaciones necesitan recorrer la lista hacia atrás. En esos casos, cada nodo recibe un segundo enlace que apunta al nodo anterior. Esta estructura se llama <strong>lista doblemente enlazada</strong> y, esquemáticamente, se ve así:</p>
+<p><img alt="Lista doblemente enlazada: cada nodo tiene los campos prev, datos y next; los next apuntan al nodo siguiente y los prev al anterior, el prev del primer nodo y el next del último son NULL" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/doubly-linked-list.svg"></p>
+<blockquote>
+<p><strong>Nota:</strong> no incluyo aquí ejemplos de implementación de listas enlazadas. Si nunca has implementado una, puede ser un buen ejercicio.</p>
+</blockquote>
+<h2 id="listas-en-el-kernel">Listas enlazadas en el kernel Linux</h2>
+<p>Una vez repasada la idea básica, veamos cómo las implementa el kernel Linux.</p>
+<p>Antes de ver esa implementación, esperaba algo muy parecido a lo anterior: una estructura simple con un puntero o espacio para los datos y una referencia a otro nodo. ¡Resultó ser bastante distinta!</p>
+<p>El kernel implementa las llamadas <strong>listas enlazadas intrusivas</strong>. En ellas no hay un puntero a los datos. El nodo de la lista contiene solo dos punteros: uno al elemento siguiente y otro al anterior. Ese nodo se incrusta dentro de la estructura que queremos guardar en la lista, y los enlaces conectan estos nodos incrustados:</p>
+<p><img alt="Lista intrusiva: tres estructuras struct foo, cada una con sus campos de datos y un nodo incrustado con prev y next; los enlaces van de nodo a nodo, no de estructura a estructura" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/intrusive-list.svg"></p>
+<p>Sí, al principio puede parecer muy raro. ¿Cómo puede una estructura así representar una lista de procesos, dispositivos, archivos o cualquier otro objeto del kernel si no contiene los objetos? La respuesta es justamente una de las ideas características de la implementación de Linux: en lugar de guardar el objeto dentro del nodo de la lista, se guarda el nodo de la lista dentro del objeto.</p>
+<p>La implementación de las listas enlazadas del kernel está en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a>. La estructura en sí refleja la idea que acabamos de describir:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">prev</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>La estructura <code>list_head</code> contiene solo dos punteros: al nodo siguiente y al anterior. ¿Cómo se usa, entonces? Se incrusta un <code>list_head</code> directamente en la estructura cuyos objetos queremos mantener en una lista. Por ejemplo, la estructura que define un proceso tiene, entre otros campos:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">task_struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="n">tasks</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>El campo <code>tasks</code> sirve para enlazar objetos <code>task_struct</code> entre sí. Así, en lugar de reservar un nodo de lista aparte que contenga un puntero a un <code>task_struct</code>, cada <code>task_struct</code> contiene su propio nodo. Lo interesante es que los punteros <code>next</code> y <code>prev</code> no apuntan directamente a otro <code>task_struct</code>, sino al miembro <code>tasks</code> incrustado en los <code>task_struct</code> vecinos. Esquemáticamente:</p>
+<p><img alt="Lista de task_struct: tres estructuras struct task_struct con otros campos arriba y abajo y el miembro tasks en medio; los punteros prev y next de cada tasks apuntan al miembro tasks de las estructuras vecinas" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/task-struct-list.svg"></p>
+<p>Este enfoque nos da una lista enlazada sin reservar memoria aparte para cada nodo y sin que <code>list_head</code> tenga que saber nada de las estructuras que enlaza.</p>
+<p>Suena muy bien, pero la primera vez que uno lo ve surge otra pregunta: si al recorrer la lista solo tenemos un puntero a <code>list_head</code>, ¿cómo volvemos al <code>task_struct</code> que lo contiene? La respuesta se apoya en otro auxiliar muy común del kernel: la macro <code>container_of</code>. Esta macro nos da un puntero a la estructura que nos interesa; en nuestro caso, a partir de un puntero al miembro <code>tasks</code> obtenemos el <code>task_struct</code> que lo contiene.</p>
+<p>La idea es bastante simple. Si conocemos la dirección de un nodo de lista incrustado en una estructura, el tipo de la estructura y el nombre del campo que representa el nodo, podemos calcular la dirección de la propia estructura. Aquí tenemos un puntero al miembro <code>tasks</code>, que es un <code>list_head</code>, y sabemos que ese miembro pertenece a la estructura <code>task_struct</code>. Con esa información, el kernel obtiene la dirección del <code>task_struct</code>.</p>
+<p>Esto es exactamente lo que permite que la implementación de las listas siga siendo genérica: <code>list_head</code> no sabe nada de <code>task_struct</code>, y aun así el código que usa la lista siempre puede volver al objeto que contiene el nodo.</p>
+<p>Entendida la idea básica, veamos la implementación de <code>container_of</code>. La definición de la macro está en <a href="https://github.com/torvalds/linux/blob/master/include/linux/container_of.h">include/linux/container_of.h</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * container_of - cast a member of a structure out to the containing structure</span>
+<span class="cm"> * @ptr:    the pointer to the member.</span>
+<span class="cm"> * @type:   the type of the container struct this is embedded in.</span>
+<span class="cm"> * @member: the name of the member within the struct.</span>
+<span class="cm"> *</span>
+<span class="cm"> * WARNING: any const qualifier of @ptr is lost.</span>
+<span class="cm"> * Do not use container_of() in new code.</span>
+<span class="cm"> */</span>
+<span class="cp">#define container_of(ptr, type, member) ({              \</span>
+<span class="cp">    static_assert(__same_type(*(ptr), typeof_member(type, member)) || \</span>
+<span class="cp">              __same_type(*(ptr), void),            \</span>
+<span class="cp">              &quot;pointer type mismatch in container_of()&quot;);   \</span>
+<span class="cp">    (type *)((void *)(ptr) - offsetof(type, member)); })</span>
+</code></pre></div>
+
+<p>La macro recibe tres argumentos:</p>
+<ul>
+<li>el puntero al nodo de la lista;</li>
+<li>el tipo de la estructura que contiene el nodo;</li>
+<li>el nombre del campo que representa el nodo.</li>
+</ul>
+<p>En el ejemplo anterior, estos argumentos corresponderían a:</p>
+<ul>
+<li>el puntero al campo <code>tasks</code>;</li>
+<li><code>struct task_struct</code>, como tipo que contiene el nodo;</li>
+<li><code>tasks</code>, como nombre del campo que representa el nodo.</li>
+</ul>
+<p>La primera línea del cuerpo de la macro no tiene que ver con el cálculo de la dirección: solo hace una comprobación de tipos en tiempo de compilación para asegurar que el puntero al nodo tenga el tipo esperado.</p>
+<p>La segunda línea hace el trabajo real. Con la macro <a href="https://en.cppreference.com/c/types/offsetof">offsetof</a> calcula el desplazamiento desde el inicio de la estructura hasta el campo que define el nodo. Conocido ese desplazamiento, lo restamos de la dirección del nodo y obtenemos la dirección de la estructura que lo contiene.</p>
+<p><img alt="container_of: dentro de un struct task_struct, el miembro tasks está 0x390 bytes después del inicio de la estructura; restando ese desplazamiento a ptr (0xFFFF888100A2C390) se obtiene la dirección de la estructura, 0xFFFF888100A2C000" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/container-of.svg"></p>
+<p>¡Y eso es básicamente todo! En abstracto, <code>container_of</code> nos da la dirección de una estructura cuando conocemos la dirección de uno de sus campos. Llevado al contexto de las listas enlazadas, no es más que obtener la entrada real de la lista a partir de un puntero a su nodo incrustado:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * list_entry - get the struct for this entry</span>
+<span class="cm"> * @ptr:    the &amp;struct list_head pointer.</span>
+<span class="cm"> * @type:   the type of the struct this is embedded in.</span>
+<span class="cm"> * @member: the name of the list_head within the struct.</span>
+<span class="cm"> */</span>
+<span class="cp">#define list_entry(ptr, type, member) \</span>
+<span class="cp">    container_of(ptr, type, member)</span>
+</code></pre></div>
+
+<h2 id="operaciones">Operaciones sobre listas</h2>
+<p>En la sección anterior conocimos la estructura básica de las listas enlazadas del kernel. Ahora veamos las operaciones para agregar, eliminar y actualizar elementos.</p>
+<p>Simplemente enumerar la API existente sería bastante aburrido. Es mucho más interesante ver un ejemplo real de uso: algún mecanismo que probablemente hayas visto al usar Linux, pero sin pensar en lo que ocurre por detrás.</p>
+<p>El kernel usa listas en muchísimos lugares. Tomemos, por ejemplo, los <a href="https://es.wikipedia.org/wiki/Archivo_de_dispositivo">dispositivos de caracteres</a> misceláneos (<em>misc</em>).</p>
+<p>Cada dispositivo de caracteres se identifica con un par de números: el número mayor (<em>major</em>) y el menor (<em>minor</em>). El mayor suele identificar al controlador o a un grupo de dispositivos relacionados, y el menor, a un dispositivo concreto que maneja ese controlador.</p>
+<p>El kernel ofrece una API especial que permite a un controlador registrar un dispositivo de caracteres sin asignarle un número mayor propio. Todos esos dispositivos comparten el mismo número mayor y cada uno recibe su propio número menor. Ese número mayor es:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define MISC_MAJOR      10</span>
+</code></pre></div>
+
+<p>Podemos ver los dispositivos misceláneos registrados con el siguiente comando:</p>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-l<span class="w"> </span>/dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5 == &quot;10,&quot; { print $10 }&#39;</span>
+
+acpi_thermal_rel
+autofs
+cpu_dma_latency
+cuse
+fuse
+hpet
+hwrng
+io_uring_mock
+kvm
+loop-control
+mcelog
+nvram
+rfkill
+snapshot
+tpm0
+udmabuf
+uhid
+userfaultfd
+vga_arbiter
+vhost-net
+vhost-vsock
+</code></pre></div>
+
+<p>Desde el espacio de usuario, los dispositivos misceláneos se ven como dispositivos de caracteres normales con el mismo número mayor y distintos números menores. Lo que nos interesa es cómo el kernel lleva internamente la cuenta de todos ellos.</p>
+<p>Cada dispositivo misceláneo se representa con una estructura <code>miscdevice</code>, definida en <a href="https://github.com/torvalds/linux/blob/master/include/linux/miscdevice.h">include/linux/miscdevice.h</a>. Entre otros, esta estructura tiene un campo llamado <code>list</code>, que permite al dispositivo formar parte de la lista enlazada que mantiene el subsistema misc:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">miscdevice</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minor</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">file_operations</span><span class="w"> </span><span class="o">*</span><span class="n">fops</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="n">list</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">parent</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">this_device</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">attribute_group</span><span class="w"> </span><span class="o">**</span><span class="n">groups</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">nodename</span><span class="p">;</span>
+<span class="w">    </span><span class="n">umode_t</span><span class="w"> </span><span class="n">mode</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Ya sabemos cómo usará el kernel el campo <code>list</code>: cada dispositivo registrado contiene su propio nodo, y todos están enlazados en una única lista con la que el kernel les sigue la pista. Hasta aquí debería quedar claro cómo se manejan y enlazan los nodos. Pero ¿cómo accedemos a la lista en sí? Necesitamos una referencia a su cabeza:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">LIST_HEAD</span><span class="p">(</span><span class="n">misc_list</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Siguiendo las definiciones de las macros <code>LIST_HEAD</code> y <code>LIST_HEAD_INIT</code> en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a>, esto se expande a una inicialización de estructura C corriente:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="n">misc_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">&amp;</span><span class="p">(</span><span class="n">misc_list</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="p">(</span><span class="n">misc_list</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>Los dos valores del inicializador son los campos <code>next</code> y <code>prev</code> de la estructura <code>list_head</code>. Como al principio la lista está vacía, no hay otros nodos a los que apuntar, así que ambos apuntan a la propia cabeza.</p>
+<p>Cuando el kernel registra un dispositivo, inicializa la estructura <code>miscdevice</code> correspondiente y la agrega a la lista con:</p>
+<div class="highlight"><pre><span></span><code><span class="n">list_add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">misc</span><span class="o">-&gt;</span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">misc_list</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Esta función está definida en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a> y luce así:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">__always_inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">list_add</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">new</span><span class="p">,</span>
+<span class="w">                     </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">head</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">__list_add</span><span class="p">(</span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Simplemente delega el trabajo real en el auxiliar interno <code>__list_add</code>, implementado así:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">__always_inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__list_add</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">new</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">prev</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">next</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">__list_add_valid</span><span class="p">(</span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">prev</span><span class="p">,</span><span class="w"> </span><span class="n">next</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">next</span><span class="o">-&gt;</span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">;</span>
+<span class="w">    </span><span class="n">new</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="w">    </span><span class="n">new</span><span class="o">-&gt;</span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
+<span class="w">    </span><span class="n">WRITE_ONCE</span><span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="n">new</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Si alguna vez implementaste una lista enlazada, esto debería resultarte familiar. Para insertar un nodo nuevo entre dos nodos existentes, el kernel actualiza cuatro enlaces:</p>
+<p><img alt="list_add en cuatro pasos: antes de la inserción prev y next son vecinos y new está suelto; luego next-&gt;prev = new, new-&gt;next = next, new-&gt;prev = prev y, por último, prev-&gt;next = new, con lo que new queda entre prev y next" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/list-add.svg"></p>
+<p>Con esto ya sabemos lo suficiente para entender la idea básica de la API de listas enlazadas del kernel. Vimos cómo se incrustan los nodos en otras estructuras, cómo recuperar la estructura contenedora con <code>list_entry</code> y cómo se inserta un nodo nuevo con <code>list_add</code>.</p>
+<p>El resto de las operaciones básicas sigue la misma idea. Hay auxiliares para eliminar nodos, agregarlos al final de una lista, moverlos entre listas y recorrer los elementos.</p>
+<p>No los revisaré uno por uno. Con los conceptos que ya conocemos, leer su implementación en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a> puede ser un buen ejercicio.</p>
+<h2 id="conclusion">Conclusión</h2>
+<p>El kernel Linux no guarda los objetos dentro de los nodos de sus listas, sino los nodos dentro de los objetos: un <code>struct list_head</code> con dos punteros, incrustado en la estructura que se quiere enlazar. <code>container_of</code> (y su alias <code>list_entry</code>) recupera la estructura contenedora restando el desplazamiento del miembro, y operaciones como <code>list_add</code> solo reajustan cuatro punteros. Esa combinación mantiene la implementación genérica y evita una reserva de memoria por cada nodo, y es la base de buena parte de las estructuras que aparecen en los subsistemas del kernel.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/">posted at 01:51</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/senote.html" rel="tag">SE.Note</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/linux.html" class="tags">Linux</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/data-structures.html" class="tags selected">data structures</a>
+                </div>
+            </article>
+
+            <div class="clear"></div>
+            <footer>
+                <p>
+                <a href="https://github.com/tcarwash/blue-penguin-dark">Blue Penguin Dark</a> Theme
+                &middot;
+                Powered by <a href="http://getpelican.com">Pelican</a>
+                &middot;
+                <a href="https://gcca.github.io/feeds/all.rss.xml" rel="alternate">Rss Feed</a>
+                </p>
+            </footer>
+        </div>
+        <div class="clear"></div>
+    </div>
+</body>
+</html>

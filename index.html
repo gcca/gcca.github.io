@@ -49,7 +49,750 @@
             </a></h1></div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Nov 14, 2026</h4>
+        <div id="content">            <h4 class="date">Nov 15, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/15/algunas-contradicciones/" rel="bookmark" title="Permanent Link to &quot;Algunas contradicciones&quot;">Algunas contradicciones</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/15/algunas-contradicciones/" aria-label="Algunas contradicciones">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/05.jpg" alt="" width="784" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>Hace unos días leía un comentario que preguntaba por el error en un argumento donde se suponía que</p>
+<div class="math">$$
+\frac{a}{b}=\frac{6}{4},
+$$</div>
+<p>de modo que</p>
+<div class="math">$$
+4a=6b.
+$$</div>
+<p>Realizando la transformación</p>
+<div class="math">$$
+14a-10a=21b-15b,
+$$</div>
+<p>transponiendo términos,</p>
+<div class="math">$$
+15b-10a=21b-14a,
+$$</div>
+<p>y sacando un factor común, obtenemos</p>
+<div class="math">$$
+5(3b-2a)=7(3b-2a).
+$$</div>
+<p>Simplificando el factor <span class="math">\(3b-2a\)</span>, resulta <span class="math">\(5=7\)</span>, lo que claramente es falso.</p>
+<p>Hay una cierta satisfacción filosófica en saber por qué las cosas funcionan, pero una persona pragmática puede argüir que uno solamente necesita saber cómo funcionan para resolver problemas de la vida real.</p>
+<p>La formación matemática que uno recibe en clases introductorias es, sin duda, la adecuada para comenzar a resolver muchos problemas de física, química, biología, economía, ciencias de la computación, finanzas, ingeniería o cualquier otra actividad a la que termine dedicándose. Uno puede aplicar reglas como la de la cadena, la de L’Hôpital o la integración por partes sin saber por qué funcionan o si tienen alguna excepción.</p>
+<p>Sin embargo, uno puede meterse en problemas si aplica las reglas sin conocer de dónde vienen y cuáles son los límites de su aplicabilidad. Déjenme dar algunos ejemplos en los cuales muchas de estas reglas familiares, aplicadas a ciegas y sin un conocimiento del análisis subyacente, pueden conducir al desastre.</p>
+<h2>Ejemplo 1. División por cero</h2>
+<p>Esto le debe resultar muy familiar: la ley de cancelación <span class="math">\(ac=bc\implies a=b\)</span> no funciona cuando <span class="math">\(c=0\)</span>. Por ejemplo, la identidad <span class="math">\(1\times0=2\times0\)</span> es cierta, pero si uno cancela ciegamente el <span class="math">\(0\)</span>, obtiene <span class="math">\(1=2\)</span>, lo cual es falso. En este caso fue obvio que se dividió por cero, pero en otros casos puede estar más oculto.</p>
+<h2>Ejemplo 2. Series divergentes</h2>
+<p>Probablemente ha visto series geométricas como la suma infinita</p>
+<div class="math">$$
+S=1+\frac12+\frac14+\frac18+\frac1{16}+\cdots.
+$$</div>
+<p>También habrá visto el siguiente truco para sumar estas series: si llamamos <span class="math">\(S\)</span> a la suma anterior y multiplicamos ambos lados por <span class="math">\(2\)</span>, obtenemos</p>
+<div class="math">$$
+2S=2+1+\frac12+\frac14+\frac18+\frac1{16}+\cdots=2+S
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=2\)</span>. Así, la serie suma <span class="math">\(2\)</span>. Sin embargo, si aplica el mismo truco a la serie</p>
+<div class="math">$$
+S=1+2+4+8+16+\cdots,
+$$</div>
+<p>obtiene un resultado sin sentido:</p>
+<div class="math">$$
+2S=2+4+8+16+\cdots=S-1\implies S=-1.
+$$</div>
+<p>Así, el mismo razonamiento que muestra que <span class="math">\(1+\frac12+\frac14+\frac18+\frac1{16}+\cdots=2\)</span> también da que <span class="math">\(1+2+4+8+\cdots=-1\)</span>. ¿Por qué es cierta la primera ecuación, pero no la segunda? Un ejemplo similar surge con la serie</p>
+<div class="math">$$
+S=1-1+1-1+1-1+\cdots;
+$$</div>
+<p>podemos escribir</p>
+<div class="math">$$
+S=1-(1-1+1-1+\cdots)=1-S
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=1/2\)</span>; o, en su lugar, podemos escribir</p>
+<div class="math">$$
+S=(1-1)+(1-1)+(1-1)+\cdots=0+0+\cdots
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=0\)</span>; o, en su lugar, podemos escribir</p>
+<div class="math">$$
+S=1+(-1+1)+(-1+1)+\cdots=1+0+0+\cdots
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=1\)</span>. ¿Cuál es la correcta?</p>
+<h2>Ejemplo 3. Sucesiones divergentes</h2>
+<p>Aquí hay una pequeña variación del ejemplo anterior. Sea <span class="math">\(x\)</span> un número real y sea <span class="math">\(L\)</span> el límite</p>
+<div class="math">$$
+L=\lim_{n\to\infty}x^n.
+$$</div>
+<p>Haciendo el cambio de variable <span class="math">\(n=m+1\)</span>, tenemos</p>
+<div class="math">$$
+L=\lim_{m+1\to\infty}x^{m+1}
+=\lim_{m+1\to\infty}x\cdot x^m
+=x\lim_{m+1\to\infty}x^m.
+$$</div>
+<p>Pero, si <span class="math">\(m+1\to\infty\)</span>, entonces <span class="math">\(m\to\infty\)</span>. Por lo tanto,</p>
+<div class="math">$$
+\lim_{m+1\to\infty}x^m
+=\lim_{m\to\infty}x^m
+=\lim_{n\to\infty}x^n=L,
+$$</div>
+<p>y así</p>
+<div class="math">$$
+xL=L.
+$$</div>
+<p>En este punto podríamos cancelar el factor <span class="math">\(L\)</span> y concluir que <span class="math">\(x=1\)</span> para un número real arbitrario <span class="math">\(x\)</span>, lo que es absurdo. Pero, ya que somos conscientes del problema de la división por cero, podríamos ser un poco más cuidadosos y concluir, en su lugar, que <span class="math">\(x=1\)</span> o <span class="math">\(L=0\)</span>. En particular, parece que hemos demostrado que</p>
+<div class="math">$$
+\lim_{n\to\infty}x^n=0\qquad\text{para todo }x\ne1.
+$$</div>
+<p>Pero esta conclusión es absurda si la aplicamos a ciertos valores de <span class="math">\(x\)</span>. Por ejemplo, para <span class="math">\(x=2\)</span> podríamos concluir que la sucesión <span class="math">\(1,2,4,8,\ldots\)</span> converge a cero, y para <span class="math">\(x=-1\)</span> podríamos concluir que la sucesión <span class="math">\(1,-1,1,-1,\ldots\)</span> también converge a cero. Estas conclusiones parecen absurdas; ¿cuál es el problema con el argumento anterior?</p>
+<h2>Ejemplo 4. Valores límite de funciones</h2>
+<p>Se empieza por la expresión <span class="math">\(\lim_{x\to\infty}\sin(x)\)</span> y se hace el cambio de variable <span class="math">\(x=y+\pi\)</span>. Recordando que <span class="math">\(\sin(y+\pi)=-\sin(y)\)</span>, se obtiene</p>
+<div class="math">$$
+\begin{aligned}
+\lim_{x\to\infty}\sin(x)
+&amp;=\lim_{y+\pi\to\infty}\sin(y+\pi)\\
+&amp;=\lim_{y\to\infty}(-\sin(y))\\
+&amp;=-\lim_{y\to\infty}\sin(y).
+\end{aligned}
+$$</div>
+<p>Ya que <span class="math">\(\lim_{x\to\infty}\sin(x)=\lim_{y\to\infty}\sin(y)\)</span>, tenemos que</p>
+<div class="math">$$
+\lim_{x\to\infty}\sin(x)=-\lim_{x\to\infty}\sin(x)
+$$</div>
+<p>y, por lo tanto,</p>
+<div class="math">$$
+\lim_{x\to\infty}\sin(x)=0.
+$$</div>
+<p>Si hacemos entonces el cambio de variable <span class="math">\(x=z+\pi/2\)</span> y recordamos que <span class="math">\(\sin(z+\pi/2)=\cos(z)\)</span>, concluimos que</p>
+<div class="math">$$
+\lim_{z\to\infty}\cos(z)=0.
+$$</div>
+<p>Elevando al cuadrado ambos límites y sumándolos, vemos que</p>
+<div class="math">$$
+\lim_{x\to\infty}\bigl(\sin^2(x)+\cos^2(x)\bigr)=0^2+0^2=0.
+$$</div>
+<p>Por otro lado, tenemos <span class="math">\(\sin^2(x)+\cos^2(x)=1\)</span> para todo <span class="math">\(x\)</span>. Así, hemos demostrado que ¡<span class="math">\(1=0\)</span>! ¿Cuál es la dificultad aquí?</p>
+<h2>Ejemplo 5. Intercambiando sumas</h2>
+<p>Consideremos el siguiente hecho aritmético. Tomemos cualquier matriz de números, por ejemplo,</p>
+<div class="math">$$
+\begin{pmatrix}
+1&amp;2&amp;3\\
+4&amp;5&amp;6\\
+7&amp;8&amp;9
+\end{pmatrix},
+$$</div>
+<p>y calculemos las sumas de todas las filas y las sumas de todas las columnas. Luego calculemos el total de las sumas de las filas y el total de las sumas de las columnas. En ambos casos obtendremos el mismo número: la suma de todas las entradas de la matriz.</p>
+<div class="math">$$
+\begin{array}{c@{\quad}c}
+\begin{pmatrix}
+\phantom{0}1&amp;\phantom{0}2&amp;\phantom{0}3\\
+\phantom{0}4&amp;\phantom{0}5&amp;\phantom{0}6\\
+\phantom{0}7&amp;\phantom{0}8&amp;\phantom{0}9
+\end{pmatrix}
+&amp;\begin{array}{r}6\\15\\24\end{array}\\
+\begin{array}{ccc}12&amp;15&amp;18\end{array}&amp;45
+\end{array}
+$$</div>
+<p>Para decirlo de otro modo, si desea sumar todos los elementos de una matriz <span class="math">\(m\times n\)</span>, no importa si suma primero las filas o las columnas: acabará con la misma respuesta. Antes de la invención de las computadoras, los contadores usaban este hecho para evitar errores al cuadrar sus libros. En notación de sumas, este hecho puede expresarse como</p>
+<div class="math">$$
+\sum_{i=1}^m\sum_{j=1}^n a_{ij}
+=\sum_{j=1}^n\sum_{i=1}^m a_{ij},
+$$</div>
+<p>si <span class="math">\(a_{ij}\)</span> denota el elemento de la <span class="math">\(i\)</span>-ésima fila y la <span class="math">\(j\)</span>-ésima columna de la matriz.</p>
+<p>Ahora, uno puede pensar que esta regla debe extenderse fácilmente a las series infinitas:</p>
+<div class="math">$$
+\sum_{i=1}^{\infty}\sum_{j=1}^{\infty}a_{ij}
+=\sum_{j=1}^{\infty}\sum_{i=1}^{\infty}a_{ij}.
+$$</div>
+<p>En efecto, si usa series infinitas con frecuencia en su trabajo, encontrará que es muy común intercambiar sumas como estas. Otra manera de expresar esta afirmación es que, en una matriz infinita, la suma de los totales por filas debería ser igual a la suma de los totales por columnas. Sin embargo, a pesar de lo razonable que parece, ¡es falsa en general! Aquí hay un contraejemplo:</p>
+<div class="math">$$
+\begin{pmatrix}
+1&amp;0&amp;0&amp;0&amp;0&amp;\cdots\\
+-1&amp;1&amp;0&amp;0&amp;0&amp;\cdots\\
+0&amp;-1&amp;1&amp;0&amp;0&amp;\cdots\\
+0&amp;0&amp;-1&amp;1&amp;0&amp;\cdots\\
+0&amp;0&amp;0&amp;-1&amp;1&amp;\cdots\\
+\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\ddots
+\end{pmatrix}
+$$</div>
+<p>Si suma todas las filas y luego suma sus totales, obtiene <span class="math">\(1\)</span>; pero, si suma todas las columnas y luego suma sus totales, obtiene ¡<span class="math">\(0\)</span>! ¿Significa esto que las sumas de series infinitas no deben intercambiarse y que se debería desconfiar de cualquier argumento que use un intercambio?</p>
+<h2>Ejemplo 6. Intercambiando integrales</h2>
+<p>El intercambio de integrales es un recurso tan común en matemáticas como el intercambio de sumas. Supongamos que uno quiere calcular el volumen bajo una superficie <span class="math">\(z=f(x,y)\)</span>, con <span class="math">\(f\ge0\)</span> para esta interpretación geométrica; ignoramos los límites de integración por el momento. Uno puede hacerlo mediante cortes paralelos al eje <span class="math">\(x\)</span>: para cada valor fijo de <span class="math">\(y\)</span>, calcula el área <span class="math">\(\int f(x,y)\,dx\)</span> y luego integra esa área respecto de <span class="math">\(y\)</span> para obtener el volumen</p>
+<div class="math">$$
+V=\int\!\int f(x,y)\,dx\,dy.
+$$</div>
+<p>O podría hacer cortes paralelos al eje <span class="math">\(y\)</span>: para cada <span class="math">\(x\)</span> fijo, calcula el área <span class="math">\(\int f(x,y)\,dy\)</span> y luego integra respecto de <span class="math">\(x\)</span> para obtener</p>
+<div class="math">$$
+V=\int\!\int f(x,y)\,dy\,dx.
+$$</div>
+<p>Esto parece sugerir que uno siempre debería poder intercambiar los signos integrales:</p>
+<div class="math">$$
+\int\!\int f(x,y)\,dx\,dy
+=\int\!\int f(x,y)\,dy\,dx.
+$$</div>
+<p>En efecto, las personas cambian el orden de integración todo el tiempo, porque a veces es más sencillo integrar primero respecto de una variable que de la otra. Sin embargo, así como a veces no es posible intercambiar sumas infinitas, también puede ser peligroso intercambiar integrales. Un ejemplo es el integrando <span class="math">\(e^{-xy}-xye^{-xy}\)</span>, que toma valores de ambos signos. Supongamos que creemos que podemos intercambiar las integrales:</p>
+<div class="math">$$
+\int_0^{\infty}\int_0^1(e^{-xy}-xye^{-xy})\,dy\,dx
+=\int_0^1\int_0^{\infty}(e^{-xy}-xye^{-xy})\,dx\,dy.
+$$</div>
+<p>Ya que</p>
+<div class="math">$$
+\int_0^1(e^{-xy}-xye^{-xy})\,dy
+=\left[ye^{-xy}\right]_{y=0}^{y=1}=e^{-x},
+$$</div>
+<p>el lado izquierdo es</p>
+<div class="math">$$
+\int_0^{\infty}e^{-x}\,dx
+=\left[-e^{-x}\right]_0^{\infty}=1.
+$$</div>
+<p>Pero, para cada <span class="math">\(y&gt;0\)</span>,</p>
+<div class="math">$$
+\int_0^{\infty}(e^{-xy}-xye^{-xy})\,dx
+=\left[xe^{-xy}\right]_{x=0}^{x=\infty}=0.
+$$</div>
+<p>En <span class="math">\(y=0\)</span>, esta integral interior diverge. Interpretando la integral exterior como impropia en ese extremo, el lado derecho es</p>
+<div class="math">$$
+\lim_{\delta\to0^+}\int_{\delta}^1 0\,dy=0.
+$$</div>
+<p>Sin duda, <span class="math">\(1\ne0\)</span>, por lo que existe un error en algún lugar; pero no se encuentra en los cálculos de cada integral, sino en el paso donde intercambiamos el orden de integración. Así que ¿cómo sabemos cuándo confiar en el intercambio de integrales?</p>
+<h2>Ejemplo 7. Intercambiando límites</h2>
+<p>Supongamos que empezamos por la siguiente igualdad, aparentemente convincente: <a id="limites-iterados"></a></p>
+<div class="math">$$
+\lim_{x\to0}\lim_{y\to0}\frac{x^2}{x^2+y^2}
+=\lim_{y\to0}\lim_{x\to0}\frac{x^2}{x^2+y^2}.
+\tag{1}
+$$</div>
+<p>Pero, para <span class="math">\(x\ne0\)</span>, tenemos</p>
+<div class="math">$$
+\lim_{y\to0}\frac{x^2}{x^2+y^2}
+=\frac{x^2}{x^2+0^2}=1,
+$$</div>
+<p>así que el lado izquierdo de <a href="#limites-iterados">(1)</a> es <span class="math">\(1\)</span>. Por otro lado, para <span class="math">\(y\ne0\)</span>, tenemos</p>
+<div class="math">$$
+\lim_{x\to0}\frac{x^2}{x^2+y^2}
+=\frac{0^2}{0^2+y^2}=0,
+$$</div>
+<p>así que el lado derecho de <a href="#limites-iterados">(1)</a> es <span class="math">\(0\)</span>. Ya que, evidentemente, <span class="math">\(1\)</span> no es igual a <span class="math">\(0\)</span>, esto sugiere que el intercambio de límites es poco fiable. Pero ¿existen otras circunstancias en las que sea legítimo?</p>
+<h2>Ejemplo 8. Intercambiando límites, otra vez</h2>
+<p>Consideremos otra igualdad aparentemente convincente:</p>
+<div class="math">$$
+\lim_{x\to1^-}\lim_{n\to\infty}x^n
+=\lim_{n\to\infty}\lim_{x\to1^-}x^n,
+$$</div>
+<p>donde la notación <span class="math">\(x\to1^-\)</span> significa que <span class="math">\(x\)</span> se aproxima a <span class="math">\(1\)</span> desde la izquierda. Cuando <span class="math">\(0&lt;x&lt;1\)</span>, tenemos <span class="math">\(\lim_{n\to\infty}x^n=0\)</span> y, por lo tanto, el lado izquierdo es cero. Pero también tenemos que <span class="math">\(\lim_{x\to1^-}x^n=1\)</span> para todo <span class="math">\(n\)</span> y, por lo tanto, el lado derecho es <span class="math">\(1\)</span>. ¿Demuestra esto que este tipo de intercambio de límites es siempre inseguro?</p>
+<h2>Ejemplo 9. Intercambiando límites e integrales</h2>
+<p>Para cualquier número real <span class="math">\(y\)</span>, tenemos</p>
+<div class="math">$$
+\begin{aligned}
+\int_{-\infty}^{\infty}\frac{1}{1+(x-y)^2}\,dx
+&amp;=\left[\arctan(x-y)\right]_{x=-\infty}^{x=\infty}\\
+&amp;=\frac{\pi}{2}-\left(-\frac{\pi}{2}\right)=\pi.
+\end{aligned}
+$$</div>
+<p>Tomando el límite cuando <span class="math">\(y\to\infty\)</span>, podríamos esperar que</p>
+<div class="math">$$
+\begin{aligned}
+\int_{-\infty}^{\infty}\lim_{y\to\infty}\frac{1}{1+(x-y)^2}\,dx
+&amp;=\lim_{y\to\infty}\int_{-\infty}^{\infty}\frac{1}{1+(x-y)^2}\,dx\\
+&amp;=\pi.
+\end{aligned}
+$$</div>
+<p>Pero, para cada <span class="math">\(x\)</span>, tenemos <span class="math">\(\lim_{y\to\infty}\frac{1}{1+(x-y)^2}=0\)</span>. Así, hemos concluido que <span class="math">\(0=\pi\)</span>. ¿Cuál es el problema con el argumento anterior? ¿Deberíamos abandonar la técnica, muy útil, de intercambiar límites e integrales?</p>
+<h2>Ejemplo 10. Intercambiando límites y derivadas</h2>
+<p>Observe que, si <span class="math">\(\epsilon&gt;0\)</span>, entonces</p>
+<div class="math">$$
+\frac{d}{dx}\left(\frac{x^3}{\epsilon^2+x^2}\right)
+=\frac{3x^2(\epsilon^2+x^2)-2x^4}{(\epsilon^2+x^2)^2}
+$$</div>
+<p>y, en particular,</p>
+<div class="math">$$
+\left.\frac{d}{dx}\left(\frac{x^3}{\epsilon^2+x^2}\right)\right|_{x=0}=0.
+$$</div>
+<p>Al tomar el límite cuando <span class="math">\(\epsilon\to0^+\)</span>, obtenemos la función</p>
+<div class="math">$$
+f_0(x):=\lim_{\epsilon\to0^+}\frac{x^3}{\epsilon^2+x^2}
+=\begin{cases}
+\dfrac{x^3}{x^2}=x,&amp;x\ne0,\\
+0,&amp;x=0.
+\end{cases}
+$$</div>
+<p>Si intercambiamos el límite y la derivada, podríamos esperar que</p>
+<div class="math">$$
+f_0'(0)
+=\lim_{\epsilon\to0^+}\left.\frac{d}{dx}\left(\frac{x^3}{\epsilon^2+x^2}\right)\right|_{x=0}
+=0.
+$$</div>
+<p>Pero <span class="math">\(f_0(x)=x\)</span> para todo <span class="math">\(x\)</span>, incluido el cero, así que el miembro izquierdo es <span class="math">\(f_0'(0)=1\)</span>. ¿Significa esto que siempre es ilegítimo intercambiar límites y derivadas?</p>
+<h2>Ejemplo 11. Intercambiando derivadas</h2>
+<p>Sea <span class="math">\(f\)</span> la función definida por</p>
+<div class="math">$$
+f(x,y):=\begin{cases}
+\dfrac{xy^3}{x^2+y^2},&amp;(x,y)\ne(0,0),\\
+0,&amp;(x,y)=(0,0).
+\end{cases}
+$$</div>
+<p>Una maniobra común en análisis es intercambiar las dos derivadas parciales; así, uno espera que</p>
+<div class="math">$$
+\frac{\partial^2 f}{\partial x\,\partial y}(0,0)
+=\frac{\partial^2 f}{\partial y\,\partial x}(0,0).
+$$</div>
+<p>Pero, por la regla del cociente, para <span class="math">\((x,y)\ne(0,0)\)</span> tenemos</p>
+<div class="math">$$
+\frac{\partial f}{\partial y}(x,y)
+=\frac{3xy^2}{x^2+y^2}-\frac{2xy^4}{(x^2+y^2)^2}
+$$</div>
+<p>y, en particular, para <span class="math">\(x\ne0\)</span>,</p>
+<div class="math">$$
+\frac{\partial f}{\partial y}(x,0)
+=\frac{0}{x^2}-\frac{0}{x^4}=0.
+$$</div>
+<p>En el origen, la definición de derivada parcial también da <span class="math">\(\frac{\partial f}{\partial y}(0,0)=0\)</span>. Así,</p>
+<div class="math">$$
+\frac{\partial^2 f}{\partial x\,\partial y}(0,0)=0.
+$$</div>
+<p>Por otro lado, nuevamente por la regla del cociente, para <span class="math">\((x,y)\ne(0,0)\)</span> tenemos</p>
+<div class="math">$$
+\frac{\partial f}{\partial x}(x,y)
+=\frac{y^3}{x^2+y^2}-\frac{2x^2y^3}{(x^2+y^2)^2}
+$$</div>
+<p>y, por lo tanto, para <span class="math">\(y\ne0\)</span>,</p>
+<div class="math">$$
+\frac{\partial f}{\partial x}(0,y)
+=\frac{y^3}{y^2}-\frac{0}{y^4}=y.
+$$</div>
+<p>En el origen, la definición da <span class="math">\(\frac{\partial f}{\partial x}(0,0)=0\)</span>. Así,</p>
+<div class="math">$$
+\frac{\partial^2 f}{\partial y\,\partial x}(0,0)=1.
+$$</div>
+<p>Ya que <span class="math">\(1\ne0\)</span>, vemos que el intercambio de derivadas no es válido en general. Pero ¿hay otras circunstancias en las que sea legítimo?</p>
+<p>Uno podría objetar que la expresión <span class="math">\(xy^3/(x^2+y^2)\)</span> no está definida en el origen. Sin embargo, al establecer <span class="math">\(f(0,0)=0\)</span>, como hemos hecho, la función es continua y diferenciable en todo punto y ambas primeras derivadas parciales son continuas en todo punto. Esto no implica que esas primeras derivadas sean, a su vez, diferenciables en el origen.</p>
+<hr>
+<p>Publicado originalmente el 24 de febrero de 2016 en <a href="https://cristhiangz.wordpress.com/2016/02/24/algunas-contradicciones/">∞ c·gz ∞</a>.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/15/algunas-contradicciones/">posted at 01:54</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathmisc.html" rel="tag">Math.Misc</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
+                </div>
+            </article>            <h4 class="date">Nov 15, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/" rel="bookmark" title="Permanent Link to &quot;Lista doblemente enlazada en el kernel Linux&quot;">Lista doblemente enlazada en el kernel Linux</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/" aria-label="Lista doblemente enlazada en el kernel Linux">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/04.jpg" alt="" width="888" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>El kernel Linux es una pieza de código enorme. Como todo kernel de un sistema operativo moderno, contiene planificadores que administran procesos y recursos, una pila de red, varios sistemas de archivos, miles de controladores de dispositivos y muchísimo más. Al mismo tiempo, tiene que gestionar todo esto de la forma más eficiente posible. Y la eficiencia no siempre consiste en escribir instrucciones más rápidas o algoritmos ingeniosos. Muy a menudo, como en cualquier aplicación de espacio de usuario, empieza con una pregunta mucho más fundamental: ¿cómo están organizados los datos?</p>
+<p>Como <a href="https://lore.kernel.org/git/Pine.LNX.4.64.0607270936200.4168@g5.osdl.org/">escribió</a> alguna vez Linus Torvalds:</p>
+<blockquote>
+<p>Los buenos programadores se preocupan por las estructuras de datos y sus relaciones.</p>
+<p>— Linus Torvalds, lista de correo de <em>git</em>, 27 de julio de 2006</p>
+</blockquote>
+<p>El kernel necesita llevar la cuenta de procesos, páginas de memoria, archivos, temporizadores, dispositivos, conexiones de red e innumerables objetos más. Algunos deben buscarse rápido, otros deben mantenerse siempre ordenados, otros se recorren con frecuencia y otros tienen que insertarse o eliminarse con el menor costo posible. Elegir una representación adecuada para estos datos puede influir directamente en el rendimiento y en el consumo de memoria.</p>
+<p>Esto es especialmente importante en un software como el kernel de un sistema operativo. Idealmente, debería ser casi invisible para el usuario y añadir la menor sobrecarga posible.</p>
+<p>Si alguna vez has leído el código fuente del kernel, probablemente notaste que listas enlazadas, árboles, colas, mapas de bits, tablas hash y muchas otras estructuras de datos aparecen en casi todos sus subsistemas. Algunas resultan familiares por los libros clásicos de ciencias de la computación; otras se adaptaron a los requisitos particulares y al estilo de programación del kernel.</p>
+<p>En este artículo veremos uno de estos bloques básicos, para reconocerlo cuando exploremos los principales subsistemas del kernel.</p>
+<h2 id="listas-enlazadas">Listas enlazadas</h2>
+<p>La primera estructura de datos que veremos es la <a href="https://es.wikipedia.org/wiki/Lista_enlazada">lista enlazada</a>.</p>
+<p>Me parece una buena elección para empezar porque, por un lado, es relativamente sencilla y, por otro, es omnipresente. Decir que es omnipresente no es exagerar: encontramos listas enlazadas en muchas partes distintas del kernel. Para tener una idea aproximada de cuán común es:</p>
+<div class="highlight"><pre><span></span><code>rg<span class="w"> </span>-w<span class="w"> </span><span class="s1">&#39;struct list_head&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="m">17143</span>
+</code></pre></div>
+
+<p>¡Más de diecisiete mil apariciones! Sin duda vale la pena entender cómo se implementa y se usa la lista enlazada en el kernel.</p>
+<p>Uno de los usos principales de esta estructura es organizar distintos tipos de objetos en secuencias. Pero antes de entrar en la implementación del kernel, repasemos brevemente la estructura en general.</p>
+<p>Según <a href="https://es.wikipedia.org/wiki/Lista_enlazada">Wikipedia</a>:</p>
+<blockquote>
+<p>En ciencias de la computación, una <em>lista enlazada</em> es una estructura de datos lineal compuesta por una secuencia de nodos. Cada nodo almacena uno o más valores de datos y una o varias referencias —también llamadas <em>enlaces</em> o <em>punteros</em>— hacia otros nodos de la lista.</p>
+<p>— <a href="https://es.wikipedia.org/wiki/Lista_enlazada">Wikipedia, «Lista enlazada»</a></p>
+</blockquote>
+<p>En otras palabras, a diferencia de un <a href="https://es.wikipedia.org/wiki/Vector_(inform%C3%A1tica)">arreglo</a>, los elementos de una lista enlazada no tienen que ocupar posiciones contiguas en memoria. La relación entre ellos se representa explícitamente mediante enlaces. En el caso más simple, cada nodo contiene un único enlace al nodo siguiente:</p>
+<p><img alt="Lista simplemente enlazada: el puntero head apunta al primer nodo; cada nodo tiene un campo datos (d0, d1, d2) y un campo next que apunta al nodo siguiente, y el next del último nodo es NULL" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/singly-linked-list.svg"></p>
+<p>Una lista así se llama <strong>lista simplemente enlazada</strong> y solo puede recorrerse en un sentido: partimos de <code>head</code> y seguimos el puntero <code>next</code> de cada nodo hasta llegar al final. Su definición y la implementación de sus operaciones básicas son bastante simples. Si has leído, por ejemplo, <a href="https://www.amazon.com/Algorithms-4th-Robert-Sedgewick/dp/032157351X">Algorithms</a> de Robert Sedgewick y Kevin Wayne, conoces la representación clásica:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Node</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Item</span><span class="w"> </span><span class="n">item</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Node</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Cada <code>Node</code> guarda un elemento y una referencia al nodo siguiente. Por ejemplo, si la lista contiene tres elementos, el primer nodo apunta al segundo y el segundo al tercero. El último nodo no apunta a nada: su enlace vale <code>null</code>, y así se determina el final de la lista.</p>
+<p>Agregar un elemento nuevo no exige mover los elementos existentes en memoria: basta con crear un nodo y ajustar los enlaces correspondientes. Para eliminar un elemento, cambiamos el enlace del nodo anterior para que se salte el nodo eliminado.</p>
+<p>Muchas veces esto no es suficiente. Algunas operaciones necesitan recorrer la lista hacia atrás. En esos casos, cada nodo recibe un segundo enlace que apunta al nodo anterior. Esta estructura se llama <strong>lista doblemente enlazada</strong> y, esquemáticamente, se ve así:</p>
+<p><img alt="Lista doblemente enlazada: cada nodo tiene los campos prev, datos y next; los next apuntan al nodo siguiente y los prev al anterior, el prev del primer nodo y el next del último son NULL" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/doubly-linked-list.svg"></p>
+<blockquote>
+<p><strong>Nota:</strong> no incluyo aquí ejemplos de implementación de listas enlazadas. Si nunca has implementado una, puede ser un buen ejercicio.</p>
+</blockquote>
+<h2 id="listas-en-el-kernel">Listas enlazadas en el kernel Linux</h2>
+<p>Una vez repasada la idea básica, veamos cómo las implementa el kernel Linux.</p>
+<p>Antes de ver esa implementación, esperaba algo muy parecido a lo anterior: una estructura simple con un puntero o espacio para los datos y una referencia a otro nodo. ¡Resultó ser bastante distinta!</p>
+<p>El kernel implementa las llamadas <strong>listas enlazadas intrusivas</strong>. En ellas no hay un puntero a los datos. El nodo de la lista contiene solo dos punteros: uno al elemento siguiente y otro al anterior. Ese nodo se incrusta dentro de la estructura que queremos guardar en la lista, y los enlaces conectan estos nodos incrustados:</p>
+<p><img alt="Lista intrusiva: tres estructuras struct foo, cada una con sus campos de datos y un nodo incrustado con prev y next; los enlaces van de nodo a nodo, no de estructura a estructura" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/intrusive-list.svg"></p>
+<p>Sí, al principio puede parecer muy raro. ¿Cómo puede una estructura así representar una lista de procesos, dispositivos, archivos o cualquier otro objeto del kernel si no contiene los objetos? La respuesta es justamente una de las ideas características de la implementación de Linux: en lugar de guardar el objeto dentro del nodo de la lista, se guarda el nodo de la lista dentro del objeto.</p>
+<p>La implementación de las listas enlazadas del kernel está en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a>. La estructura en sí refleja la idea que acabamos de describir:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">prev</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>La estructura <code>list_head</code> contiene solo dos punteros: al nodo siguiente y al anterior. ¿Cómo se usa, entonces? Se incrusta un <code>list_head</code> directamente en la estructura cuyos objetos queremos mantener en una lista. Por ejemplo, la estructura que define un proceso tiene, entre otros campos:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">task_struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="n">tasks</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>El campo <code>tasks</code> sirve para enlazar objetos <code>task_struct</code> entre sí. Así, en lugar de reservar un nodo de lista aparte que contenga un puntero a un <code>task_struct</code>, cada <code>task_struct</code> contiene su propio nodo. Lo interesante es que los punteros <code>next</code> y <code>prev</code> no apuntan directamente a otro <code>task_struct</code>, sino al miembro <code>tasks</code> incrustado en los <code>task_struct</code> vecinos. Esquemáticamente:</p>
+<p><img alt="Lista de task_struct: tres estructuras struct task_struct con otros campos arriba y abajo y el miembro tasks en medio; los punteros prev y next de cada tasks apuntan al miembro tasks de las estructuras vecinas" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/task-struct-list.svg"></p>
+<p>Este enfoque nos da una lista enlazada sin reservar memoria aparte para cada nodo y sin que <code>list_head</code> tenga que saber nada de las estructuras que enlaza.</p>
+<p>Suena muy bien, pero la primera vez que uno lo ve surge otra pregunta: si al recorrer la lista solo tenemos un puntero a <code>list_head</code>, ¿cómo volvemos al <code>task_struct</code> que lo contiene? La respuesta se apoya en otro auxiliar muy común del kernel: la macro <code>container_of</code>. Esta macro nos da un puntero a la estructura que nos interesa; en nuestro caso, a partir de un puntero al miembro <code>tasks</code> obtenemos el <code>task_struct</code> que lo contiene.</p>
+<p>La idea es bastante simple. Si conocemos la dirección de un nodo de lista incrustado en una estructura, el tipo de la estructura y el nombre del campo que representa el nodo, podemos calcular la dirección de la propia estructura. Aquí tenemos un puntero al miembro <code>tasks</code>, que es un <code>list_head</code>, y sabemos que ese miembro pertenece a la estructura <code>task_struct</code>. Con esa información, el kernel obtiene la dirección del <code>task_struct</code>.</p>
+<p>Esto es exactamente lo que permite que la implementación de las listas siga siendo genérica: <code>list_head</code> no sabe nada de <code>task_struct</code>, y aun así el código que usa la lista siempre puede volver al objeto que contiene el nodo.</p>
+<p>Entendida la idea básica, veamos la implementación de <code>container_of</code>. La definición de la macro está en <a href="https://github.com/torvalds/linux/blob/master/include/linux/container_of.h">include/linux/container_of.h</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * container_of - cast a member of a structure out to the containing structure</span>
+<span class="cm"> * @ptr:    the pointer to the member.</span>
+<span class="cm"> * @type:   the type of the container struct this is embedded in.</span>
+<span class="cm"> * @member: the name of the member within the struct.</span>
+<span class="cm"> *</span>
+<span class="cm"> * WARNING: any const qualifier of @ptr is lost.</span>
+<span class="cm"> * Do not use container_of() in new code.</span>
+<span class="cm"> */</span>
+<span class="cp">#define container_of(ptr, type, member) ({              \</span>
+<span class="cp">    static_assert(__same_type(*(ptr), typeof_member(type, member)) || \</span>
+<span class="cp">              __same_type(*(ptr), void),            \</span>
+<span class="cp">              &quot;pointer type mismatch in container_of()&quot;);   \</span>
+<span class="cp">    (type *)((void *)(ptr) - offsetof(type, member)); })</span>
+</code></pre></div>
+
+<p>La macro recibe tres argumentos:</p>
+<ul>
+<li>el puntero al nodo de la lista;</li>
+<li>el tipo de la estructura que contiene el nodo;</li>
+<li>el nombre del campo que representa el nodo.</li>
+</ul>
+<p>En el ejemplo anterior, estos argumentos corresponderían a:</p>
+<ul>
+<li>el puntero al campo <code>tasks</code>;</li>
+<li><code>struct task_struct</code>, como tipo que contiene el nodo;</li>
+<li><code>tasks</code>, como nombre del campo que representa el nodo.</li>
+</ul>
+<p>La primera línea del cuerpo de la macro no tiene que ver con el cálculo de la dirección: solo hace una comprobación de tipos en tiempo de compilación para asegurar que el puntero al nodo tenga el tipo esperado.</p>
+<p>La segunda línea hace el trabajo real. Con la macro <a href="https://en.cppreference.com/c/types/offsetof">offsetof</a> calcula el desplazamiento desde el inicio de la estructura hasta el campo que define el nodo. Conocido ese desplazamiento, lo restamos de la dirección del nodo y obtenemos la dirección de la estructura que lo contiene.</p>
+<p><img alt="container_of: dentro de un struct task_struct, el miembro tasks está 0x390 bytes después del inicio de la estructura; restando ese desplazamiento a ptr (0xFFFF888100A2C390) se obtiene la dirección de la estructura, 0xFFFF888100A2C000" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/container-of.svg"></p>
+<p>¡Y eso es básicamente todo! En abstracto, <code>container_of</code> nos da la dirección de una estructura cuando conocemos la dirección de uno de sus campos. Llevado al contexto de las listas enlazadas, no es más que obtener la entrada real de la lista a partir de un puntero a su nodo incrustado:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * list_entry - get the struct for this entry</span>
+<span class="cm"> * @ptr:    the &amp;struct list_head pointer.</span>
+<span class="cm"> * @type:   the type of the struct this is embedded in.</span>
+<span class="cm"> * @member: the name of the list_head within the struct.</span>
+<span class="cm"> */</span>
+<span class="cp">#define list_entry(ptr, type, member) \</span>
+<span class="cp">    container_of(ptr, type, member)</span>
+</code></pre></div>
+
+<h2 id="operaciones">Operaciones sobre listas</h2>
+<p>En la sección anterior conocimos la estructura básica de las listas enlazadas del kernel. Ahora veamos las operaciones para agregar, eliminar y actualizar elementos.</p>
+<p>Simplemente enumerar la API existente sería bastante aburrido. Es mucho más interesante ver un ejemplo real de uso: algún mecanismo que probablemente hayas visto al usar Linux, pero sin pensar en lo que ocurre por detrás.</p>
+<p>El kernel usa listas en muchísimos lugares. Tomemos, por ejemplo, los <a href="https://es.wikipedia.org/wiki/Archivo_de_dispositivo">dispositivos de caracteres</a> misceláneos (<em>misc</em>).</p>
+<p>Cada dispositivo de caracteres se identifica con un par de números: el número mayor (<em>major</em>) y el menor (<em>minor</em>). El mayor suele identificar al controlador o a un grupo de dispositivos relacionados, y el menor, a un dispositivo concreto que maneja ese controlador.</p>
+<p>El kernel ofrece una API especial que permite a un controlador registrar un dispositivo de caracteres sin asignarle un número mayor propio. Todos esos dispositivos comparten el mismo número mayor y cada uno recibe su propio número menor. Ese número mayor es:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define MISC_MAJOR      10</span>
+</code></pre></div>
+
+<p>Podemos ver los dispositivos misceláneos registrados con el siguiente comando:</p>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-l<span class="w"> </span>/dev<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5 == &quot;10,&quot; { print $10 }&#39;</span>
+
+acpi_thermal_rel
+autofs
+cpu_dma_latency
+cuse
+fuse
+hpet
+hwrng
+io_uring_mock
+kvm
+loop-control
+mcelog
+nvram
+rfkill
+snapshot
+tpm0
+udmabuf
+uhid
+userfaultfd
+vga_arbiter
+vhost-net
+vhost-vsock
+</code></pre></div>
+
+<p>Desde el espacio de usuario, los dispositivos misceláneos se ven como dispositivos de caracteres normales con el mismo número mayor y distintos números menores. Lo que nos interesa es cómo el kernel lleva internamente la cuenta de todos ellos.</p>
+<p>Cada dispositivo misceláneo se representa con una estructura <code>miscdevice</code>, definida en <a href="https://github.com/torvalds/linux/blob/master/include/linux/miscdevice.h">include/linux/miscdevice.h</a>. Entre otros, esta estructura tiene un campo llamado <code>list</code>, que permite al dispositivo formar parte de la lista enlazada que mantiene el subsistema misc:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">miscdevice</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minor</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">file_operations</span><span class="w"> </span><span class="o">*</span><span class="n">fops</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="n">list</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">parent</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">this_device</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">attribute_group</span><span class="w"> </span><span class="o">**</span><span class="n">groups</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">nodename</span><span class="p">;</span>
+<span class="w">    </span><span class="n">umode_t</span><span class="w"> </span><span class="n">mode</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>Ya sabemos cómo usará el kernel el campo <code>list</code>: cada dispositivo registrado contiene su propio nodo, y todos están enlazados en una única lista con la que el kernel les sigue la pista. Hasta aquí debería quedar claro cómo se manejan y enlazan los nodos. Pero ¿cómo accedemos a la lista en sí? Necesitamos una referencia a su cabeza:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">LIST_HEAD</span><span class="p">(</span><span class="n">misc_list</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Siguiendo las definiciones de las macros <code>LIST_HEAD</code> y <code>LIST_HEAD_INIT</code> en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a>, esto se expande a una inicialización de estructura C corriente:</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="n">misc_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">&amp;</span><span class="p">(</span><span class="n">misc_list</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="p">(</span><span class="n">misc_list</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>Los dos valores del inicializador son los campos <code>next</code> y <code>prev</code> de la estructura <code>list_head</code>. Como al principio la lista está vacía, no hay otros nodos a los que apuntar, así que ambos apuntan a la propia cabeza.</p>
+<p>Cuando el kernel registra un dispositivo, inicializa la estructura <code>miscdevice</code> correspondiente y la agrega a la lista con:</p>
+<div class="highlight"><pre><span></span><code><span class="n">list_add</span><span class="p">(</span><span class="o">&amp;</span><span class="n">misc</span><span class="o">-&gt;</span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">misc_list</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Esta función está definida en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a> y luce así:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">__always_inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">list_add</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">new</span><span class="p">,</span>
+<span class="w">                     </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">head</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">__list_add</span><span class="p">(</span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Simplemente delega el trabajo real en el auxiliar interno <code>__list_add</code>, implementado así:</p>
+<div class="highlight"><pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="n">__always_inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__list_add</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">new</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">prev</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">struct</span><span class="w"> </span><span class="nc">list_head</span><span class="w"> </span><span class="o">*</span><span class="n">next</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">__list_add_valid</span><span class="p">(</span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">prev</span><span class="p">,</span><span class="w"> </span><span class="n">next</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">next</span><span class="o">-&gt;</span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">;</span>
+<span class="w">    </span><span class="n">new</span><span class="o">-&gt;</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="w">    </span><span class="n">new</span><span class="o">-&gt;</span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
+<span class="w">    </span><span class="n">WRITE_ONCE</span><span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">,</span><span class="w"> </span><span class="n">new</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Si alguna vez implementaste una lista enlazada, esto debería resultarte familiar. Para insertar un nodo nuevo entre dos nodos existentes, el kernel actualiza cuatro enlaces:</p>
+<p><img alt="list_add en cuatro pasos: antes de la inserción prev y next son vecinos y new está suelto; luego next-&gt;prev = new, new-&gt;next = next, new-&gt;prev = prev y, por último, prev-&gt;next = new, con lo que new queda entre prev y next" src="https://gcca.github.io/static/year=2026/month=11/day=15/linux_lista_doblemente_enlazada/list-add.svg"></p>
+<p>Con esto ya sabemos lo suficiente para entender la idea básica de la API de listas enlazadas del kernel. Vimos cómo se incrustan los nodos en otras estructuras, cómo recuperar la estructura contenedora con <code>list_entry</code> y cómo se inserta un nodo nuevo con <code>list_add</code>.</p>
+<p>El resto de las operaciones básicas sigue la misma idea. Hay auxiliares para eliminar nodos, agregarlos al final de una lista, moverlos entre listas y recorrer los elementos.</p>
+<p>No los revisaré uno por uno. Con los conceptos que ya conocemos, leer su implementación en <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">include/linux/list.h</a> puede ser un buen ejercicio.</p>
+<h2 id="conclusion">Conclusión</h2>
+<p>El kernel Linux no guarda los objetos dentro de los nodos de sus listas, sino los nodos dentro de los objetos: un <code>struct list_head</code> con dos punteros, incrustado en la estructura que se quiere enlazar. <code>container_of</code> (y su alias <code>list_entry</code>) recupera la estructura contenedora restando el desplazamiento del miembro, y operaciones como <code>list_add</code> solo reajustan cuatro punteros. Esa combinación mantiene la implementación genérica y evita una reserva de memoria por cada nodo, y es la base de buena parte de las estructuras que aparecen en los subsistemas del kernel.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/15/linux-lista-doblemente-enlazada/">posted at 01:51</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/senote.html" rel="tag">SE.Note</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/linux.html" class="tags">Linux</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C</a>
+                    &nbsp;<a href="https://gcca.github.io/tag/data-structures.html" class="tags">data structures</a>
+                </div>
+            </article>            <h4 class="date">Nov 15, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/" rel="bookmark" title="Permanent Link to &quot;La media no dice nada&quot;">La media no dice nada</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/" aria-label="La media no dice nada">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/05.jpg" alt="" width="784" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>Imagina un panel de monitoreo con cuatro servicios. Al lado de cada nombre hay un único número: <strong>latencia media, 120 ms</strong>. Los cuatro tienen el mismo color verde, nadie recibe alertas y el informe semanal dice que «todo está estable».</p>
+<p>Sin embargo, en uno de ellos casi todas las peticiones tardan lo mismo; en otro, la mitad de los usuarios recibe respuesta en menos de 90 ms mientras que uno de cada cien espera más de medio segundo; en un tercero hay dos grupos de peticiones que no se parecen en nada, y en el cuarto, de vez en cuando, alguien espera varios segundos. El número es idéntico; la experiencia, no.</p>
+<p>En este artículo explico por qué la media es un resumen tan pobre para medir rendimiento, qué propiedades matemáticas la hacen frágil y qué conviene mirar en su lugar.</p>
+<h2 id="mismo-promedio">Mismo promedio, cuatro historias</h2>
+<p>Para el ejemplo generé 20 000 latencias sintéticas por servicio y las reescalé para que la media de cada uno fuera exactamente 120 ms:</p>
+<ul>
+<li><strong>A, simétrico:</strong> distribución normal con poca dispersión. Es lo que uno imagina cuando lee «120 ms».</li>
+<li><strong>B, sesgado:</strong> distribución log-normal, típica de tiempos de respuesta: muchas peticiones rápidas y una cola larga a la derecha.</li>
+<li><strong>C, bimodal:</strong> el 70 % de las peticiones se resuelve desde una caché (~50 ms) y el 30 % restante va al almacenamiento (~280 ms). Ninguna petición tarda 120 ms.</li>
+<li><strong>D, cola pesada:</strong> una distribución de Pareto desplazada. La mayoría es rápida, pero los valores extremos son mucho más grandes que en B.</li>
+</ul>
+<p><img alt="Cuatro histogramas de latencia con la misma media de 120 ms: uno simétrico y estrecho, uno sesgado a la derecha, uno con dos picos en 50 y 280 ms, y uno con cola larga; en cada uno se marcan la media y la mediana" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/media-igual-histogramas.svg"></p>
+<p>La línea discontinua (la media) está en el mismo lugar en los cuatro paneles. La línea punteada (la mediana) no. En A coinciden; en B y D la mediana queda muy a la izquierda, porque la cola arrastra la media hacia la derecha; en C la media cae justo en el hueco entre los dos picos, donde no hay ninguna petición. <strong>La media puede describir un valor que nunca ocurre.</strong></p>
+<h2 id="que-resume-la-media">Qué resume realmente la media</h2>
+<p>Dada una muestra <span class="math">\(x_1, \dots, x_n\)</span>, la media es</p>
+<div class="math">$$
+\bar x = \frac{1}{n}\sum_{i=1}^{n} x_i.
+$$</div>
+<p>Una forma útil de entenderla es como la solución de un problema de optimización. Si buscamos el número <span class="math">\(c\)</span> que minimiza el error cuadrático total,</p>
+<div class="math">$$
+S_2(c) = \sum_{i=1}^{n} (x_i - c)^2,
+$$</div>
+<p>derivamos e igualamos a cero:</p>
+<div class="math">$$
+S_2'(c) = -2\sum_{i=1}^{n} (x_i - c) = 0 \quad\Longrightarrow\quad c = \frac{1}{n}\sum_{i=1}^{n} x_i = \bar x.
+$$</div>
+<p>En cambio, si minimizamos el error absoluto,</p>
+<div class="math">$$
+S_1(c) = \sum_{i=1}^{n} |x_i - c|,
+$$</div>
+<p>la (sub)derivada es <span class="math">\(S_1'(c) = \#\{x_i &lt; c\} - \#\{x_i &gt; c\}\)</span>, que se anula cuando hay tantos puntos a la izquierda de <span class="math">\(c\)</span> como a la derecha. Ese punto es la <strong>mediana</strong>.</p>
+<p>La diferencia está en el cuadrado. Un punto alejado a distancia <span class="math">\(d\)</span> aporta <span class="math">\(d^2\)</span> a <span class="math">\(S_2\)</span> pero solo <span class="math">\(d\)</span> a <span class="math">\(S_1\)</span>, de modo que la media «paga» muchísimo por acercarse a los valores extremos. Por eso la cola de B y D desplaza la media y apenas mueve la mediana.</p>
+<p>Un ejemplo concreto: 1000 peticiones que tardan 100 ms cada una tienen media y mediana de 100 ms. Si una sola de ellas cae en un <em>timeout</em> de 30 s, la mediana sigue en 100 ms, pero la media sube a</p>
+<div class="math">$$
+\frac{999 \cdot 100 + 30\,000}{1000} = 129.9 \text{ ms}.
+$$</div>
+<p>Una petición entre mil movió la media casi un 30 %. En estadística robusta esto se mide con el <strong>punto de ruptura</strong>: la fracción de datos que hay que corromper para llevar el estimador a un valor arbitrario. Para la media es <span class="math">\(1/n\)</span>, que tiende a 0; para la mediana es 50 %.</p>
+<p>La fragilidad también se nota al estimar con muestras pequeñas. Tomé 5000 muestras de 200 peticiones del servicio D y calculé en cada una la media y la mediana, divididas por su valor real:</p>
+<p><img alt="Dos histogramas de las estimaciones relativas al valor real: la mediana se concentra entre 0.9 y 1.13, mientras que la media se dispersa entre 0.85 y 1.23 y tiene una cola larga hacia la derecha" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/bootstrap-media-mediana.svg"></p>
+<p>Con las mismas 200 peticiones, el 95 % de las medias cae entre 0.85 y 1.23 veces su valor real; el 95 % de las medianas, entre 0.90 y 1.13. El coeficiente de variación de la media (11 %) casi duplica el de la mediana (6 %), y la media tiene una cola a la derecha: cada cierto tiempo, una muestra que incluye un valor extremo produce un promedio muy inflado. Comparar dos promedios semanales de un servicio así es, en buena parte, comparar ruido.</p>
+<h2 id="percentiles">Percentiles y la cola</h2>
+<p>Si la media no sirve, ¿qué número usar? La respuesta honesta es que ninguno basta, pero los <strong>percentiles</strong> se acercan mucho más. El percentil <span class="math">\(q\)</span> es el valor por debajo del cual queda una fracción <span class="math">\(q\)</span> de las observaciones. Formalmente, a partir de la función de distribución empírica</p>
+<div class="math">$$
+\hat F_n(x) = \frac{1}{n}\,\#\{\, i : x_i \le x \,\},
+$$</div>
+<p>se define</p>
+<div class="math">$$
+Q(q) = \inf\{\, x : \hat F_n(x) \ge q \,\}.
+$$</div>
+<p>La mediana es <span class="math">\(Q(0.5)\)</span>, o <span class="math">\(p_{50}\)</span>. Para los cuatro servicios:</p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th style="text-align: right;">media</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p95</th>
+<th style="text-align: right;">p99</th>
+<th style="text-align: right;">p99.9</th>
+<th style="text-align: right;">máximo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A · simétrico</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">165</td>
+<td style="text-align: right;">176</td>
+</tr>
+<tr>
+<td>B · sesgado</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">323</td>
+<td style="text-align: right;">563</td>
+<td style="text-align: right;">1019</td>
+<td style="text-align: right;">2882</td>
+</tr>
+<tr>
+<td>C · bimodal</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">310</td>
+<td style="text-align: right;">335</td>
+<td style="text-align: right;">362</td>
+<td style="text-align: right;">390</td>
+</tr>
+<tr>
+<td>D · cola pesada</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">322</td>
+<td style="text-align: right;">674</td>
+<td style="text-align: right;">1689</td>
+<td style="text-align: right;">7702</td>
+</tr>
+</tbody>
+</table>
+<p><em>(latencias en ms)</em></p>
+<p>Ahora sí aparecen las diferencias. En A el p99 apenas supera la media; en D es más de cinco veces la media y el p99.9 pasa de 1.6 s. B y D tienen p95 casi iguales, pero se separan en la cola extrema. C tiene la mediana más baja de todos y, aun así, casi un tercio de sus peticiones tarda más del doble de la media.</p>
+<p>La herramienta que muestra todos los percentiles a la vez es la propia <span class="math">\(\hat F_n\)</span>, la <strong>ECDF</strong> (<em>empirical cumulative distribution function</em>). Cada percentil se lee cortando la curva con una recta horizontal:</p>
+<p><img alt="Funciones de distribución empírica de los cuatro servicios, con líneas horizontales en p50, p95 y p99; la curva del servicio A sube de golpe cerca de 120 ms, la del C tiene un escalón plano entre 70 y 220 ms, y las de B y D se acercan a 1 muy lentamente" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/ecdf-percentiles.svg"></p>
+<p>La ECDF tiene ventajas sobre el histograma: no depende de elegir el ancho de las barras, no suaviza nada y permite comparar varias distribuciones en un mismo gráfico. Algunas lecturas rápidas:</p>
+<ul>
+<li><strong>Una subida vertical</strong> significa que muchas peticiones tardan casi lo mismo (A).</li>
+<li><strong>Un tramo plano</strong> es un hueco: no hay peticiones con esas latencias (C, entre 70 y 220 ms). Casi siempre indica dos caminos distintos en el código.</li>
+<li><strong>Una curva que tarda en llegar a 1</strong> es una cola larga (B y D). Si dos curvas se cruzan, ninguna distribución es «mejor» en todos los percentiles.</li>
+</ul>
+<h2 id="comparar-versiones">Comparar dos versiones</h2>
+<p>El caso donde la media hace más daño es la comparación antes/después. Supongamos un despliegue que acelera el camino normal, pero hace que el 3 % de las peticiones caiga en un camino nuevo y lento. Con 8000 peticiones por versión:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">media</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>antes</td>
+<td style="text-align: right;">120 ms</td>
+<td style="text-align: right;">105 ms</td>
+<td style="text-align: right;">340 ms</td>
+</tr>
+<tr>
+<td>después</td>
+<td style="text-align: right;">101 ms</td>
+<td style="text-align: right;">80 ms</td>
+<td style="text-align: right;">646 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Si solo se mira la media, el despliegue fue un éxito: <strong>19 ms menos</strong>. Pero el p99 casi se duplicó.</p>
+<p>Para no depender de un par de percentiles elegidos a mano, conviene graficar la diferencia percentil a percentil, <span class="math">\(\Delta(q) = Q_{\text{después}}(q) - Q_{\text{antes}}(q)\)</span>, para todo <span class="math">\(q\)</span>. Para saber qué parte de esa curva es ruido, repetí el cálculo sobre 400 remuestreos <em>bootstrap</em> (muestras con reemplazo del mismo tamaño) y sombreé el intervalo que contiene el 95 % central de los resultados:</p>
+<p><img alt="Diferencia de latencia entre la versión nueva y la anterior para cada percentil: negativa y decreciente hasta el percentil 96, con un mínimo cercano a −60 ms, y luego un salto brusco hasta unos +300 ms en el percentil 99; una línea horizontal marca la diferencia de medias de −19 ms" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/diferencia-cuantiles.svg"></p>
+<p>La gráfica cuenta toda la historia en un vistazo: hasta el percentil 96 la versión nueva es más rápida, y la mejora crece con el percentil; por encima del 97, es cientos de milisegundos más lenta, y la banda deja claro que no es ruido. La diferencia de medias (−19 ms) es un promedio ponderado de ambos efectos que no describe a ningún usuario real.</p>
+<h2 id="fan-out">Fan-out: por qué la cola es lo que importa</h2>
+<p>Podría pensarse que el p99 es un detalle: solo afecta a una petición de cada cien. El problema es que, en un sistema distribuido, una petición del usuario rara vez toca un único servicio. Una página que se arma consultando <span class="math">\(n\)</span> servicios en paralelo tarda tanto como <strong>el más lento</strong> de ellos.</p>
+<p>Si cada servicio responde lento (por encima de su p99) con probabilidad <span class="math">\(p = 0.01\)</span>, y suponemos independencia, la probabilidad de que la petición completa sea lenta es</p>
+<div class="math">$$
+P(\text{lenta}) = 1 - P(\text{ninguno lento}) = 1 - (1 - p)^n.
+$$</div>
+<p>Con <span class="math">\(n = 10\)</span>, eso da <span class="math">\(1 - 0.99^{10} \approx 9.6\,\%\)</span>. Con <span class="math">\(n = 100\)</span>, <span class="math">\(1 - 0.99^{100} \approx 63\,\%\)</span>: el p99 de cada componente se convierte en la mediana del sistema.</p>
+<p><img alt="Probabilidad de que una petición sea lenta en función del número de servicios consultados: para p = 0.01 la curva sube a 10 % con 10 servicios y a 63 % con 100; para p = 0.001 crece mucho más despacio y llega a 18 % con 200" src="https://gcca.github.io/static/year=2026/month=11/day=15/la_media_no_dice_nada/fan-out.svg"></p>
+<p>Para <span class="math">\(p\)</span> pequeño, <span class="math">\(1-(1-p)^n \approx np\)</span> mientras <span class="math">\(np \ll 1\)</span>, así que la probabilidad crece casi linealmente con el número de dependencias. Bajar la cola de cada componente de <span class="math">\(p=0.01\)</span> a <span class="math">\(p=0.001\)</span> es lo que permite que la curva naranja se mantenga baja. Ninguna mejora de la media consigue eso.</p>
+<h2 id="medir-mejor">Medir mejor</h2>
+<p>Algunas reglas que aplico al medir latencias:</p>
+<ol>
+<li><strong>Guardar la distribución, no un resumen.</strong> Registrar histogramas (con <em>buckets</em> fijos o logarítmicos) o sketches de cuantiles, como el <em>t-digest</em>, en lugar de un promedio o un único percentil precalculado. A partir de la distribución se puede calcular cualquier cosa; a partir de un resumen, no.</li>
+<li><strong>Nunca promediar percentiles.</strong> El p99 de dos máquinas juntas <em>no</em> es el promedio de sus p99: si una atiende 900 peticiones y la otra 100, el promedio simple ignora esa diferencia y, aunque se pondere, los percentiles no se combinan linealmente. Lo correcto es sumar los histogramas y calcular el percentil sobre el resultado.</li>
+<li><strong>Reportar al menos p50, p95 y p99</strong>, y el p99.9 cuando haya tráfico suficiente. Con <span class="math">\(n\)</span> observaciones, el percentil <span class="math">\(q\)</span> se apoya en unas <span class="math">\(n(1-q)\)</span> de ellas: con 1000 peticiones, el p99.9 depende de un solo dato.</li>
+<li><strong>Indicar siempre el tamaño de muestra y la ventana de tiempo.</strong> Un p99 de 5 minutos y uno de 24 horas no son comparables.</li>
+<li><strong>Mirar la forma antes de resumir.</strong> Un histograma o una ECDF revelan en segundos la bimodalidad, los huecos y las colas que ningún número resume.</li>
+<li><strong>Comparar versiones con la distribución completa</strong>: una gráfica de <span class="math">\(\Delta(q)\)</span> con su banda de incertidumbre vale más que una tabla de medias.</li>
+</ol>
+<h2 id="cierre">Cierre</h2>
+<p>La media responde a una pregunta muy específica: si repartiéramos el tiempo total en partes iguales, ¿cuánto le tocaría a cada petición? Esa pregunta casi nunca es la que nos importa. Los usuarios no perciben el promedio; perciben <em>su</em> petición, y las peticiones que más recuerdan son las de la cola.</p>
+<p>La próxima vez que un panel muestre un único número verde, vale la pena preguntarse qué forma tiene la distribución que hay detrás. Cuatro servicios con 120 ms de media pueden ser cuatro sistemas completamente distintos.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/">posted at 01:36</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathstat.html" rel="tag">Math.Stat</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/statistics.html" class="tags">Statistics</a>
+                </div>
+            </article>            <h4 class="date">Nov 14, 2026</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -94,266 +837,6 @@ $$</div>
                     &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
                     &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
                 </div>
-            </article>            <h4 class="date">Nov 14, 2026</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/" rel="bookmark" title="Permanent Link to &quot;ML, Notas 1: Machine Learning&quot;">ML, Notas 1: Machine Learning</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/" aria-label="ML, Notas 1: Machine Learning">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/04.jpg" alt="" width="888" height="490" loading="lazy" decoding="async" />
-                </a>
-
-                <p>Este artículo es el primero de una serie acerca de los conceptos y herramientas que se manejan en el campo de estudio conocido como Machine Learning, que es un tópico de Inteligencia Artificial, Estadística y Teoría de la Probabilidad.</p>
-<p><strong>— 1. Regresión por el método de mínimos cuadrados —</strong></p>
-<p>Una de las maneras más sencillas de obtener una función a base de datos experimentales es el método de «mínimos cuadrados». Supongamos que necesitamos determinar experimentalmente una dependencia de la magnitud <span class="math">\({y}\)</span> en función de <span class="math">\({x}\)</span>:</p>
-<div class="math">$$
-\displaystyle  y = \varphi(x).
-$$</div>
-<p>Del experimento obtenemos como resultado <span class="math">\({n}\)</span> valores de la función <span class="math">\({y}\)</span> para los valores correspondientes del argumento <span class="math">\({x}\)</span>:</p>
-<div class="math">$$
-\displaystyle  \begin{array}{c|cccc} \mathbf x &amp; x_1 &amp; x_2 &amp; \quad\dotso\quad &amp; x_n \\\hline \mathbf y &amp; y_1 &amp; y_2 &amp; \quad\dotso\quad &amp; y_n \end{array}
-$$</div>
-<p>La forma de la función <span class="math">\({y = \varphi(x)}\)</span> se determina teóricamente o usando la disposición en el plano de coordenadas de los puntos correspondientes a los valores experimentales. Dependiendo de la distribución de estos puntos, elegiremos la forma de la función desconocida <span class="math">\({y = \varphi(x)}\)</span>. Por ejemplo, si vemos que los puntos experimentales no se separan mucho de una recta, entonces se puede buscar la función <span class="math">\({y = \varphi(x)}\)</span> en la forma de una función lineal <span class="math">\({y = ax + b}\)</span>; si los puntos experimentales tienden a «ir hacia arriba», entonces es natural pensar que podemos buscar la función <span class="math">\({y = \varphi(x)}\)</span> en la forma <span class="math">\({y = ax^b}\)</span>; y así sucesivamente; es decir, viendo la distribución de los puntos experimentales, debemos elegir una función conocida (lineal, potencial, trigonométrica, exponencial, logarítmica, etc.) que nos parezca la más adecuada para buscar la función <span class="math">\({y = \varphi(x)}\)</span>. Elegida la forma de la función <span class="math">\({y = \varphi(x, a, b, c, \dotsc)}\)</span>, <em>tenemos que buscar los parámetros</em> <span class="math">\({a,b, c, \dotsc}\)</span> que la integran, de modo tal que la función describa de la mejor manera el proceso examinado.</p>
-<p>El método que tratamos ahora es el de <em>mínimos cuadrados</em>, que consiste en lo siguiente.</p>
-<p>Examinemos una suma de los cuadrados de las diferencias de los valores <span class="math">\({y_i}\)</span>, obtenidos del experimento, y la función <span class="math">\({\varphi(x,a,b,c,\dotsc)}\)</span> en los puntos correspondientes: <a id="eqne"></a></p>
-<div class="math">$$
-\displaystyle   S(a,b,c,\dotsc) = \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]^2. \ \ \ \ \ (1)
-$$</div>
-<p>Elijamos los parámetros <span class="math">\({a,b,c,\dotsc}\)</span> de manera que esta suma tenga valor mínimo:</p>
-<div class="math">$$
-\displaystyle S(a,b,c,\dotsc) = \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]^2 = \min.
-$$</div>
-<p>Así, el problema se ha reducido a la búsqueda de los valores de los parámetros <span class="math">\({a,b,c,\dotsc}\)</span>, para los cuales la función <span class="math">\({S(a,b,c,\dotsc)}\)</span> tiene un mínimo. Esto es posible por la <em>prueba de la primera derivada</em>, estudiada en un curso de Cálculo diferencial; así, en virtud de lo anterior, tenemos que estos valores <span class="math">\({a,b,c,\dotsc}\)</span> satisfacen el sistema de ecuaciones</p>
-<div class="math">$$
-\displaystyle \frac{\partial S}{\partial a} = 0, \frac{\partial S}{\partial b} = 0, \frac{\partial S}{\partial c} = 0, \dotsc,
-$$</div>
-<p>o, en la forma desarrollada <a id="eqnsis"></a></p>
-<div class="math">$$
-\displaystyle   \begin{aligned} \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]\frac{\partial \varphi(x,a,b,c,\dotsc)}{\partial a} = 0, \\ \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]\frac{\partial \varphi(x,a,b,c,\dotsc)}{\partial b} = 0, \\ \sum_{i=1}^n [y_i - \varphi(x,a,b,c,\dotsc)]\frac{\partial \varphi(x,a,b,c,\dotsc)}{\partial c} = 0, \\ \vdots \quad\; \end{aligned} \ \ \ \ \ (2)
-$$</div>
-<p>Notar que el número de ecuaciones es igual al número de incógnitas. En cada caso concreto se investiga la cuestión sobre la existencia de la solución del sistema de ecuaciones <a href="#eqnsis">(2)</a> y del mínimo de la función <span class="math">\({S(a,b,c,\dotsc)}\)</span>.</p>
-<p>Veamos algunos casos de la determinación de la función <span class="math">\({y = \varphi(x,a,b,c,\dotsc)}\)</span>.</p>
-<p><strong>I.</strong> Sea <span class="math">\({y = ax + b}\)</span>. Entonces, la función <span class="math">\({S(a,b)}\)</span>, en la expresión <a href="#eqne">(1)</a>, tiene la forma</p>
-<div class="math">$$
-\displaystyle S(a,b) = \sum_{i=1}^n [y_i - (ax_i + b)]^2.
-$$</div>
-<p>Esta es una función con dos variables, <span class="math">\({a}\)</span> y <span class="math">\({b}\)</span> (<span class="math">\({x_i}\)</span> e <span class="math">\({y_i}\)</span> son parte de los datos experimentales). Por consiguiente,</p>
-<div class="math">$$
-\displaystyle  \begin{aligned} \frac{\partial S}{\partial a} &amp; = -2 \sum_{i=1}^n [y_i - (ax_i + b)]x_i = 0,\\ \frac{\partial S}{\partial b} &amp; = -2 \sum_{i=1}^n [y_i - (ax_i + b)] = 0, \end{aligned}
-$$</div>
-<p>es decir, el sistema de ecuaciones <a href="#eqnsis">(2)</a> en este caso toma la forma</p>
-<div class="math">$$
-\displaystyle  \begin{aligned} &amp;\sum_{i=1}^n y_i x_i - a \sum_{i=1}^n x_i^2 - b \sum_{i=1}^n x_i = 0,\\ &amp;\sum_{i=1}^n y_i - a \sum_{i=1}^n x_i - bn = 0. \end{aligned}
-$$</div>
-<p>Hemos obtenido el sistema de dos ecuaciones lineales con dos incógnitas <span class="math">\({a}\)</span> y <span class="math">\({b}\)</span>. Es fácil ver que el sistema tiene una solución determinada y la función <span class="math">\({S(a,b)}\)</span> tiene un mínimo para los valores hallados <span class="math">\({a}\)</span> y <span class="math">\({b}\)</span>. Esto se verifica fácilmente también a base de las condiciones suficientes para la existencia del mínimo. Recordemos. Sea <span class="math">\({(x_0,y_0)}\)</span> un punto crítico de la función <span class="math">\({f(x,y)}\)</span>, es decir,</p>
-<div class="math">$$
-\displaystyle  \frac{\partial f(x_0,y_0)}{\partial x} = 0, \qquad \frac{\partial f(x_0,y_0)}{\partial y} = 0.
-$$</div>
-<p>Entonces, para <span class="math">\({x = x_0}\)</span> e <span class="math">\({y = y_0}\)</span> se cumple que <span class="math">\({f(x,y)}\)</span> tiene mínimo si</p>
-<div class="math">$$
-\displaystyle  \frac{\partial^2 f(x_0,y_0)}{\partial x^2} \times \frac{\partial^2 f(x_0,y_0)}{\partial y^2} - \left(\frac{\partial^2 f(x_0,y_0)}{\partial x\,\partial y}\right)^2 &gt; 0 \;\;\text{y}\;\; \frac{\partial^2 f(x_0,y_0)}{\partial x^2} &gt; 0.
-$$</div>
-<p>En efecto, tenemos</p>
-<div class="math">$$
-\displaystyle \frac{\partial^2 S}{\partial a^2} = \sum_{i=1}^n x^2_i; \quad \frac{\partial^2 S}{\partial a\,\partial b} = \sum_{i=1}^n x_i; \quad \frac{\partial^2 S}{\partial b^2} = n.
-$$</div>
-<p>Así,</p>
-<div class="math">$$
-\displaystyle  \begin{aligned} &amp;\frac{\partial^2 S}{\partial a^2}\frac{\partial^2 S}{\partial b^2}-\left(\frac{\partial^2 S}{\partial a\,\partial b}\right)^2 = n \sum_{i=1}^n x_i^2 - \left(\sum_{i=1}^n x_i\right)^2 = \sum_{i\ne j} (x_i - x_j)^2 &gt; 0,\\ &amp;\frac{\partial^2 S}{\partial a^2} &gt; 0. \end{aligned}
-$$</div>
-<p><strong>II.</strong> Sea la función de aproximación un trinomio de segundo grado <span class="math">\({y = ax^2 + bx + c}\)</span>. En este caso, la expresión <a href="#eqne">(1)</a> tiene la forma</p>
-<div class="math">$$
-\displaystyle  S(a,b,c) = \sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)]^2.
-$$</div>
-<p>El sistema de ecuaciones <a href="#eqnsis">(2)</a> toma la forma</p>
-<div class="math">$$
-\displaystyle  \begin{aligned} &amp;\sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)]x_i^2 = 0, \\ &amp;\sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)]x_i = 0, \\ &amp;\sum_{i=1}^n [y_i - (ax_i^2 + bx_i + c)] = 0, \end{aligned}
-$$</div>
-<p>o, en la forma desarrollada</p>
-<div class="math">$$
-\displaystyle  \begin{aligned} &amp;\sum_{i=1}^n y_i x_i^2 - a \sum_{i=1}^n x_i^4 - b \sum_{i=1}^n x_i^3 - c \sum_{i=1}^n x_i^2 = 0, \\ &amp;\sum_{i=1}^n y_i x_i - a \sum_{i=1}^n x_i^3 - b \sum_{i=1}^n x_i^2 - c \sum_{i=1}^n x_i = 0, \\ &amp;\sum_{i=1}^n y_i - a \sum_{i=1}^n x_i^2 - b \sum_{i=1}^n x_i - cn = 0. \end{aligned}
-$$</div>
-<p>Obtenemos un sistema de ecuaciones lineales para determinar las incógnitas <span class="math">\({a,b,c}\)</span>. De las condiciones del problema se deduce que el sistema tiene una solución determinada y, además, la función <span class="math">\({S(a,b,c)}\)</span> tiene un mínimo para los valores obtenidos de <span class="math">\({a,b,c}\)</span>.</p>
-<p>Continuará…</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2026/11/14/ml-notas-1-machine-learning-prehistoria/">posted at 07:16</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathml.html" rel="tag">Math.ML</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
-                </div>
-            </article>            <h4 class="date">Nov 14, 2026</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2026/11/14/project-euler-01/" rel="bookmark" title="Permanent Link to &quot;Project-Euler 01&quot;">Project-Euler 01</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/14/project-euler-01/" aria-label="Project-Euler 01">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/03.jpg" alt="" width="849" height="490" loading="lazy" decoding="async" />
-                </a>
-
-                <p>Esta es la primera de una serie de publicaciones en las que iré resolviendo los problemas planteados en el <a href="https://projecteuler.net">Proyecto Euler</a>. El siguiente es el problema que se va a tratar:</p>
-<blockquote>
-<p><strong>Ejercicio 1.</strong> Si listamos los números naturales menores que 10 y múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span>, obtenemos <span class="math">\(3\)</span>, <span class="math">\(5\)</span>, <span class="math">\(6\)</span> y <span class="math">\(9\)</span>, cuya suma es <span class="math">\(23\)</span>. Hallar la suma de los múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span> menores que <span class="math">\(1000\)</span>.</p>
-</blockquote>
-<p>Un primer enfoque sencillo es el siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="n">suma</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">suma</span> <span class="o">+=</span> <span class="n">n</span>
-</code></pre></div>
-
-<p>O, más al estilo Python:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">sum</span><span class="p">(</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-
-<p>No obstante, si el proceso no se restringe a <span class="math">\(1000\)</span>, el método es claramente ineficiente.</p>
-<p>¿Cómo podríamos calcular la suma para los múltiplos menores que un millón sin afectar el desempeño?</p>
-<p>Empecemos analizando un problema más sencillo. ¿Cómo calcularíamos la suma de los múltiplos de <span class="math">\(k\)</span> menores que <span class="math">\(N\)</span>? (Consideremos que <span class="math">\(k&lt;N\)</span>.)</p>
-<p>Procedamos de manera intuitiva. Básicamente, queremos calcular <span class="math">\(1k+2k+3k+4k+5k+\dotsb+nk\)</span>, donde <span class="math">\(nk\)</span> es el último múltiplo de <span class="math">\(k\)</span> que es menor que <span class="math">\(N\)</span>. Es decir, queremos calcular <span class="math">\(k(1+2+3+4+5+\dotsb+n)\)</span>, lo que se resume en evaluar <span class="math">\(kn(n+1)/2\)</span>. Luego, solo nos queda resolver cómo obtener <span class="math">\(n\)</span>, que es el máximo factor que cumple <span class="math">\(nk&lt;N\)</span>, lo que a su vez cumple <span class="math">\(n&lt;N/k\)</span>. Entonces, para hallar <span class="math">\(n\)</span>, basta con dividir <span class="math">\(N\)</span> por <span class="math">\(k\)</span> y fijar el mayor <span class="math">\(n\)</span> que sea menor que dicho cociente.</p>
-<p>Ahora bien, veamos cómo proceder para demostrar que obtendremos realmente la suma. Denotamos con <span class="math">\(M_k^N\)</span> al conjunto de los múltiplos de <span class="math">\(k\)</span> menores que <span class="math">\(N\)</span>. De esta manera, lo que buscamos es evaluar</p>
-<div class="math">$$\sum_{n\in M_k^N} n.$$</div>
-<p>Así, hemos definido <span class="math">\(M_k^N\)</span> de manera que <span class="math">\(M_k^N:=\{ck:ck&lt;N,\,c\in\mathbf N\}\)</span>. (Es sencillo probar que dicho conjunto es el que buscamos. Notemos, además, que se usa el axioma de sustitución. Dejo al lector probar que de la definición de múltiplo se llega a la definición del conjunto presentado.)</p>
-<p>Consideremos la siguiente definición y las siguientes proposiciones:</p>
-<blockquote>
-<p><strong>Definición 1 (Múltiplo).</strong> Decimos que un número natural <span class="math">\(m\)</span> es múltiplo de un número natural <span class="math">\(n\)</span> si se cumple que <span class="math">\(m=kn\)</span> para algún número natural <span class="math">\(k\)</span>.</p>
-<p><strong>Proposición 2.</strong> Sean <span class="math">\(X\)</span> un conjunto finito, <span class="math">\(f\colon X\rightarrow\mathbf R\)</span> una función y <span class="math">\(g\colon Y\rightarrow X\)</span> una biyección. Entonces</p>
-<p>
-<div class="math">$$\sum_{x\in X}f(x) = \sum_{y\in Y}g\circ f(y).$$</div>
-</p>
-<p><strong>Proposición 3.</strong> Sean <span class="math">\(X\)</span> un conjunto finito, <span class="math">\(f\colon X\rightarrow\mathbf R\)</span> una función y <span class="math">\(c\)</span> un número real. Entonces</p>
-<p>
-<div class="math">$$\sum_{x\in X}cf(x) = c\sum_{x\in X}f(x).$$</div>
-</p>
-</blockquote>
-<p>Usando las proposiciones 2 y 3, obtenemos que</p>
-<div class="math">$$\sum_{n\in M_k^N}n=\sum_{n\in I_k^N}kn=k\sum_{n\in I_k^N}n,$$</div>
-<p>donde <span class="math">\(I_k^N=\{n\in\mathbf N: kn&lt;N\}\)</span>.</p>
-<p>Es sencillo ver que en <span class="math">\(I_k^N\)</span> se encuentran los números de la sucesión <span class="math">\(1,2,3,4,5,\dotsc,L\)</span>, donde <span class="math">\(L\)</span> es el mayor número tal que <span class="math">\(Lk&lt;N\)</span>. Así, la cuestión es cómo calculamos <span class="math">\(L\)</span>. Bien, tenemos que <span class="math">\(L=\max I_k^N\)</span>. Como <span class="math">\(Lk&lt;N\)</span>, se cumple <span class="math">\(L\le (N-1)/k\)</span>. Por otro lado, tenemos que <span class="math">\((N-1)/k&lt;L-1\)</span>, ya que <span class="math">\((L+1)k\ge N\)</span>. Esto, por definición, corresponde a la parte entera de <span class="math">\((N-1)/k\)</span>; es decir, concluimos que <span class="math">\(L=\lfloor(N-1)/k\rfloor\)</span>. Así, por definición de serie finita, tenemos que</p>
-<div class="math">$$\sum_{n\in M_k^N}n=\sum_{n=1}^{\left\lfloor\frac{N-1}k\right\rfloor}kn.$$</div>
-<p>Ahora podemos calcular la suma de los múltiplos de <span class="math">\(3\)</span> menores que <span class="math">\(10\)</span>, <span class="math">\(100\)</span> o <span class="math">\(1000\)</span>, respectivamente:</p>
-<div class="math">$$
-\begin{aligned}
-3\sum_{n=1}^{3}n&amp;=3\times\frac{3\times4}2=18\\
-3\sum_{n=1}^{33}n&amp;=3\times\frac{33\times34}2=1683\\
-3\sum_{n=1}^{333}n&amp;=3\times\frac{333\times334}2=166833
-\end{aligned}
-$$</div>
-<p>Todavía nos queda resolver cómo calcular dicha suma para los que son múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span>, no de uno solo de ellos. No basta con sumar la suma de los múltiplos de <span class="math">\(3\)</span> y la suma de los múltiplos de <span class="math">\(5\)</span>; es decir, se cumple <span class="math">\(\sum_{n\in M_{3\text{ o }5}^{1000}}n\ne\sum_{n\in M_3^{1000}}n+\sum_{n\in M_{5}^{1000}}n\)</span> porque estamos sumando dos veces los múltiplos de <span class="math">\(3\)</span> que a su vez son múltiplos de <span class="math">\(5\)</span>. Podemos usar el principio de inclusión-exclusión. Si <span class="math">\(M_{3\text{ o }5}^{1000}\)</span> es el conjunto de los múltiplos de <span class="math">\(3\)</span> o <span class="math">\(5\)</span> menores que <span class="math">\(1000\)</span>, tenemos que <span class="math">\(\sum_{n\in M_{3\text{ o }5}^{1000}}n=\sum_{n\in M_3^{1000}}n+\sum_{n\in M_{5}^{1000}}n-\sum_{n\in M_{3\text{ y }5}^{1000}}n\)</span>. ¿Cómo calculamos <span class="math">\(\sum_{n\in M_{3\text{ y }5}^{1000}}n\)</span>?</p>
-<p>Para que un número <span class="math">\(n\)</span> sea múltiplo de <span class="math">\(3\)</span> y <span class="math">\(5\)</span>, tiene que ser de la forma <span class="math">\(n=3k\)</span> para algún número natural <span class="math">\(k\)</span>. Luego, como <span class="math">\(n\)</span> también es múltiplo de <span class="math">\(5\)</span>, tenemos que <span class="math">\(k=5k'\)</span>, donde <span class="math">\(k'\)</span> es un número natural. Por lo tanto, obtenemos <span class="math">\(n=3\cdot5k'=15k'\)</span>; es decir, <span class="math">\(n\)</span> es múltiplo de <span class="math">\(3\)</span> y <span class="math">\(5\)</span> si es múltiplo de <span class="math">\(15\)</span>. (Incluso podríamos generalizar esto.)</p>
-<p>En consecuencia,</p>
-<div class="math">$$
-\begin{array}{ccccccc}
-\displaystyle\sum_{n\in M_{3\text{ o }5}^{1000}}n&amp;=&amp;\displaystyle\sum_{n\in M_3^{1000}}n&amp;+&amp;\displaystyle\sum_{n\in M_{5}^{1000}}n&amp;-&amp;\displaystyle\sum_{n\in M_{3\text{ y }5}^{1000}}n\\
-&amp;=&amp;\displaystyle\sum_{n=1}^{333}3n&amp;+&amp;\displaystyle\sum_{n=1}^{199}5n&amp;-&amp;\displaystyle\sum_{n=1}^{66}15n\\
-&amp;=&amp;3\times\left(\displaystyle\frac{333\times334}2\right)&amp;+&amp;5\times\left(\displaystyle\frac{199\times200}2\right)&amp;-&amp;15\times\left(\displaystyle\frac{66\times67}2\right)\\
-&amp;=&amp;233168
-\end{array}
-$$</div>
-<p>🙂</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2026/11/14/project-euler-01/">posted at 06:25</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathmisc.html" rel="tag">Math.Misc</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/project-euler.html" class="tags">Project Euler</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
-                </div>
-            </article>            <h4 class="date">Nov 13, 2026</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/" rel="bookmark" title="Permanent Link to &quot;Consistent hashing: anotaciones&quot;">Consistent hashing: anotaciones</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/" aria-label="Consistent hashing: anotaciones">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/01.jpg" alt="" width="760" height="519" loading="lazy" decoding="async" />
-                </a>
-
-                <p>Para asignar una clave a un servidor podemos usar <code>hash(clave) % cantidad_de_nodos</code>. El problema aparece al agregar o quitar servidores: cambia el divisor y muchas claves cambian de destino. Consistent hashing mantiene un espacio de posiciones fijo y coloca allí tanto nodos como claves.</p>
-<p>Los ejemplos <code>consish/</code> de <a href="https://github.com/gcca/nh35a/tree/aae1135157a5304cad1e715bf07c2483accfbefb">nh35a</a> comparten cuatro partes: calcular una posición, registrar los nodos, ordenarlos y buscar el siguiente nodo del anillo.</p>
-<h2>Del hash al anillo</h2>
-<p>En Zig, <code>hashS</code> obtiene un digest MD5 de 16 bytes, lee sus dos mitades como enteros de 64 bits en big endian y las combina mediante XOR:</p>
-<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="n">ns</span><span class="o">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">d</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
-<span class="w">    </span><span class="n">std</span><span class="p">.</span><span class="n">crypto</span><span class="p">.</span><span class="n">hash</span><span class="p">.</span><span class="n">Md5</span><span class="p">.</span><span class="n">hash</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="p">.{});</span>
-
-<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
-<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">dh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">readInt</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">[</span><span class="mi">8</span><span class="p">..</span><span class="mi">16</span><span class="p">],</span><span class="w"> </span><span class="p">.</span><span class="n">big</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">dh</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">dl</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">ns</span><span class="p">;</span><span class="w"> </span><span class="c1">// posición dentro del anillo</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Aquí <code>ns = 65535</code>: las posiciones van de <code>0</code> a <code>65534</code>. Es el tamaño del anillo, independiente de cuántos nodos haya. Todos deben usar el mismo hash y la misma interpretación de los bytes para reproducir la asignación.</p>
-<p>En <code>Nodes</code>, <code>ds</code> guarda nombres y <code>ss</code> sus posiciones. <code>add</code> incorpora ambos; <code>done</code> los ordena por posición, manteniendo cada nombre junto a su hash. Con los nodos del ejemplo, el orden es <code>B:8630</code>, <code>A:14321</code>, <code>C:35588</code>.</p>
-<h2>Buscar el nodo responsable</h2>
-<p>Cada nodo recibe las claves del intervalo que termina en su posición. La búsqueda encuentra el primer hash mayor o igual al de la clave. Si no existe, vuelve al comienzo del anillo:</p>
-<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="n">bs</span><span class="p">(</span><span class="n">self</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="kr">const</span><span class="w"> </span><span class="n">Nodes</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">@panic</span><span class="p">(</span><span class="s">&quot;no elements&quot;</span><span class="p">);</span>
-
-<span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hashS</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ns</span><span class="p">);</span>
-<span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">sort</span><span class="p">.</span><span class="n">lowerBound</span><span class="p">(</span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">sh</span><span class="p">,</span><span class="w"> </span><span class="n">cmpHash</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ss</span><span class="p">.</span><span class="n">items</span><span class="p">.</span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="c1">// vuelta al primer nodo</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">.{</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">ds</span><span class="p">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">sh</span><span class="w"> </span><span class="p">};</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>Con las posiciones ordenadas, la búsqueda binaria cuesta <code>O(log N)</code> para <code>N</code> nodos, además del cálculo del hash. El segundo valor retornado, <code>sh</code>, es la posición de la <strong>clave</strong>, no la del nodo elegido.</p>
-<h2>Qué cambia al agregar un nodo</h2>
-<p>La clave <code>"10"</code> cae en <code>41300</code>, después de <code>C</code>; por eso vuelve a <code>B</code>. Si incorporamos <code>D</code>, cuyo hash es <code>50913</code>, pasa a tener un sucesor antes de completar la vuelta:</p>
-<table>
-<thead>
-<tr><th style="padding-right: 1em">Clave</th><th style="padding-right: 1em; text-align: right">Hash</th><th style="padding-right: 1em">Sin D</th><th>Con D</th></tr>
-</thead>
-<tbody>
-<tr><td style="padding-right: 1em"><code>"1"</code></td><td style="padding-right: 1em; text-align: right">21135</td><td style="padding-right: 1em">C</td><td>C</td></tr>
-<tr><td style="padding-right: 1em"><code>"10"</code></td><td style="padding-right: 1em; text-align: right">41300</td><td style="padding-right: 1em">B</td><td>D</td></tr>
-<tr><td style="padding-right: 1em"><code>"100"</code></td><td style="padding-right: 1em; text-align: right">19522</td><td style="padding-right: 1em">C</td><td>C</td></tr>
-</tbody>
-</table>
-
-<p>Este agregado extiende el ejemplo original. Solo las posiciones del intervalo <code>(35588, 50913]</code> pasan de <code>B</code> a <code>D</code>; el resto conserva su propietario. Esa estabilidad al cambiar los nodos es la idea central. En la versión Zig, el ejemplo ampliado requiere inicializar <code>Nodes</code> con capacidad para cuatro elementos, porque <code>add</code> usa <code>appendBounded</code>.</p>
-<h2>Las partes comunes en cada lenguaje</h2>
-<ul>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c/consish/consish.c">C</a></strong>: implementa MD5 y guarda nombres y hashes en arrays paralelos. <code>done</code> usa inserción; la búsqueda binaria es manual. Duplica los nombres y libera la memoria explícitamente.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c%2B%2B/consish/consish.cc">C++</a></strong>: también implementa MD5. Usa vectores, ordena los pares con <code>stable_sort</code> sobre <code>zip</code> y busca con <code>lower_bound</code>. Los contenedores gestionan su memoria.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/c3/consish/consish.c3">C3</a></strong>: usa MD5 de la biblioteca estándar y listas paralelas. Construye pares temporales para ordenar con quicksort y consulta mediante <code>binarysearch</code> como punto de inserción.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/go/consish/main.go">Go</a></strong>: usa <code>crypto/md5</code> y <code>binary.BigEndian</code>. <code>sort.Interface</code> intercambia juntos nombres y hashes; <code>slices.BinarySearch</code> encuentra el nodo o su punto de inserción.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/ocaml/consish/consish.ml">OCaml</a></strong>: usa <code>Digest</code> y un array de pares. Ordena y calcula el módulo con operaciones sin signo sobre <code>int64</code>; implementa la búsqueda mediante recursión.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/rust/consish/src/main.rs">Rust</a></strong>: usa el crate <code>md-5</code> y vectores paralelos. Ordena índices para reordenar ambos vectores; <code>partition_point</code> encuentra el primer hash que no sea menor.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/swift/consish/consish.swift">Swift</a></strong>: usa <code>CryptoKit.Insecure.MD5</code>, enteros <code>UInt64</code> y un array de tuplas. <code>sort</code> conserva unidos nombre y posición; la búsqueda binaria es manual.</li>
-<li><strong><a href="https://github.com/gcca/nh35a/blob/aae1135157a5304cad1e715bf07c2483accfbefb/zig/consish/src/main.zig">Zig</a></strong>: usa <code>Md5</code>, <code>ArrayList</code> y un allocator explícito. <code>heapContext</code> ordena intercambiando ambas listas; <code>lowerBound</code> resuelve la búsqueda.</li>
-</ul>
-<p>Estos ejemplos colocan un solo punto por nodo, por lo que los intervalos pueden ser desiguales. Los nodos virtuales permiten distribuir cada servidor entre varios puntos del anillo. Las colisiones también requieren una regla compartida de desempate para conservar una asignación reproducible.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2026/11/13/consistent-hashing-anotaciones/">posted at 20:05</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/seavail.html" rel="tag">SE.Avail</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/architecture.html" class="tags">architecture</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/distributed.html" class="tags">distributed</a>
-                </div>
             </article>
 
                 <div class="clear"></div>
@@ -362,7 +845,7 @@ $$</div>
 
                     <a href="https://gcca.github.io/page/2/" class="next_page">Next&nbsp;&rarr;</a>
 
-                    <span>Page 1 of 5</span>
+                    <span>Page 1 of 6</span>
                 </div>
 
             <div class="clear"></div>

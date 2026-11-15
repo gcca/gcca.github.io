@@ -51,7 +51,338 @@
             </a></h1></div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Nov 14, 2026</h4>
+        <div id="content">            <h4 class="date">Nov 15, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/15/algunas-contradicciones/" rel="bookmark" title="Permanent Link to &quot;Algunas contradicciones&quot;">Algunas contradicciones</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/15/algunas-contradicciones/" aria-label="Algunas contradicciones">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/05.jpg" alt="" width="784" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>Hace unos días leía un comentario que preguntaba por el error en un argumento donde se suponía que</p>
+<div class="math">$$
+\frac{a}{b}=\frac{6}{4},
+$$</div>
+<p>de modo que</p>
+<div class="math">$$
+4a=6b.
+$$</div>
+<p>Realizando la transformación</p>
+<div class="math">$$
+14a-10a=21b-15b,
+$$</div>
+<p>transponiendo términos,</p>
+<div class="math">$$
+15b-10a=21b-14a,
+$$</div>
+<p>y sacando un factor común, obtenemos</p>
+<div class="math">$$
+5(3b-2a)=7(3b-2a).
+$$</div>
+<p>Simplificando el factor <span class="math">\(3b-2a\)</span>, resulta <span class="math">\(5=7\)</span>, lo que claramente es falso.</p>
+<p>Hay una cierta satisfacción filosófica en saber por qué las cosas funcionan, pero una persona pragmática puede argüir que uno solamente necesita saber cómo funcionan para resolver problemas de la vida real.</p>
+<p>La formación matemática que uno recibe en clases introductorias es, sin duda, la adecuada para comenzar a resolver muchos problemas de física, química, biología, economía, ciencias de la computación, finanzas, ingeniería o cualquier otra actividad a la que termine dedicándose. Uno puede aplicar reglas como la de la cadena, la de L’Hôpital o la integración por partes sin saber por qué funcionan o si tienen alguna excepción.</p>
+<p>Sin embargo, uno puede meterse en problemas si aplica las reglas sin conocer de dónde vienen y cuáles son los límites de su aplicabilidad. Déjenme dar algunos ejemplos en los cuales muchas de estas reglas familiares, aplicadas a ciegas y sin un conocimiento del análisis subyacente, pueden conducir al desastre.</p>
+<h2>Ejemplo 1. División por cero</h2>
+<p>Esto le debe resultar muy familiar: la ley de cancelación <span class="math">\(ac=bc\implies a=b\)</span> no funciona cuando <span class="math">\(c=0\)</span>. Por ejemplo, la identidad <span class="math">\(1\times0=2\times0\)</span> es cierta, pero si uno cancela ciegamente el <span class="math">\(0\)</span>, obtiene <span class="math">\(1=2\)</span>, lo cual es falso. En este caso fue obvio que se dividió por cero, pero en otros casos puede estar más oculto.</p>
+<h2>Ejemplo 2. Series divergentes</h2>
+<p>Probablemente ha visto series geométricas como la suma infinita</p>
+<div class="math">$$
+S=1+\frac12+\frac14+\frac18+\frac1{16}+\cdots.
+$$</div>
+<p>También habrá visto el siguiente truco para sumar estas series: si llamamos <span class="math">\(S\)</span> a la suma anterior y multiplicamos ambos lados por <span class="math">\(2\)</span>, obtenemos</p>
+<div class="math">$$
+2S=2+1+\frac12+\frac14+\frac18+\frac1{16}+\cdots=2+S
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=2\)</span>. Así, la serie suma <span class="math">\(2\)</span>. Sin embargo, si aplica el mismo truco a la serie</p>
+<div class="math">$$
+S=1+2+4+8+16+\cdots,
+$$</div>
+<p>obtiene un resultado sin sentido:</p>
+<div class="math">$$
+2S=2+4+8+16+\cdots=S-1\implies S=-1.
+$$</div>
+<p>Así, el mismo razonamiento que muestra que <span class="math">\(1+\frac12+\frac14+\frac18+\frac1{16}+\cdots=2\)</span> también da que <span class="math">\(1+2+4+8+\cdots=-1\)</span>. ¿Por qué es cierta la primera ecuación, pero no la segunda? Un ejemplo similar surge con la serie</p>
+<div class="math">$$
+S=1-1+1-1+1-1+\cdots;
+$$</div>
+<p>podemos escribir</p>
+<div class="math">$$
+S=1-(1-1+1-1+\cdots)=1-S
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=1/2\)</span>; o, en su lugar, podemos escribir</p>
+<div class="math">$$
+S=(1-1)+(1-1)+(1-1)+\cdots=0+0+\cdots
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=0\)</span>; o, en su lugar, podemos escribir</p>
+<div class="math">$$
+S=1+(-1+1)+(-1+1)+\cdots=1+0+0+\cdots
+$$</div>
+<p>y, por lo tanto, <span class="math">\(S=1\)</span>. ¿Cuál es la correcta?</p>
+<h2>Ejemplo 3. Sucesiones divergentes</h2>
+<p>Aquí hay una pequeña variación del ejemplo anterior. Sea <span class="math">\(x\)</span> un número real y sea <span class="math">\(L\)</span> el límite</p>
+<div class="math">$$
+L=\lim_{n\to\infty}x^n.
+$$</div>
+<p>Haciendo el cambio de variable <span class="math">\(n=m+1\)</span>, tenemos</p>
+<div class="math">$$
+L=\lim_{m+1\to\infty}x^{m+1}
+=\lim_{m+1\to\infty}x\cdot x^m
+=x\lim_{m+1\to\infty}x^m.
+$$</div>
+<p>Pero, si <span class="math">\(m+1\to\infty\)</span>, entonces <span class="math">\(m\to\infty\)</span>. Por lo tanto,</p>
+<div class="math">$$
+\lim_{m+1\to\infty}x^m
+=\lim_{m\to\infty}x^m
+=\lim_{n\to\infty}x^n=L,
+$$</div>
+<p>y así</p>
+<div class="math">$$
+xL=L.
+$$</div>
+<p>En este punto podríamos cancelar el factor <span class="math">\(L\)</span> y concluir que <span class="math">\(x=1\)</span> para un número real arbitrario <span class="math">\(x\)</span>, lo que es absurdo. Pero, ya que somos conscientes del problema de la división por cero, podríamos ser un poco más cuidadosos y concluir, en su lugar, que <span class="math">\(x=1\)</span> o <span class="math">\(L=0\)</span>. En particular, parece que hemos demostrado que</p>
+<div class="math">$$
+\lim_{n\to\infty}x^n=0\qquad\text{para todo }x\ne1.
+$$</div>
+<p>Pero esta conclusión es absurda si la aplicamos a ciertos valores de <span class="math">\(x\)</span>. Por ejemplo, para <span class="math">\(x=2\)</span> podríamos concluir que la sucesión <span class="math">\(1,2,4,8,\ldots\)</span> converge a cero, y para <span class="math">\(x=-1\)</span> podríamos concluir que la sucesión <span class="math">\(1,-1,1,-1,\ldots\)</span> también converge a cero. Estas conclusiones parecen absurdas; ¿cuál es el problema con el argumento anterior?</p>
+<h2>Ejemplo 4. Valores límite de funciones</h2>
+<p>Se empieza por la expresión <span class="math">\(\lim_{x\to\infty}\sin(x)\)</span> y se hace el cambio de variable <span class="math">\(x=y+\pi\)</span>. Recordando que <span class="math">\(\sin(y+\pi)=-\sin(y)\)</span>, se obtiene</p>
+<div class="math">$$
+\begin{aligned}
+\lim_{x\to\infty}\sin(x)
+&amp;=\lim_{y+\pi\to\infty}\sin(y+\pi)\\
+&amp;=\lim_{y\to\infty}(-\sin(y))\\
+&amp;=-\lim_{y\to\infty}\sin(y).
+\end{aligned}
+$$</div>
+<p>Ya que <span class="math">\(\lim_{x\to\infty}\sin(x)=\lim_{y\to\infty}\sin(y)\)</span>, tenemos que</p>
+<div class="math">$$
+\lim_{x\to\infty}\sin(x)=-\lim_{x\to\infty}\sin(x)
+$$</div>
+<p>y, por lo tanto,</p>
+<div class="math">$$
+\lim_{x\to\infty}\sin(x)=0.
+$$</div>
+<p>Si hacemos entonces el cambio de variable <span class="math">\(x=z+\pi/2\)</span> y recordamos que <span class="math">\(\sin(z+\pi/2)=\cos(z)\)</span>, concluimos que</p>
+<div class="math">$$
+\lim_{z\to\infty}\cos(z)=0.
+$$</div>
+<p>Elevando al cuadrado ambos límites y sumándolos, vemos que</p>
+<div class="math">$$
+\lim_{x\to\infty}\bigl(\sin^2(x)+\cos^2(x)\bigr)=0^2+0^2=0.
+$$</div>
+<p>Por otro lado, tenemos <span class="math">\(\sin^2(x)+\cos^2(x)=1\)</span> para todo <span class="math">\(x\)</span>. Así, hemos demostrado que ¡<span class="math">\(1=0\)</span>! ¿Cuál es la dificultad aquí?</p>
+<h2>Ejemplo 5. Intercambiando sumas</h2>
+<p>Consideremos el siguiente hecho aritmético. Tomemos cualquier matriz de números, por ejemplo,</p>
+<div class="math">$$
+\begin{pmatrix}
+1&amp;2&amp;3\\
+4&amp;5&amp;6\\
+7&amp;8&amp;9
+\end{pmatrix},
+$$</div>
+<p>y calculemos las sumas de todas las filas y las sumas de todas las columnas. Luego calculemos el total de las sumas de las filas y el total de las sumas de las columnas. En ambos casos obtendremos el mismo número: la suma de todas las entradas de la matriz.</p>
+<div class="math">$$
+\begin{array}{c@{\quad}c}
+\begin{pmatrix}
+\phantom{0}1&amp;\phantom{0}2&amp;\phantom{0}3\\
+\phantom{0}4&amp;\phantom{0}5&amp;\phantom{0}6\\
+\phantom{0}7&amp;\phantom{0}8&amp;\phantom{0}9
+\end{pmatrix}
+&amp;\begin{array}{r}6\\15\\24\end{array}\\
+\begin{array}{ccc}12&amp;15&amp;18\end{array}&amp;45
+\end{array}
+$$</div>
+<p>Para decirlo de otro modo, si desea sumar todos los elementos de una matriz <span class="math">\(m\times n\)</span>, no importa si suma primero las filas o las columnas: acabará con la misma respuesta. Antes de la invención de las computadoras, los contadores usaban este hecho para evitar errores al cuadrar sus libros. En notación de sumas, este hecho puede expresarse como</p>
+<div class="math">$$
+\sum_{i=1}^m\sum_{j=1}^n a_{ij}
+=\sum_{j=1}^n\sum_{i=1}^m a_{ij},
+$$</div>
+<p>si <span class="math">\(a_{ij}\)</span> denota el elemento de la <span class="math">\(i\)</span>-ésima fila y la <span class="math">\(j\)</span>-ésima columna de la matriz.</p>
+<p>Ahora, uno puede pensar que esta regla debe extenderse fácilmente a las series infinitas:</p>
+<div class="math">$$
+\sum_{i=1}^{\infty}\sum_{j=1}^{\infty}a_{ij}
+=\sum_{j=1}^{\infty}\sum_{i=1}^{\infty}a_{ij}.
+$$</div>
+<p>En efecto, si usa series infinitas con frecuencia en su trabajo, encontrará que es muy común intercambiar sumas como estas. Otra manera de expresar esta afirmación es que, en una matriz infinita, la suma de los totales por filas debería ser igual a la suma de los totales por columnas. Sin embargo, a pesar de lo razonable que parece, ¡es falsa en general! Aquí hay un contraejemplo:</p>
+<div class="math">$$
+\begin{pmatrix}
+1&amp;0&amp;0&amp;0&amp;0&amp;\cdots\\
+-1&amp;1&amp;0&amp;0&amp;0&amp;\cdots\\
+0&amp;-1&amp;1&amp;0&amp;0&amp;\cdots\\
+0&amp;0&amp;-1&amp;1&amp;0&amp;\cdots\\
+0&amp;0&amp;0&amp;-1&amp;1&amp;\cdots\\
+\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\vdots&amp;\ddots
+\end{pmatrix}
+$$</div>
+<p>Si suma todas las filas y luego suma sus totales, obtiene <span class="math">\(1\)</span>; pero, si suma todas las columnas y luego suma sus totales, obtiene ¡<span class="math">\(0\)</span>! ¿Significa esto que las sumas de series infinitas no deben intercambiarse y que se debería desconfiar de cualquier argumento que use un intercambio?</p>
+<h2>Ejemplo 6. Intercambiando integrales</h2>
+<p>El intercambio de integrales es un recurso tan común en matemáticas como el intercambio de sumas. Supongamos que uno quiere calcular el volumen bajo una superficie <span class="math">\(z=f(x,y)\)</span>, con <span class="math">\(f\ge0\)</span> para esta interpretación geométrica; ignoramos los límites de integración por el momento. Uno puede hacerlo mediante cortes paralelos al eje <span class="math">\(x\)</span>: para cada valor fijo de <span class="math">\(y\)</span>, calcula el área <span class="math">\(\int f(x,y)\,dx\)</span> y luego integra esa área respecto de <span class="math">\(y\)</span> para obtener el volumen</p>
+<div class="math">$$
+V=\int\!\int f(x,y)\,dx\,dy.
+$$</div>
+<p>O podría hacer cortes paralelos al eje <span class="math">\(y\)</span>: para cada <span class="math">\(x\)</span> fijo, calcula el área <span class="math">\(\int f(x,y)\,dy\)</span> y luego integra respecto de <span class="math">\(x\)</span> para obtener</p>
+<div class="math">$$
+V=\int\!\int f(x,y)\,dy\,dx.
+$$</div>
+<p>Esto parece sugerir que uno siempre debería poder intercambiar los signos integrales:</p>
+<div class="math">$$
+\int\!\int f(x,y)\,dx\,dy
+=\int\!\int f(x,y)\,dy\,dx.
+$$</div>
+<p>En efecto, las personas cambian el orden de integración todo el tiempo, porque a veces es más sencillo integrar primero respecto de una variable que de la otra. Sin embargo, así como a veces no es posible intercambiar sumas infinitas, también puede ser peligroso intercambiar integrales. Un ejemplo es el integrando <span class="math">\(e^{-xy}-xye^{-xy}\)</span>, que toma valores de ambos signos. Supongamos que creemos que podemos intercambiar las integrales:</p>
+<div class="math">$$
+\int_0^{\infty}\int_0^1(e^{-xy}-xye^{-xy})\,dy\,dx
+=\int_0^1\int_0^{\infty}(e^{-xy}-xye^{-xy})\,dx\,dy.
+$$</div>
+<p>Ya que</p>
+<div class="math">$$
+\int_0^1(e^{-xy}-xye^{-xy})\,dy
+=\left[ye^{-xy}\right]_{y=0}^{y=1}=e^{-x},
+$$</div>
+<p>el lado izquierdo es</p>
+<div class="math">$$
+\int_0^{\infty}e^{-x}\,dx
+=\left[-e^{-x}\right]_0^{\infty}=1.
+$$</div>
+<p>Pero, para cada <span class="math">\(y&gt;0\)</span>,</p>
+<div class="math">$$
+\int_0^{\infty}(e^{-xy}-xye^{-xy})\,dx
+=\left[xe^{-xy}\right]_{x=0}^{x=\infty}=0.
+$$</div>
+<p>En <span class="math">\(y=0\)</span>, esta integral interior diverge. Interpretando la integral exterior como impropia en ese extremo, el lado derecho es</p>
+<div class="math">$$
+\lim_{\delta\to0^+}\int_{\delta}^1 0\,dy=0.
+$$</div>
+<p>Sin duda, <span class="math">\(1\ne0\)</span>, por lo que existe un error en algún lugar; pero no se encuentra en los cálculos de cada integral, sino en el paso donde intercambiamos el orden de integración. Así que ¿cómo sabemos cuándo confiar en el intercambio de integrales?</p>
+<h2>Ejemplo 7. Intercambiando límites</h2>
+<p>Supongamos que empezamos por la siguiente igualdad, aparentemente convincente: <a id="limites-iterados"></a></p>
+<div class="math">$$
+\lim_{x\to0}\lim_{y\to0}\frac{x^2}{x^2+y^2}
+=\lim_{y\to0}\lim_{x\to0}\frac{x^2}{x^2+y^2}.
+\tag{1}
+$$</div>
+<p>Pero, para <span class="math">\(x\ne0\)</span>, tenemos</p>
+<div class="math">$$
+\lim_{y\to0}\frac{x^2}{x^2+y^2}
+=\frac{x^2}{x^2+0^2}=1,
+$$</div>
+<p>así que el lado izquierdo de <a href="#limites-iterados">(1)</a> es <span class="math">\(1\)</span>. Por otro lado, para <span class="math">\(y\ne0\)</span>, tenemos</p>
+<div class="math">$$
+\lim_{x\to0}\frac{x^2}{x^2+y^2}
+=\frac{0^2}{0^2+y^2}=0,
+$$</div>
+<p>así que el lado derecho de <a href="#limites-iterados">(1)</a> es <span class="math">\(0\)</span>. Ya que, evidentemente, <span class="math">\(1\)</span> no es igual a <span class="math">\(0\)</span>, esto sugiere que el intercambio de límites es poco fiable. Pero ¿existen otras circunstancias en las que sea legítimo?</p>
+<h2>Ejemplo 8. Intercambiando límites, otra vez</h2>
+<p>Consideremos otra igualdad aparentemente convincente:</p>
+<div class="math">$$
+\lim_{x\to1^-}\lim_{n\to\infty}x^n
+=\lim_{n\to\infty}\lim_{x\to1^-}x^n,
+$$</div>
+<p>donde la notación <span class="math">\(x\to1^-\)</span> significa que <span class="math">\(x\)</span> se aproxima a <span class="math">\(1\)</span> desde la izquierda. Cuando <span class="math">\(0&lt;x&lt;1\)</span>, tenemos <span class="math">\(\lim_{n\to\infty}x^n=0\)</span> y, por lo tanto, el lado izquierdo es cero. Pero también tenemos que <span class="math">\(\lim_{x\to1^-}x^n=1\)</span> para todo <span class="math">\(n\)</span> y, por lo tanto, el lado derecho es <span class="math">\(1\)</span>. ¿Demuestra esto que este tipo de intercambio de límites es siempre inseguro?</p>
+<h2>Ejemplo 9. Intercambiando límites e integrales</h2>
+<p>Para cualquier número real <span class="math">\(y\)</span>, tenemos</p>
+<div class="math">$$
+\begin{aligned}
+\int_{-\infty}^{\infty}\frac{1}{1+(x-y)^2}\,dx
+&amp;=\left[\arctan(x-y)\right]_{x=-\infty}^{x=\infty}\\
+&amp;=\frac{\pi}{2}-\left(-\frac{\pi}{2}\right)=\pi.
+\end{aligned}
+$$</div>
+<p>Tomando el límite cuando <span class="math">\(y\to\infty\)</span>, podríamos esperar que</p>
+<div class="math">$$
+\begin{aligned}
+\int_{-\infty}^{\infty}\lim_{y\to\infty}\frac{1}{1+(x-y)^2}\,dx
+&amp;=\lim_{y\to\infty}\int_{-\infty}^{\infty}\frac{1}{1+(x-y)^2}\,dx\\
+&amp;=\pi.
+\end{aligned}
+$$</div>
+<p>Pero, para cada <span class="math">\(x\)</span>, tenemos <span class="math">\(\lim_{y\to\infty}\frac{1}{1+(x-y)^2}=0\)</span>. Así, hemos concluido que <span class="math">\(0=\pi\)</span>. ¿Cuál es el problema con el argumento anterior? ¿Deberíamos abandonar la técnica, muy útil, de intercambiar límites e integrales?</p>
+<h2>Ejemplo 10. Intercambiando límites y derivadas</h2>
+<p>Observe que, si <span class="math">\(\epsilon&gt;0\)</span>, entonces</p>
+<div class="math">$$
+\frac{d}{dx}\left(\frac{x^3}{\epsilon^2+x^2}\right)
+=\frac{3x^2(\epsilon^2+x^2)-2x^4}{(\epsilon^2+x^2)^2}
+$$</div>
+<p>y, en particular,</p>
+<div class="math">$$
+\left.\frac{d}{dx}\left(\frac{x^3}{\epsilon^2+x^2}\right)\right|_{x=0}=0.
+$$</div>
+<p>Al tomar el límite cuando <span class="math">\(\epsilon\to0^+\)</span>, obtenemos la función</p>
+<div class="math">$$
+f_0(x):=\lim_{\epsilon\to0^+}\frac{x^3}{\epsilon^2+x^2}
+=\begin{cases}
+\dfrac{x^3}{x^2}=x,&amp;x\ne0,\\
+0,&amp;x=0.
+\end{cases}
+$$</div>
+<p>Si intercambiamos el límite y la derivada, podríamos esperar que</p>
+<div class="math">$$
+f_0'(0)
+=\lim_{\epsilon\to0^+}\left.\frac{d}{dx}\left(\frac{x^3}{\epsilon^2+x^2}\right)\right|_{x=0}
+=0.
+$$</div>
+<p>Pero <span class="math">\(f_0(x)=x\)</span> para todo <span class="math">\(x\)</span>, incluido el cero, así que el miembro izquierdo es <span class="math">\(f_0'(0)=1\)</span>. ¿Significa esto que siempre es ilegítimo intercambiar límites y derivadas?</p>
+<h2>Ejemplo 11. Intercambiando derivadas</h2>
+<p>Sea <span class="math">\(f\)</span> la función definida por</p>
+<div class="math">$$
+f(x,y):=\begin{cases}
+\dfrac{xy^3}{x^2+y^2},&amp;(x,y)\ne(0,0),\\
+0,&amp;(x,y)=(0,0).
+\end{cases}
+$$</div>
+<p>Una maniobra común en análisis es intercambiar las dos derivadas parciales; así, uno espera que</p>
+<div class="math">$$
+\frac{\partial^2 f}{\partial x\,\partial y}(0,0)
+=\frac{\partial^2 f}{\partial y\,\partial x}(0,0).
+$$</div>
+<p>Pero, por la regla del cociente, para <span class="math">\((x,y)\ne(0,0)\)</span> tenemos</p>
+<div class="math">$$
+\frac{\partial f}{\partial y}(x,y)
+=\frac{3xy^2}{x^2+y^2}-\frac{2xy^4}{(x^2+y^2)^2}
+$$</div>
+<p>y, en particular, para <span class="math">\(x\ne0\)</span>,</p>
+<div class="math">$$
+\frac{\partial f}{\partial y}(x,0)
+=\frac{0}{x^2}-\frac{0}{x^4}=0.
+$$</div>
+<p>En el origen, la definición de derivada parcial también da <span class="math">\(\frac{\partial f}{\partial y}(0,0)=0\)</span>. Así,</p>
+<div class="math">$$
+\frac{\partial^2 f}{\partial x\,\partial y}(0,0)=0.
+$$</div>
+<p>Por otro lado, nuevamente por la regla del cociente, para <span class="math">\((x,y)\ne(0,0)\)</span> tenemos</p>
+<div class="math">$$
+\frac{\partial f}{\partial x}(x,y)
+=\frac{y^3}{x^2+y^2}-\frac{2x^2y^3}{(x^2+y^2)^2}
+$$</div>
+<p>y, por lo tanto, para <span class="math">\(y\ne0\)</span>,</p>
+<div class="math">$$
+\frac{\partial f}{\partial x}(0,y)
+=\frac{y^3}{y^2}-\frac{0}{y^4}=y.
+$$</div>
+<p>En el origen, la definición da <span class="math">\(\frac{\partial f}{\partial x}(0,0)=0\)</span>. Así,</p>
+<div class="math">$$
+\frac{\partial^2 f}{\partial y\,\partial x}(0,0)=1.
+$$</div>
+<p>Ya que <span class="math">\(1\ne0\)</span>, vemos que el intercambio de derivadas no es válido en general. Pero ¿hay otras circunstancias en las que sea legítimo?</p>
+<p>Uno podría objetar que la expresión <span class="math">\(xy^3/(x^2+y^2)\)</span> no está definida en el origen. Sin embargo, al establecer <span class="math">\(f(0,0)=0\)</span>, como hemos hecho, la función es continua y diferenciable en todo punto y ambas primeras derivadas parciales son continuas en todo punto. Esto no implica que esas primeras derivadas sean, a su vez, diferenciables en el origen.</p>
+<hr>
+<p>Publicado originalmente el 24 de febrero de 2016 en <a href="https://cristhiangz.wordpress.com/2016/02/24/algunas-contradicciones/">∞ c·gz ∞</a>.</p>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/15/algunas-contradicciones/">posted at 01:54</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathmisc.html" rel="tag">Math.Misc</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags selected">Math</a>
+                </div>
+            </article>            <h4 class="date">Nov 14, 2026</h4>
 
             <article class="post">
                 <h2 class="title">
