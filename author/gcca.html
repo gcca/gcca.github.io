@@ -51,7 +51,118 @@
             </a></h1></div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Nov 15, 2026</h4>
+        <div id="content">            <h4 class="date">Nov 21, 2026</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2026/11/21/el-cuarteto-de-anscombe/" rel="bookmark" title="Permanent Link to &quot;El cuarteto de Anscombe&quot;">El cuarteto de Anscombe</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/21/el-cuarteto-de-anscombe/" aria-label="El cuarteto de Anscombe">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/03.jpg" alt="" width="849" height="490" loading="lazy" decoding="async" />
+                </a>
+
+                <p>Imagina que ajustas una recta a cuatro conjuntos de datos. En los cuatro obtienes, al redondear, <span class="math">\(\hat y = 3 + 0.5x\)</span> y <span class="math">\(R^2 = 0.67\)</span>. ¿En qué casos usarías esa recta para predecir un nuevo valor de <span class="math">\(y\)</span>?</p>
+<p>Se parece al problema de los cuatro servicios que tenían la misma latencia media en <a href="https://gcca.github.io/2026/11/15/la-media-no-dice-nada/">La media no dice nada</a>. Esta vez estamos resumiendo la relación entre dos variables.</p>
+<h2 id="resumen">Cuatro conjuntos, casi el mismo resumen</h2>
+<p>En 1973, Francis Anscombe publicó cuatro conjuntos ficticios de once pares <span class="math">\((x, y)\)</span>. Los primeros tres comparten los mismos valores de <span class="math">\(x\)</span>. Calculé las medias, las varianzas muestrales, la correlación de Pearson y los coeficientes de la recta por mínimos cuadrados para cada conjunto.</p>
+<table>
+<thead>
+<tr>
+<th>Estadístico</th>
+<th style="text-align: right;">I</th>
+<th style="text-align: right;">II</th>
+<th style="text-align: right;">III</th>
+<th style="text-align: right;">IV</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Media de <span class="math">\(x\)</span></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr>
+<td>Media de <span class="math">\(y\)</span></td>
+<td style="text-align: right;">7.501</td>
+<td style="text-align: right;">7.501</td>
+<td style="text-align: right;">7.500</td>
+<td style="text-align: right;">7.501</td>
+</tr>
+<tr>
+<td>Varianza de <span class="math">\(x\)</span></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr>
+<td>Varianza de <span class="math">\(y\)</span></td>
+<td style="text-align: right;">4.127</td>
+<td style="text-align: right;">4.128</td>
+<td style="text-align: right;">4.123</td>
+<td style="text-align: right;">4.123</td>
+</tr>
+<tr>
+<td>Correlación <span class="math">\(r\)</span></td>
+<td style="text-align: right;">0.8164</td>
+<td style="text-align: right;">0.8162</td>
+<td style="text-align: right;">0.8163</td>
+<td style="text-align: right;">0.8165</td>
+</tr>
+<tr>
+<td>Intercepto</td>
+<td style="text-align: right;">3.0001</td>
+<td style="text-align: right;">3.0009</td>
+<td style="text-align: right;">3.0025</td>
+<td style="text-align: right;">3.0017</td>
+</tr>
+<tr>
+<td>Pendiente</td>
+<td style="text-align: right;">0.5001</td>
+<td style="text-align: right;">0.5000</td>
+<td style="text-align: right;">0.4997</td>
+<td style="text-align: right;">0.4999</td>
+</tr>
+<tr>
+<td><span class="math">\(R^2\)</span></td>
+<td style="text-align: right;">0.6665</td>
+<td style="text-align: right;">0.6662</td>
+<td style="text-align: right;">0.6663</td>
+<td style="text-align: right;">0.6667</td>
+</tr>
+</tbody>
+</table>
+<p>La coincidencia tiene una explicación. En una regresión lineal simple con intercepto, la pendiente es <span class="math">\(r\,s_y/s_x\)</span>, donde <span class="math">\(s_x\)</span> y <span class="math">\(s_y\)</span> son las desviaciones estándar muestrales. El intercepto se obtiene haciendo que la recta pase por <span class="math">\((\bar x, \bar y)\)</span>, y <span class="math">\(R^2\)</span> es simplemente <span class="math">\(r^2\)</span>. Si las medias, las varianzas y la correlación se parecen tanto, las últimas tres filas también se van a parecer.</p>
+<p>En los cuatro casos, la recta reduce en unos dos tercios la suma de los cuadrados de los errores que obtendríamos al predecir siempre la media de <span class="math">\(y\)</span>.</p>
+<h2 id="los-puntos">Qué cambia al mirar los puntos</h2>
+<p>Los cuatro paneles usan la misma escala. La línea discontinua es la recta ajustada en cada conjunto. En III y IV, el punto naranja es el que retiro para ver cuánto cambia el ajuste.</p>
+<p><img alt="Cuatro diagramas de dispersión con rectas casi iguales. En I los puntos se dispersan alrededor de la recta. En II forman un arco. En III casi todos siguen una recta menos inclinada, con un punto muy por encima. En IV hay diez puntos en x = 8 y uno aislado en x = 19." src="https://gcca.github.io/static/year=2026/month=11/day=21/el_cuarteto_de_anscombe/cuarteto-de-anscombe.svg"></p>
+<p><strong>I. Una nube alrededor de la recta.</strong> Hay puntos por encima y por debajo a lo largo del eje <span class="math">\(x\)</span>. Una recta parece un punto de partida razonable.</p>
+<p><strong>II. Una curva.</strong> En los extremos, la recta sobreestima <span class="math">\(y\)</span>. En el centro, lo subestima. Si graficas los residuos <span class="math">\(y_i - \hat y_i\)</span> contra <span class="math">\(x_i\)</span>, vuelve a aparecer el arco. Probaría un término cuadrático.</p>
+<p><strong>III. Un punto cambia la pendiente.</strong> Diez observaciones siguen de cerca una recta menos inclinada. La que se separa es <span class="math">\((13, 12.74)\)</span>, muy por encima de las demás. Al repetir el ajuste sin ese punto, la pendiente baja de <span class="math">\(0.50\)</span> a <span class="math">\(0.35\)</span>. Con datos reales, esa diferencia me llevaría a revisar cómo se obtuvo la observación.</p>
+<p><strong>IV. Un punto aporta toda la comparación entre valores de <span class="math">\(x\)</span>.</strong> Diez observaciones tienen <span class="math">\(x = 8\)</span> y su media de <span class="math">\(y\)</span> es aproximadamente <span class="math">\(7\)</span>. El único punto con otro valor de <span class="math">\(x\)</span> es <span class="math">\((19, 12.50)\)</span>. La recta une esos dos niveles, así que su pendiente sale de dividir <span class="math">\(12.50 - 7.00\)</span> entre <span class="math">\(19 - 8\)</span>. Si quitas ese punto, <span class="math">\(x\)</span> queda constante y la pendiente ya no se puede estimar.</p>
+<h2 id="antes-de-usar-la-pendiente">Antes de usar la pendiente</h2>
+<p>Volvamos al panel de latencias. Supongamos que ajustas una recta entre peticiones por segundo y latencia, y que el único dato de carga alta se tomó durante un despliegue. Si el gráfico se parece al IV, tu estimación de cuánto sube la latencia con la carga depende de esa medición. Antes de usarla para planificar capacidad, repetiría la medición a varios niveles de carga.</p>
+<p>Para una regresión así, empiezo por graficar los pares <span class="math">\((x, y)\)</span>. Después miro los residuos y, si una observación parece tener mucha influencia, comparo el ajuste con y sin ella. La diferencia entre ambos ajustes me dice cuánto de la conclusión descansa en ese punto.</p>
+<h2 id="referencias">Referencia</h2>
+<ul>
+<li>F. J. Anscombe (1973). <a href="https://doi.org/10.1080/00031305.1973.10478966"><em>Graphs in Statistical Analysis</em></a>.</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2026/11/21/el-cuarteto-de-anscombe/">posted at 03:36</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathstat.html" rel="tag">Math.Stat</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/statistics.html" class="tags">Statistics</a>
+                </div>
+            </article>            <h4 class="date">Nov 15, 2026</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -793,51 +904,6 @@ $$</div>
                     &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathstat.html" rel="tag">Math.Stat</a>
                     &nbsp;&middot;
                     &nbsp;<a href="https://gcca.github.io/tag/statistics.html" class="tags">Statistics</a>
-                </div>
-            </article>            <h4 class="date">Nov 14, 2026</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/" rel="bookmark" title="Permanent Link to &quot;Inducción para una desigualdad&quot;">Inducción para una desigualdad</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/" aria-label="Inducción para una desigualdad">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/02.jpg" alt="" width="720" height="356" loading="lazy" decoding="async" />
-                </a>
-
-                <p>Hace poco estuve revisando un pequeño problema en el que se pedía aplicar inducción.</p>
-<blockquote>
-<p><strong>Ejercicio 1.</strong> Sea <span class="math">\(n\)</span> un número natural positivo, <span class="math">\(n\ge2\)</span>. Entonces</p>
-<p>
-<div class="math">$$\sum_{k=1}^n\frac1{k^2}&lt;2-\frac1n.$$</div>
-</p>
-</blockquote>
-<p>Vi lo siguiente en un intento de prueba:</p>
-<div class="math">$$\sum_{k=1}^k\frac1{k^2}+\frac1{(k+1)^2}&lt;2-\frac1{k+1},$$</div>
-<p>sin saber cómo seguir.</p>
-<p>Para obtener la prueba deseada, supongamos que</p>
-<div class="math">$$\sum_{k=1}^n\frac1{k^2}&lt;2-\frac1n.$$</div>
-<p>Entonces</p>
-<div class="math">$$
-\begin{aligned}
-\sum_{k=1}^{n+1}\frac1{k^2}&amp;=&amp;\sum_{k=1}^n\frac1{k^2}+\frac1{(n+1)^2}\\
-&amp;=&amp;2-\frac1n+\frac1{(n+1)^2}.
-\end{aligned}
-$$</div>
-<p>Así, el problema queda reducido a mostrar que</p>
-<div class="math">$$-\frac1n+\frac1{(n+1)^2}\ge-\frac1{n+1},$$</div>
-<p>lo cual es sencillo de realizar con algo de álgebra. El punto es que uno tiene que usar el supuesto que funciona para <span class="math">\(n\)</span>. Además, cuando usamos <span class="math">\(k\)</span> como índice de la suma, no deberíamos usar <span class="math">\(k\)</span> en cualquier lugar, como se hizo anteriormente.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2026/11/14/induccion-para-una-desigualdad/">posted at 07:18</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/mathex.html" rel="tag">Math.Ex</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/math.html" class="tags">Math</a>
-                    &nbsp;<a href="https://gcca.github.io/tag/note.html" class="tags">Note</a>
                 </div>
             </article>
 

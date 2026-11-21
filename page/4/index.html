@@ -49,7 +49,51 @@
             </a></h1></div>
     </header>
     <div id="wrapper">
-        <div id="content">            <h4 class="date">Dec 14, 2024</h4>
+        <div id="content">            <h4 class="date">Jan 24, 2025</h4>
+
+            <article class="post">
+                <h2 class="title">
+                    <a href="https://gcca.github.io/2025/01/24/githubactions-monorepos/" rel="bookmark" title="Permanent Link to &quot;GitHub Actions en monorepos complejos&quot;">GitHub Actions en monorepos complejos</a>
+                </h2>
+
+                
+                
+
+                <a class="thumbnail-link" href="https://gcca.github.io/2025/01/24/githubactions-monorepos/" aria-label="GitHub Actions en monorepos complejos">
+                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/01.jpg" alt="" width="760" height="519" loading="lazy" decoding="async" />
+                </a>
+
+                <h1>Resumen del artículo sobre GitHub Actions</h1>
+<ul>
+<li>
+<p><strong>Contexto</strong>: Un equipo trabaja en un monorepo con múltiples módulos, cada uno con su propio pipeline. Desarrollo basado en trunk y múltiples despliegues diarios.</p>
+</li>
+<li>
+<p><strong>Limitaciones de GitHub Actions</strong>:</p>
+</li>
+<li><strong>Manejo de Workflows Complejos</strong>: Problemas con workflows complejos en monorepos, especialmente en la reutilización de workflows y en las comprobaciones de pull request.</li>
+<li>
+<p><strong>Dependencia en el Entorno de GitHub</strong>: Limitaciones para correr localmente los mismos workflows de GitHub, afectando desarrollo y depuración.</p>
+</li>
+<li>
+<p><strong>Alternativas y Sugerencias</strong>:</p>
+</li>
+<li>
+<p>Uso de herramientas como Nix o Docker para ejecutar comandos, permitiendo consistencia entre entornos locales y de CI/CD.</p>
+</li>
+<li>
+<p><strong>Conclusión</strong>: Para proyectos grandes y complejos, especialmente monorepos, se recomienda evaluar cuidadosamente el uso de GitHub Actions debido a sus limitaciones en gestión de workflows y consistencia de entornos.</p>
+</li>
+</ul>
+                <div class="clear"></div>
+
+                <div class="info">
+                    <a href="https://gcca.github.io/2025/01/24/githubactions-monorepos/">posted at 17:51</a>
+                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/semisc.html" rel="tag">SE.Misc</a>
+                    &nbsp;&middot;
+                    &nbsp;<a href="https://gcca.github.io/tag/misc.html" class="tags">Misc</a>
+                </div>
+            </article>            <h4 class="date">Dec 14, 2024</h4>
 
             <article class="post">
                 <h2 class="title">
@@ -433,37 +477,6 @@
                     &nbsp;&middot;
                     &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
                     &nbsp;<a href="https://gcca.github.io/tag/c.html" class="tags">C++</a>
-                </div>
-            </article>            <h4 class="date">Dec 12, 2024</h4>
-
-            <article class="post">
-                <h2 class="title">
-                    <a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/" rel="bookmark" title="Permanent Link to &quot;URLs con nGinx&quot;">URLs con nGinx</a>
-                </h2>
-
-                
-                
-
-                <a class="thumbnail-link" href="https://gcca.github.io/2024/12/12/rw_urls_nginx/" aria-label="URLs con nGinx">
-                    <img class="post-thumbnail" src="https://gcca.github.io/images/thumbnails/05.jpg" alt="" width="784" height="490" loading="lazy" decoding="async" />
-                </a>
-
-                <p>En <code>nginx</code>, se pueden reescribir URLs con la directiva <code>rewrite</code>. Por ejemplo, para redirigir todas las URLs usando NginxHttpRewriteModule, se puede usar:</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$host</span><span class="w"> </span><span class="p">~</span><span class="sr">*</span><span class="w"> </span><span class="s">&amp;quot</span><span class="p">;</span><span class="k">^sub.dom.com$&amp;quot</span><span class="p">;</span><span class="k">){</span>
-<span class="w">  </span><span class="s">rewrite</span><span class="w"> </span><span class="s">^.*(?=\/)(.+)</span>$<span class="w"> </span><span class="s">http://www.dom.com/blog</span><span class="nv">$1</span><span class="w"> </span><span class="s">permanent</span><span class="p">;</span>
-<span class="w">  </span><span class="k">break</span><span class="p">;</span>
-<span class="k">}</span>
-</code></pre></div>
-
-<p>Esto redirige URLs del formato antiguo de http://sub.dom.com/2024/12/12/slug-de-la-página al nuevo formato http://www.dom.com/blog/el-slug-de-la-página (en la capa de nginx) usando <a href="http://www.regular-expressions.info/lookaround.html">lookaround</a>, también conocido como “zero-width positive look-ahead assertion”.</p>
-<p>El <em>positive lookahead</em> coincide con el slash (escapado): <code>(?=\/)</code>, sin hacerlo parte de la coincidencia. El símbolo <code>.*</code> significa cualquier carácter y, dado que <code>*</code> consume por defecto, coincide con toda la URL hasta el último carácter de barra diagonal. Finalmente, <code>(.+)</code> forma la primera referencia inversa <code>$1</code> (los lookaheads no crean grupos de captura), la cual se usa en la nueva URL como el segundo argumento para reescribir.</p>
-                <div class="clear"></div>
-
-                <div class="info">
-                    <a href="https://gcca.github.io/2024/12/12/rw_urls_nginx/">posted at 07:40</a>
-                    &nbsp;&middot;&nbsp;<a href="https://gcca.github.io/category/setips.html" rel="tag">SE.Tips</a>
-                    &nbsp;&middot;
-                    &nbsp;<a href="https://gcca.github.io/tag/tips.html" class="tags">Tips</a>
                 </div>
             </article>
 
